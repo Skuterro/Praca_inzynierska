@@ -121,6 +121,33 @@ namespace Api.Migrations
                     b.ToTable("OneRepMaxes");
                 });
 
+            modelBuilder.Entity("Api.Models.Entities.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsRevoked")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("Api.Models.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -468,6 +495,17 @@ namespace Api.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Api.Models.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("Api.Models.Entities.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Api.Models.Entities.WorkoutPlan", b =>
                 {
                     b.HasOne("Api.Models.Entities.User", "User")
@@ -584,6 +622,8 @@ namespace Api.Migrations
                     b.Navigation("BodyMeasurements");
 
                     b.Navigation("OneRepMaxes");
+
+                    b.Navigation("RefreshTokens");
 
                     b.Navigation("WorkoutPlans");
 

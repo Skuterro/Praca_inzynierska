@@ -8,5 +8,6 @@ namespace Api.Models.Entities
         public ICollection<BodyMeasurement> BodyMeasurements { get; set; } = new List<BodyMeasurement>();
         public ICollection<OneRepMax> OneRepMaxes { get; set; } = new List<OneRepMax>();
         public ICollection<WorkoutSession> WorkoutSessions { get; set; } = new List<WorkoutSession>();
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
     }
 }

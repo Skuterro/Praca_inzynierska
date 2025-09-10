@@ -16,6 +16,7 @@ namespace Api.Database
         public DbSet<WorkoutSessionSet> WorkoutSessionSets { get; set; }
         public DbSet<BodyMeasurement> BodyMeasurements { get; set; }
         public DbSet<OneRepMax> OneRepMaxes { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -87,6 +88,12 @@ namespace Api.Database
                 .WithMany()
                 .HasForeignKey(orm => orm.ExerciseId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RefreshToken>()
+                .HasOne(rt => rt.User)
+                .WithMany(u => u.RefreshTokens)
+                .HasForeignKey(rt => rt.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
 
 

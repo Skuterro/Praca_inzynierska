@@ -1,9 +1,13 @@
-﻿using Api.Models.Entities;
+﻿using Api.Database;
+using Api.Models.Entities;
+using Api.Models.Requests.AuthRequests;
+using Api.Models.Responses.AuthResponses;
 using Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers
 {
@@ -11,60 +15,41 @@ namespace Api.Controllers
     [Route("auth")]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        private readonly ITokenService _tokenService;
+        private readonly IAuthService _authService;
 
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, ITokenService tokenService)
+        public AuthController(IAuthService authService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _tokenService = tokenService;
+            _authService = authService;
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> Register([FromBody] RegisterRequest registerRequest)
+        public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegisterRequestDto registerRequest)
         {
-            var existingUser = await _userManager.FindByEmailAsync(registerRequest.Email);
-            if (existingUser != null)
-            {
-                return BadRequest("istnieje email");
-            }
-
-            var user = new User
-            {
-                UserName = registerRequest.Email,
-                Email = registerRequest.Email,
-            };
-
-            var result = await _userManager.CreateAsync(user, registerRequest.Password);
-
-            if (!result.Succeeded)
-            {
-                return BadRequest(result.Errors);
-            }
-
-            var token = _tokenService.GenerateJwtToken(user);
-            return Ok(new { token });
+            var result = await _authService.RegisterAsync(registerRequest);
+            return Ok(result);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody] LoginRequest loginRequest)
+        public async Task<ActionResult<AuthResponseDto>> Login([FromBody] LoginRequestDto loginRequest)
         {
-            var user = await _userManager.FindByEmailAsync(loginRequest.Email);
-            if (user == null)
-            {
-                return Unauthorized("zly login lub haslo");
-            }
+            var result = await _authService.LoginAsync(loginRequest);
+            return Ok(result);
+        }
 
-            var checkPassword = await _userManager.CheckPasswordAsync(user, loginRequest.Password);
-            if (!checkPassword)
-            {
-                return Unauthorized("zly login lub haslo");
-            }
+        [Authorize]
+        [HttpPost("refresh")]
+        public async Task<ActionResult<AuthResponseDto>> Refresh([FromBody] string refreshToken)
+        {
+            var result = await _authService.RefreshAsync(refreshToken);
+            return Ok(result);
+        }
 
-            var token = _tokenService.GenerateJwtToken(user);
-            return Ok(new { token });
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<ActionResult> Logout([FromBody] string refreshToken)
+        {
+            await _authService.LogoutAsync(refreshToken);
+            return Ok(new { message = "Logged out from this session" });
         }
     }
 }

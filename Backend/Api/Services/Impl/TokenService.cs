@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Api.Models.Entities;
 using Microsoft.IdentityModel.Tokens;
@@ -35,6 +36,17 @@ namespace Api.Services.Impl
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-        }   
+        }
+
+        public RefreshToken GenerateRefreshToken()
+        {
+            var randomBytes = RandomNumberGenerator.GetBytes(64);
+
+            return new RefreshToken
+            {
+                Token = Convert.ToBase64String(randomBytes),
+                ExpiresAt = DateTime.UtcNow.AddDays(7)
+            };
+        }
     }
 }

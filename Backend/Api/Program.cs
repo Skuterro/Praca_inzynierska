@@ -1,5 +1,6 @@
 using System.Text;
 using Api.Database;
+using Api.Middleware;
 using Api.Models.Entities;
 using Api.Services;
 using Api.Services.Impl;
@@ -61,6 +62,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

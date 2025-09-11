@@ -14,9 +14,9 @@ namespace Api.Models.Entities
         public Exercise Exercise { get; set; } = null!;
 
         [Required]
-        public int sets {  get; set; }
+        public int Sets {  get; set; }
 
         [Required]
-        public int reps { get; set; }
+        public int Reps { get; set; }
     }
 }

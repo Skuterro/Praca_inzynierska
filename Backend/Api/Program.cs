@@ -1,5 +1,6 @@
 using System.Text;
 using Api.Database;
+using Api.Mapper;
 using Api.Middleware;
 using Api.Models.Entities;
 using Api.Services;
@@ -18,6 +19,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IWorkoutPlanService, WorkoutPlanService>();
+builder.Services.AddScoped<IExerciseService, ExerciseService>();
+
+builder.Services.AddAutoMapper(typeof(ExerciseMappingProfile));
 
 builder.Services.AddIdentityCore<User>(options =>
 {

@@ -7,5 +7,6 @@ namespace Api.Services.Interfaces
     public interface IWorkoutPlanService
     {
         Task<WorkoutPlanResponseDto> CreateWorkoutPlanAsync(string userId, WorkoutPlanCreateDto workoutPlanCreateDto);
+        Task<IEnumerable<WorkoutPlanResponseDto>> GetUserWorkoutPlansAsync(string userId);
     }
 }

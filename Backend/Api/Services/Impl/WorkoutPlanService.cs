@@ -44,5 +44,17 @@ namespace Api.Services.Impl
 
             return _mapper.Map<WorkoutPlanResponseDto>(workoutPlanEntity);
         }
+
+        public async Task<IEnumerable<WorkoutPlanResponseDto>> GetUserWorkoutPlansAsync(string userId)
+        {
+            var workoutPlanEntities = await _context.WorkoutPlans
+                .Where(wp => wp.UserId == userId)
+                .Include(wp => wp.WorkoutPlanDays)
+                    .ThenInclude(wpd => wpd.DayExercises)
+                        .ThenInclude(de => de.Exercise)
+                .ToListAsync();
+
+            return _mapper.Map<List<WorkoutPlanResponseDto>>(workoutPlanEntities);
+        }
     }
 }

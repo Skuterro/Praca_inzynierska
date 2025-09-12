@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Api.Models.Requests.WorkoutPlanRequests;
+using Api.Models.Responses.WorkoutPlanResponses;
 using Api.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,11 +28,6 @@ namespace Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            Console.WriteLine("CHUJ");
-            foreach (var claim in _httpContextAccessor.HttpContext!.User.Claims)
-            {
-                Console.WriteLine($"{claim.Type} = {claim.Value}");
-            }
 
             var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -39,8 +35,21 @@ namespace Api.Controllers
                 return Unauthorized();
             }
 
-            var plan = await _workoutPlanService.CreateWorkoutPlanAsync(userId, workoutPlanCreateDto);
-            return Ok(plan);
+            var workoutPlan = await _workoutPlanService.CreateWorkoutPlanAsync(userId, workoutPlanCreateDto);
+            return Ok(workoutPlan);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<WorkoutPlanResponseDto>>> GetUserWorkoutPlans()
+        {
+            var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var workoutPlans = await _workoutPlanService.GetUserWorkoutPlansAsync(userId);
+            return Ok(workoutPlans);
         }
     }
 }

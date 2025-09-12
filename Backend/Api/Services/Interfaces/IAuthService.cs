@@ -2,7 +2,7 @@
 using Api.Models.Requests.AuthRequests;
 using Api.Models.Responses.AuthResponses;
 
-namespace Api.Services
+namespace Api.Services.Interfaces
 {
     public interface IAuthService
     {

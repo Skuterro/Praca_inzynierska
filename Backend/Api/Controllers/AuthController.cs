@@ -2,7 +2,7 @@
 using Api.Models.Entities;
 using Api.Models.Requests.AuthRequests;
 using Api.Models.Responses.AuthResponses;
-using Api.Services;
+using Api.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;

@@ -2,6 +2,16 @@
 
 namespace Api.Models.Entities
 {
+    public enum WeekDay
+    {
+        Monday = 1,
+        Tuesday = 2,
+        Wednesday = 3,
+        Thursday = 4,
+        Friday = 5,
+        Saturday = 6,
+        Sunday = 7
+    }
     public class WorkoutPlanDay
     {
         [Key]
@@ -12,8 +22,7 @@ namespace Api.Models.Entities
         public string Name { get; set; } = null!;
 
         [Required]
-        [MaxLength(9)]
-        public string WeekDay { get; set; } = null!;
+        public WeekDay WeekDay { get; set; }
 
         public int WorkoutPlanId { get; set; }
         public WorkoutPlan WorkoutPlan { get; set; } = null!;

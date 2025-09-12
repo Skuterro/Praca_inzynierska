@@ -2,58 +2,47 @@
 using Api.Exceptions;
 using Api.Models.Entities;
 using Api.Models.Requests.WorkoutPlanRequests;
+using Api.Models.Responses.WorkoutPlanResponses;
+using Api.Services.Interfaces;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Services.Impl
 {
     public class WorkoutPlanService : IWorkoutPlanService
     {
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public WorkoutPlanService(AppDbContext context)
+        public WorkoutPlanService(AppDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<WorkoutPlan> CreateWorkoutPlanAsync(string userId, WorkoutPlanCreateDto workoutPlanCreateDto)
+        public async Task<WorkoutPlanResponseDto> CreateWorkoutPlanAsync(string userId, WorkoutPlanCreateDto workoutPlanCreateDto)
         {
-            var workoutPlan = new WorkoutPlan
-            {
-                Name = workoutPlanCreateDto.Name,
-                UserId = userId,
-                CreatedAt = DateTime.UtcNow
-            };
+            var workoutPlanEntity = _mapper.Map<WorkoutPlan>(workoutPlanCreateDto);
+            workoutPlanEntity.UserId = userId;
+            workoutPlanEntity.CreatedAt = DateTime.UtcNow;
 
             foreach (var workoutPlanDayDto in workoutPlanCreateDto.WorkoutDays)
             {
-                var workoutPlanDay = new WorkoutPlanDay
-                {
-                    Name = workoutPlanDayDto.Name,
-                    WeekDay = workoutPlanDayDto.WeekDay
-                };
 
                 foreach (var dayExerciseDto in workoutPlanDayDto.DayExercises)
                 {
-                    var exercise = await _context.Exercises.FindAsync(dayExerciseDto.ExerciseId);
-                    if (exercise == null)
+                    var exists = await _context.Exercises.AnyAsync(e => e.Id == dayExerciseDto.ExerciseId);
+                    if (!exists)
                     {
                         throw new BadRequestException("Exercise does not exist");
                     }
-
-                    workoutPlanDay.DayExercises.Add(new DayExercise
-                    {
-                        ExerciseId = exercise.Id,
-                        Sets = dayExerciseDto.Sets,
-                        Reps = dayExerciseDto.Reps
-                    });
                 }
-
-                workoutPlan.WorkoutPlanDays.Add(workoutPlanDay);
             }
 
-            _context.WorkoutPlans.Add(workoutPlan);
+            _context.WorkoutPlans.Add(workoutPlanEntity);
             await _context.SaveChangesAsync();
 
-            return workoutPlan;
+            return _mapper.Map<WorkoutPlanResponseDto>(workoutPlanEntity);
         }
     }
 }

@@ -3,6 +3,7 @@ using Api.Exceptions;
 using Api.Models.Entities;
 using Api.Models.Requests.AuthRequests;
 using Api.Models.Responses.AuthResponses;
+using Api.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,12 @@ namespace Api.Services.Impl
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new BadRequestException($"User creation failed: {errors}");
+            }
 
             return await GenerateTokensAsync(user);
         }

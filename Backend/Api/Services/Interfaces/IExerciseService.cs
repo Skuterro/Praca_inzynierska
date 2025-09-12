@@ -1,7 +1,7 @@
 ﻿using Api.Models.Requests.ExerciseRequests;
 using Api.Models.Responses.ExerciseResponses;
 
-namespace Api.Services
+namespace Api.Services.Interfaces
 {
     public interface IExerciseService
     {

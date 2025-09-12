@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Api.Models.Entities;
 
 namespace Api.Models.Requests.WorkoutPlanRequests
 {
@@ -8,7 +9,7 @@ namespace Api.Models.Requests.WorkoutPlanRequests
         public string Name { get; set; } = null!;
 
         [Required]
-        [MaxLength(9)]
+        [EnumDataType(typeof(WeekDay), ErrorMessage = "WeekDay must be a valid day of the week.")]
         public string WeekDay { get; set; } = null!;
 
         [Required]

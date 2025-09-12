@@ -1,6 +1,6 @@
 ﻿using Api.Models.Requests.ExerciseRequests;
 using Api.Models.Responses.ExerciseResponses;
-using Api.Services;
+using Api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers

@@ -1,5 +1,6 @@
-﻿using Api.Models.Requests.WorkoutPlanRequests;
-using Api.Services;
+﻿using System.Security.Claims;
+using Api.Models.Requests.WorkoutPlanRequests;
+using Api.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,8 +27,13 @@ namespace Api.Controllers
             {
                 return BadRequest(ModelState);
             }
+            Console.WriteLine("CHUJ");
+            foreach (var claim in _httpContextAccessor.HttpContext!.User.Claims)
+            {
+                Console.WriteLine($"{claim.Type} = {claim.Value}");
+            }
 
-            var userId = _httpContextAccessor.HttpContext!.User.FindFirst("sub")?.Value;
+            var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
             {
                 return Unauthorized();

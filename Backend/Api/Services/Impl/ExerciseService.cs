@@ -3,6 +3,7 @@ using Api.Exceptions;
 using Api.Models.Entities;
 using Api.Models.Requests.ExerciseRequests;
 using Api.Models.Responses.ExerciseResponses;
+using Api.Services.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 

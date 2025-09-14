@@ -15,5 +15,7 @@ namespace Api.Models.Entities
 
         [Required]
         public int weightKg { get; set; }
+
+        public DateTime Date {  get; set; }
     }
 }

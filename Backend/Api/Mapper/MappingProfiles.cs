@@ -2,9 +2,11 @@
 using Api.Models.Entities;
 using Api.Models.Requests.BodyMeasurementRequests;
 using Api.Models.Requests.ExerciseRequests;
+using Api.Models.Requests.OneRepMaxRequests;
 using Api.Models.Requests.WorkoutPlanRequests;
 using Api.Models.Responses.BodyMeasurementResponses;
 using Api.Models.Responses.ExerciseResponses;
+using Api.Models.Responses.OneRepMaxResponses;
 using Api.Models.Responses.WorkoutPlanResponses;
 using AutoMapper;
 
@@ -41,15 +43,28 @@ namespace Api.Mapper
         }
     }
 
-    public class BodyMeasurementMappingprofile : Profile
+    public class BodyMeasurementMappingProfile : Profile
     {
-        public BodyMeasurementMappingprofile() 
+        public BodyMeasurementMappingProfile() 
         {
             CreateMap<BodyMeasurementCreateDto, BodyMeasurement>()
                 .ForMember(dest => dest.MeasurementDate, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
 
             CreateMap<BodyMeasurement, BodyMeasurementResponseDto>();
+        }
+    }
+
+    public class OneRepMaxMappingProfile : Profile
+    {
+        public OneRepMaxMappingProfile()
+        {
+            CreateMap<OneRepMaxCreateDto, OneRepMax>()
+                .ForMember(dest => dest.Date, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore());
+
+            CreateMap<OneRepMax, OneRepMaxResponseDto>()
+                .ForMember(dest => dest.ExerciseName, opt => opt.MapFrom(src => src.Exercise.Name));
         }
     }
 }

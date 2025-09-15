@@ -8,6 +8,6 @@ namespace Api.Services.Interfaces
         Task<IEnumerable<ExerciseResponseDto>> GettAllExercisesAsync();
         Task<ExerciseResponseDto> GetExerciseById(int id);
         Task<ExerciseResponseDto> CreateExercise(ExerciseCreateDto exericseDto);
-        Task DeleteTaskAsync(int id);
+        Task DeleteExerciseAsync(int id);
     }
 }

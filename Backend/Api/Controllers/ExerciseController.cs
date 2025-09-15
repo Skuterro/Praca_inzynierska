@@ -38,8 +38,8 @@ namespace Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var createdBook = await _exerciseService.CreateExercise(exerciseDto);
-            return CreatedAtAction(nameof(GetExerciseById), new { id = createdBook.Id }, createdBook);
+            var createdExercise = await _exerciseService.CreateExercise(exerciseDto);
+            return CreatedAtAction(nameof(GetExerciseById), new { id = createdExercise.Id }, createdExercise);
         }
 
         [HttpDelete("{id}")]

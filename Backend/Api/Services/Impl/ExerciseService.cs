@@ -22,19 +22,19 @@ namespace Api.Services.Impl
 
         public async Task<IEnumerable<ExerciseResponseDto>> GettAllExercisesAsync()
         {
-            var exercises = await _context.Exercises.ToListAsync();
-            return _mapper.Map<List<ExerciseResponseDto>>(exercises);
+            var exerciseEntities = await _context.Exercises.ToListAsync();
+            return _mapper.Map<List<ExerciseResponseDto>>(exerciseEntities);
         }
 
         public async Task<ExerciseResponseDto> GetExerciseById(int id)
         {
-            var exercise = await _context.Exercises.FirstOrDefaultAsync(e => e.Id ==  id);
-            if (exercise == null) 
+            var exerciseEntity = await _context.Exercises.FirstOrDefaultAsync(e => e.Id ==  id);
+            if (exerciseEntity == null) 
             {
                 throw new NotFoundException("Exercise does not exist");
             }
 
-            return _mapper.Map<ExerciseResponseDto>(exercise);
+            return _mapper.Map<ExerciseResponseDto>(exerciseEntity);
         }
 
         public async Task<ExerciseResponseDto> CreateExercise(ExerciseCreateDto exericseDto)

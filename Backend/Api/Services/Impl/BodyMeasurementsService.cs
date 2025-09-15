@@ -52,13 +52,18 @@ namespace Api.Services.Impl
             return _mapper.Map<BodyMeasurementResponseDto>(bodyMeasEntity);
         }
 
-        public async Task DeleteBodyMeasurementAsync(int id)
+        public async Task DeleteBodyMeasurementAsync(string userId, int id)
         {
             var bodyMeasToDelete = await _context.BodyMeasurements.FirstOrDefaultAsync(bm => bm.Id == id);
         
             if(bodyMeasToDelete == null)
             {
                 throw new NotFoundException("Body measurement does not exist");
+            }
+
+            if(bodyMeasToDelete.UserId != userId)
+            {
+                throw new UnauthorizedException("");
             }
 
             _context.BodyMeasurements.Remove(bodyMeasToDelete);

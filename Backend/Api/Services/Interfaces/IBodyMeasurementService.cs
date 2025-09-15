@@ -8,6 +8,6 @@ namespace Api.Services.Interfaces
         Task<IEnumerable<BodyMeasurementResponseDto>> GetUserBodyMeasurementsAsync(string userId);
         Task<BodyMeasurementResponseDto> GetBodyMeasurementByIdAsync(int id);
         Task<BodyMeasurementResponseDto> CreateBodyMeasurementAsync(string userId, BodyMeasurementCreateDto bodyMeasurementCreateDto);
-        Task DeleteBodyMeasurementAsync(int id);
+        Task DeleteBodyMeasurementAsync(string userId, int id);
     }
 }

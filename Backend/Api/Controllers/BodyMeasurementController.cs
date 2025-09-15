@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers
 {
     [ApiController]
-    [Route("bodyMeasurements")]
+    [Route("body-measurements")]
     [Authorize]
     public class BodyMeasurementController : ControllerBase
     {
@@ -65,7 +65,13 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteBodyMeasurement([FromRoute] int id)
         {
-            await _bodyMeasurementService.DeleteBodyMeasurementAsync(id);
+            var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            await _bodyMeasurementService.DeleteBodyMeasurementAsync(userId, id);
             return NoContent();
         }
     }

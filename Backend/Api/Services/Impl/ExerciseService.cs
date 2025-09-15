@@ -45,7 +45,7 @@ namespace Api.Services.Impl
             return _mapper.Map<ExerciseResponseDto>(exerciseEntity);
         }
 
-        public async Task DeleteTaskAsync(int id)
+        public async Task DeleteExerciseAsync(int id)
         {
             var exercise = await _context.Exercises.FirstOrDefaultAsync(e => e.Id == id);
             if (exercise == null)

@@ -55,13 +55,13 @@ namespace Api.Migrations
                     b.Property<int>("ExerciseId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Reps")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Sets")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("WorkoutPlanDayId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("reps")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("sets")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -101,6 +101,9 @@ namespace Api.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ExerciseId")
                         .HasColumnType("INTEGER");
@@ -248,10 +251,8 @@ namespace Api.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("WeekDay")
-                        .IsRequired()
-                        .HasMaxLength(9)
-                        .HasColumnType("TEXT");
+                    b.Property<int>("WeekDay")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("WorkoutPlanId")
                         .HasColumnType("INTEGER");

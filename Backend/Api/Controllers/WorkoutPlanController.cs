@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers
 {
     [ApiController]
-    [Route("workoutPlans")]
+    [Route("workout-plans")]
     [Authorize]
     public class WorkoutPlanController : ControllerBase
     {

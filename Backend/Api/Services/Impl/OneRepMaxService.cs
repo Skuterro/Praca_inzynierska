@@ -65,7 +65,7 @@ namespace Api.Services.Impl
             oneRepMaxEntity.UserId = userId;
             oneRepMaxEntity.Date = DateTime.UtcNow;
 
-            _context.Add(oneRepMaxEntity);
+            _context.OneRepMaxes.Add(oneRepMaxEntity);
             await _context.SaveChangesAsync();
             return _mapper.Map<OneRepMaxResponseDto>(oneRepMaxEntity);
         }

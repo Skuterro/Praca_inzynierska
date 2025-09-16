@@ -8,6 +8,6 @@ namespace Api.Models.Requests.OneRepMaxRequests
         public int ExerciseId { get; set; }
 
         [Required(ErrorMessage = "Weight is required")]
-        public int weightKg { get; set; }
+        public decimal weightKg { get; set; }
     }
 }

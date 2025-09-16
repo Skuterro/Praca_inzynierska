@@ -8,10 +8,10 @@ namespace Api.Models.Entities
         public int Id { get; set; }
 
         [Required]
-        public int WeightKg { get; set; }
+        public decimal WeightKg { get; set; }
 
         [Required]
-        public int HeightCm { get; set; }
+        public decimal HeightCm { get; set; }
 
         [Required]
         public int BodyFatPercent { get; set; }

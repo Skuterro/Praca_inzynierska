@@ -6,6 +6,6 @@ namespace Api.Models.Responses.OneRepMaxResponses
     {
         public int Id { get; set; }
         public string ExerciseName { get; set; } = null!;
-        public string WeightKg { get; set; } = null!;
+        public decimal WeightKg { get; set; } 
     }
 }

@@ -20,7 +20,7 @@ namespace Api.Models.Entities
         public int Reps { get; set; }
 
         [Required]
-        public int WeightKg { get; set; }
+        public decimal WeightKg { get; set; }
 
     }
 }

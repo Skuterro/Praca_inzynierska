@@ -14,7 +14,7 @@ namespace Api.Models.Entities
         public Exercise Exercise { get; set; } = null!;
 
         [Required]
-        public int weightKg { get; set; }
+        public decimal WeightKg { get; set; }
 
         public DateTime Date {  get; set; }
     }

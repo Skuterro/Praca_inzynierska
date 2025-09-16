@@ -24,6 +24,7 @@ builder.Services.AddScoped<IWorkoutPlanService, WorkoutPlanService>();
 builder.Services.AddScoped<IExerciseService, ExerciseService>();
 builder.Services.AddScoped<IBodyMeasurementService, BodyMeasurementService>();
 builder.Services.AddScoped<IOneRepMaxService, OneRepMaxService>();
+builder.Services.AddScoped<IWorkoutSessionService, WorkoutSessionService>();
 
 builder.Services.AddAutoMapper(typeof(Program));
 

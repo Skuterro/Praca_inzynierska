@@ -8,5 +8,6 @@ namespace Api.Services.Interfaces
     {
         Task<WorkoutPlanResponseDto> CreateWorkoutPlanAsync(string userId, WorkoutPlanCreateDto workoutPlanCreateDto);
         Task<IEnumerable<WorkoutPlanResponseDto>> GetUserWorkoutPlansAsync(string userId);
+        Task<WorkoutPlanResponseDto> GetWorkoutPlanById(int id);
     }
 }

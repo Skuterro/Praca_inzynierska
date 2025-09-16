@@ -56,5 +56,16 @@ namespace Api.Services.Impl
 
             return _mapper.Map<List<WorkoutPlanResponseDto>>(workoutPlanEntities);
         }
+
+        public async Task<WorkoutPlanResponseDto> GetWorkoutPlanById(int id)
+        {
+            var workoutPlanEntity = await _context.WorkoutPlans.FirstOrDefaultAsync(wp => wp.Id == id);
+            if (workoutPlanEntity == null)
+            {
+                throw new NotFoundException("Workout plan does not exist");
+            }
+
+            return _mapper.Map<WorkoutPlanResponseDto>(workoutPlanEntity);
+        }
     }
 }

@@ -21,6 +21,26 @@ namespace Api.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<WorkoutPlanResponseDto>>> GetUserWorkoutPlans()
+        {
+            var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var workoutPlans = await _workoutPlanService.GetUserWorkoutPlansAsync(userId);
+            return Ok(workoutPlans);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<WorkoutPlanResponseDto>> GetWorkouPlanById(int id)
+        {
+            var workoutPlan = await _workoutPlanService.GetWorkoutPlanById(id);
+            return Ok(workoutPlan);
+        }
+
         [HttpPost]
         public async Task<ActionResult> CreateWorkoutPlan([FromBody] WorkoutPlanCreateDto workoutPlanCreateDto)
         {
@@ -35,21 +55,10 @@ namespace Api.Controllers
                 return Unauthorized();
             }
 
-            var workoutPlan = await _workoutPlanService.CreateWorkoutPlanAsync(userId, workoutPlanCreateDto);
-            return Ok(workoutPlan);
+            var createdWorkoutPlan = await _workoutPlanService.CreateWorkoutPlanAsync(userId, workoutPlanCreateDto);
+            return CreatedAtAction(nameof(GetWorkouPlanById), new { id = createdWorkoutPlan.Id }, createdWorkoutPlan);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<WorkoutPlanResponseDto>>> GetUserWorkoutPlans()
-        {
-            var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
-            {
-                return Unauthorized();
-            }
 
-            var workoutPlans = await _workoutPlanService.GetUserWorkoutPlansAsync(userId);
-            return Ok(workoutPlans);
-        }
     }
 }

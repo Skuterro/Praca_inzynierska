@@ -4,10 +4,12 @@ using Api.Models.Requests.BodyMeasurementRequests;
 using Api.Models.Requests.ExerciseRequests;
 using Api.Models.Requests.OneRepMaxRequests;
 using Api.Models.Requests.WorkoutPlanRequests;
+using Api.Models.Requests.WorkoutSessionRequests;
 using Api.Models.Responses.BodyMeasurementResponses;
 using Api.Models.Responses.ExerciseResponses;
 using Api.Models.Responses.OneRepMaxResponses;
 using Api.Models.Responses.WorkoutPlanResponses;
+using Api.Models.Responses.WorkoutSessionResponses;
 using AutoMapper;
 
 namespace Api.Mapper
@@ -65,6 +67,38 @@ namespace Api.Mapper
 
             CreateMap<OneRepMax, OneRepMaxResponseDto>()
                 .ForMember(dest => dest.ExerciseName, opt => opt.MapFrom(src => src.Exercise.Name));
+        }
+    }
+
+    public class WorkoutSessionMappingProfie : Profile
+    {
+        public WorkoutSessionMappingProfie()
+        {
+            CreateMap<WorkoutSessionCreateDto, WorkoutSession>()
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.SessionDate, opt => opt.Ignore());
+
+            CreateMap<WorkoutSessionSetCreateDto, WorkoutSessionSet>();
+
+            CreateMap<WorkoutSession, WorkoutSessionResponseDto>()
+                .ForMember(dest => dest.WorkoutPlanDayName, opt => opt.MapFrom(src => src.WorkoutPlanDay.Name))
+                .ForMember(dest => dest.Exercises, opt => opt.MapFrom(src =>
+                    src.SessionSets
+                        .GroupBy(s => new { s.ExerciseId, s.Exercise.Name })
+                        .Select(g => new WorkoutSessionExerciseDto
+                        {
+                            ExerciseId = g.Key.ExerciseId,
+                            ExerciseName = g.Key.Name,
+                            Sets = g.Select(s => new WorkoutSessionSetResponseDto
+                            {
+                                Id = s.Id,
+                                SetNumber = s.SetNumber,
+                                Reps = s.Reps,
+                                WeightKg = s.WeightKg
+                            }).ToList()
+                        })
+                        .ToList()
+                ));
         }
     }
 }

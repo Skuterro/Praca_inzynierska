@@ -45,7 +45,7 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteExercise([FromRoute] int id)
         {
-            await _exerciseService.DeleteTaskAsync(id);
+            await _exerciseService.DeleteExerciseAsync(id);
             return NoContent();
         }
     }

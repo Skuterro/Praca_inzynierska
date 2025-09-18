@@ -11,10 +11,10 @@
     {
         public int ExerciseId { get; set; }
         public string ExerciseName { get; set; } = null!;
-        public List<WorkoutSessionSetResponseDto> Sets { get; set; } = new();
+        public List<SessionSetResponseDto> Sets { get; set; } = new();
     }
 
-    public class WorkoutSessionSetResponseDto
+    public class SessionSetResponseDto
     {
         public int Id { get; set; }
         public int SetNumber { get; set; }

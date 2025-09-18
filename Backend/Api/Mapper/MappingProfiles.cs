@@ -78,8 +78,6 @@ namespace Api.Mapper
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
                 .ForMember(dest => dest.SessionDate, opt => opt.Ignore());
 
-            CreateMap<WorkoutSessionSetCreateDto, WorkoutSessionSet>();
-
             CreateMap<WorkoutSession, WorkoutSessionResponseDto>()
                 .ForMember(dest => dest.WorkoutPlanDayName, opt => opt.MapFrom(src => src.WorkoutPlanDay.Name))
                 .ForMember(dest => dest.Exercises, opt => opt.MapFrom(src =>
@@ -89,7 +87,7 @@ namespace Api.Mapper
                         {
                             ExerciseId = g.Key.ExerciseId,
                             ExerciseName = g.Key.Name,
-                            Sets = g.Select(s => new WorkoutSessionSetResponseDto
+                            Sets = g.Select(s => new SessionSetResponseDto
                             {
                                 Id = s.Id,
                                 SetNumber = s.SetNumber,
@@ -99,6 +97,10 @@ namespace Api.Mapper
                         })
                         .ToList()
                 ));
+
+            CreateMap<WorkoutSessionSetCreateDto, WorkoutSessionSet>();
+            CreateMap<WorkoutSessionSet, WorkoutSessionSetResponseDto>()
+                .ForMember(dest => dest.ExerciseName, opt => opt.MapFrom(src => src.Exercise.Name));
         }
     }
 }

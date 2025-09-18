@@ -12,9 +12,6 @@ namespace Api.Models.Requests.WorkoutSessionRequests
         public int ExerciseId { get; set; }
 
         [Required]
-        public int SetNumber { get; set; }
-
-        [Required]
         public int Reps { get; set; }
 
         [Required]

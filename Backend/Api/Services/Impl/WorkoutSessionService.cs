@@ -37,6 +37,7 @@ namespace Api.Services.Impl
             var workoutSession = await _context.WorkoutSessions
                 .Include(ws => ws.WorkoutPlanDay)    
                     .ThenInclude(wpd => wpd.DayExercises)
+                .Include(ws => ws.SessionSets)
                 .FirstOrDefaultAsync(ws => ws.Id == workoutSessionSetCreateDto.WorkoutSessionId);
 
             if (workoutSession == null)
@@ -44,13 +45,20 @@ namespace Api.Services.Impl
                throw new BadRequestException("Workout session does not exist");
             }
             
-            bool exerciseExists = workoutSession.WorkoutPlanDay.DayExercises.Any(de => de.ExerciseId == workoutSessionSetCreateDto.ExerciseId);
-            if (!exerciseExists)
+            var dayExercise = workoutSession.WorkoutPlanDay.DayExercises.FirstOrDefault(de => de.ExerciseId == workoutSessionSetCreateDto.ExerciseId);
+            if (dayExercise == null)
             {
-                throw new BadRequestException("Exercise is not in Today's plan");
+                throw new BadRequestException("This exercise does not belong to this workout");
+            }
+
+            var existingSetsCount = workoutSession.SessionSets.Count(s => s.ExerciseId == workoutSessionSetCreateDto.ExerciseId);
+            if (existingSetsCount >= dayExercise.Sets)
+            {
+                throw new BadRequestException($"You already logged all {dayExercise.Sets} sets for this exercise.");
             }
 
             var workoutSessionSetEntity = _mapper.Map<WorkoutSessionSet>(workoutSessionSetCreateDto);
+            workoutSessionSetEntity.SetNumber = existingSetsCount + 1;
 
             _context.WorkoutSessionSets.Add(workoutSessionSetEntity);
             await _context.SaveChangesAsync();

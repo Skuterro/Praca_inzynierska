@@ -29,12 +29,12 @@ namespace Api.Mapper
         {
             CreateMap<WorkoutPlanCreateDto, WorkoutPlan>()
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.UserId, opt => opt.Ignore())
-                .ForMember(dest => dest.WorkoutPlanDays, opt => opt.MapFrom(src => src.WorkoutDays));
+                .ForMember(dest => dest.UserId, opt => opt.Ignore());
+            //.ForMember(dest => dest.WorkoutPlanDays, opt => opt.MapFrom(src => src.WorkoutDays));
 
             CreateMap<WorkoutPlanDayCreateDto, WorkoutPlanDay>()
-                .ForMember(dest => dest.WeekDay, opt => opt.MapFrom(src => Enum.Parse<WeekDay>(src.WeekDay, true)))
-                .ForMember(dest => dest.DayExercises, opt => opt.MapFrom(src => src.DayExercises));
+                .ForMember(dest => dest.WeekDay, opt => opt.MapFrom(src => Enum.Parse<WeekDayEnum>(src.WeekDay, true)));
+                //.ForMember(dest => dest.DayExercises, opt => opt.MapFrom(src => src.DayExercises));
 
             CreateMap<DayExerciseCreateDto, DayExercise>();
 

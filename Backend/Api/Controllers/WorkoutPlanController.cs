@@ -42,7 +42,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateWorkoutPlan([FromBody] WorkoutPlanCreateDto workoutPlanCreateDto)
+        public async Task<ActionResult> CreateEmptyWorkoutPlan([FromBody] WorkoutPlanCreateDto workoutPlanCreateDto)
         {
             if (!ModelState.IsValid)
             {
@@ -55,10 +55,44 @@ namespace Api.Controllers
                 return Unauthorized();
             }
 
-            var createdWorkoutPlan = await _workoutPlanService.CreateWorkoutPlanAsync(userId, workoutPlanCreateDto);
+            var createdWorkoutPlan = await _workoutPlanService.CreateEmptyWorkoutPlanAsync(userId, workoutPlanCreateDto);
             return CreatedAtAction(nameof(GetWorkouPlanById), new { id = createdWorkoutPlan.Id }, createdWorkoutPlan);
         }
 
+        [HttpPost("{planId}/days")]
+        public async Task<IActionResult> AddDay([FromBody] WorkoutPlanDayCreateDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var day = await _workoutPlanService.AddDayToPlanAsync(userId, dto);
+            return Ok(day);
+        }
+
+        [HttpPost("days/{dayId}/exercises")]
+        public async Task<IActionResult> AddExerciseToDay([FromBody] DayExerciseCreateDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var res = await _workoutPlanService.AddExerciseToDayAsync(userId, dto);
+            return Ok(res);
+        }
     }
 }

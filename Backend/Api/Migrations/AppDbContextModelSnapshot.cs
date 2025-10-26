@@ -26,8 +26,8 @@ namespace Api.Migrations
                     b.Property<int>("BodyFatPercent")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("HeightCm")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal>("HeightCm")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("MeasurementDate")
                         .HasColumnType("TEXT");
@@ -36,8 +36,8 @@ namespace Api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("WeightKg")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal>("WeightKg")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -53,9 +53,6 @@ namespace Api.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("ExerciseId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Reps")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Sets")
@@ -112,8 +109,8 @@ namespace Api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("weightKg")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal>("WeightKg")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -304,8 +301,8 @@ namespace Api.Migrations
                     b.Property<int>("SetNumber")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("WeightKg")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal>("WeightKg")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("WorkoutSessionId")
                         .HasColumnType("INTEGER");

@@ -9,10 +9,10 @@ namespace Api.Models.Requests.WorkoutPlanRequests
         public string Name { get; set; } = null!;
 
         [Required]
-        [EnumDataType(typeof(WeekDay), ErrorMessage = "WeekDay must be a valid day of the week.")]
-        public string WeekDay { get; set; } = null!;
+        public int PlanId { get; set; }
 
         [Required]
-        public List<DayExerciseCreateDto> DayExercises { get; set; } = new List<DayExerciseCreateDto>();
+        [EnumDataType(typeof(WeekDayEnum), ErrorMessage = "WeekDay must be a valid day of the week.")]
+        public string WeekDay { get; set; } = null!;
     }
 }

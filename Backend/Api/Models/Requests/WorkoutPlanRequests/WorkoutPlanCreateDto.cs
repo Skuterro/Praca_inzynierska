@@ -6,7 +6,5 @@ namespace Api.Models.Requests.WorkoutPlanRequests
     {
         [Required(ErrorMessage = "Plan name is required")]
         public string Name { get; set; } = null!;
-
-        public List<WorkoutPlanDayCreateDto> WorkoutDays { get; set; } = new List<WorkoutPlanDayCreateDto>();
     }
 }

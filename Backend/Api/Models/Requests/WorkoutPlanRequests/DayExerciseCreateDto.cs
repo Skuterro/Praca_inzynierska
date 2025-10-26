@@ -8,9 +8,9 @@ namespace Api.Models.Requests.WorkoutPlanRequests
         public int ExerciseId { get; set; }
 
         [Required]
-        public int Sets { get; set; }
+        public int DayId { get; set; }
 
         [Required]
-        public int Reps { get; set; }
+        public int Sets { get; set; }
     }
 }

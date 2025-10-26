@@ -15,8 +15,5 @@ namespace Api.Models.Entities
 
         [Required]
         public int Sets {  get; set; }
-
-        [Required]
-        public int Reps { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Api.Models.Entities
 {
-    public enum WeekDay
+    public enum WeekDayEnum
     {
         Monday = 1,
         Tuesday = 2,
@@ -22,7 +22,7 @@ namespace Api.Models.Entities
         public string Name { get; set; } = null!;
 
         [Required]
-        public WeekDay WeekDay { get; set; }
+        public WeekDayEnum WeekDay { get; set; }
 
         public int WorkoutPlanId { get; set; }
         public WorkoutPlan WorkoutPlan { get; set; } = null!;

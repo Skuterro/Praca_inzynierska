@@ -1,0 +1,70 @@
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { NavigationContainer } from "@react-navigation/native";
+import HomeScreen from "../screens/HomeScreen";
+import Navbar from "../components/Navbar/Navbar";
+import ProfileScreen from "../screens/ProfileScreen";
+import SettingsScreen from "../screens/SettingsScreen";
+import WorkoutPlansScreen from "../screens/WorkoutPlansScreen";
+
+export type RootStackParamList = {
+	HomeMain: undefined;
+	WorkoutPlansMain: undefined;
+	ProfileMain: undefined;
+	SettingsMain: undefined;
+};
+
+export type RootTabParamList = {
+	Home: undefined;
+	WorkoutPlans: undefined;
+	Profile: undefined;
+	Settings: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<RootTabParamList>();
+
+function HomeStack() {
+	return (
+		<Stack.Navigator screenOptions={{ headerShown: false }}>
+			<Stack.Screen name="HomeMain" component={HomeScreen} />
+		</Stack.Navigator>
+	);
+}
+
+function WorkoutPlansStack() {
+	return (
+		<Stack.Navigator screenOptions={{ headerShown: false }}>
+			<Stack.Screen name="WorkoutPlansMain" component={WorkoutPlansScreen} />
+		</Stack.Navigator>
+	);
+}
+
+function ProfileStack() {
+	return (
+		<Stack.Navigator screenOptions={{ headerShown: false }}>
+			<Stack.Screen name="ProfileMain" component={ProfileScreen} />
+		</Stack.Navigator>
+	);
+}
+
+function SettingsStack() {
+	return (
+		<Stack.Navigator screenOptions={{ headerShown: false }}>
+			<Stack.Screen name="SettingsMain" component={SettingsScreen} />
+		</Stack.Navigator>
+	);
+}
+
+export default function AppNavigator() {
+	return (
+		<NavigationContainer>
+			<Tab.Navigator tabBar={(props) => <Navbar {...props} />} screenOptions={{ headerShown: false }}>
+				<Tab.Screen name="Home" component={HomeStack} />
+				<Tab.Screen name="WorkoutPlans" component={WorkoutPlansStack} />
+				<Tab.Screen name="Profile" component={ProfileStack} />
+				<Tab.Screen name="Settings" component={SettingsStack} />
+			</Tab.Navigator>
+		</NavigationContainer>
+	);
+}

@@ -6,10 +6,12 @@ import Navbar from "../components/Navbar/Navbar";
 import ProfileScreen from "../screens/ProfileScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import WorkoutPlansScreen from "../screens/WorkoutPlansScreen";
+import CreateWorkoutPlanScreen from "../screens/CreateWorkoutPlanScreen";
 
 export type RootStackParamList = {
 	HomeMain: undefined;
 	WorkoutPlansMain: undefined;
+	CreateWorkoutPlan: undefined;
 	ProfileMain: undefined;
 	SettingsMain: undefined;
 };
@@ -36,6 +38,7 @@ function WorkoutPlansStack() {
 	return (
 		<Stack.Navigator screenOptions={{ headerShown: false }}>
 			<Stack.Screen name="WorkoutPlansMain" component={WorkoutPlansScreen} />
+			<Stack.Screen name="CreateWorkoutPlan" component={CreateWorkoutPlanScreen} />
 		</Stack.Navigator>
 	);
 }

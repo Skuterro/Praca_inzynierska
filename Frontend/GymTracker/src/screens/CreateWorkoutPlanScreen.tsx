@@ -1,7 +1,9 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
+import { createWorkoutPlan } from "../api/WorkoutPlanService";
 import { Colors } from "../constants/Colors";
+import { useState } from "react";
 import Header from "../components/Header/Header";
 
 type CreateWorkoutPlanScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "CreateWorkoutPlan">;
@@ -11,13 +13,36 @@ type CreateWorkoutPlanScreenProps = {
 };
 
 export default function CreateWorkoutPlanScreen({ navigation }: CreateWorkoutPlanScreenProps) {
+	const [planName, setPlanName] = useState("");
+	const [loading, setLoading] = useState(false);
+
+	const handleCreatePlan = async () => {
+		if (!planName.trim()) {
+			Alert.alert("Validation error", "Plan name is required");
+			return;
+		}
+		try {
+			await createWorkoutPlan(planName);
+			Alert.alert("Success", "Workout plan created successfully!");
+			navigation.goBack();
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	return (
 		<View style={styles.container}>
 			<Header title="Create plan" onButtonClick={() => navigation.goBack()} />
 			<View style={styles.contentWrapper}>
-				<TextInput style={styles.input} placeholder="Plan title" placeholderTextColor="#888" />
-				<TouchableOpacity style={styles.button} onPress={() => alert("Plan created!")}>
-					<Text style={styles.buttonText}>Save</Text>
+				<TextInput
+					style={styles.input}
+					placeholder="Plan name"
+					placeholderTextColor="#888"
+					value={planName}
+					onChangeText={setPlanName}
+				/>
+				<TouchableOpacity style={styles.button} onPress={handleCreatePlan}>
+					<Text style={styles.buttonText}>{loading ? "Creating..." : "Create"}</Text>
 				</TouchableOpacity>
 			</View>
 		</View>

@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../navigation/AppNavigator";
-import { createWorkoutPlan } from "../api/WorkoutPlanService";
-import { Colors } from "../constants/Colors";
+import { RootStackParamList } from "../../navigation/AppNavigator";
+import { createWorkoutPlan } from "../../api/Services/WorkoutPlanService";
+import { Colors } from "../../constants/Colors";
 import { useState } from "react";
-import Header from "../components/Header/Header";
+import Header from "../../components/Header/Header";
 
 type CreateWorkoutPlanScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "CreateWorkoutPlan">;
 

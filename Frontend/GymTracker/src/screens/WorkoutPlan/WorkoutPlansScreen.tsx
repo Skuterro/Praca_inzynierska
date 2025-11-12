@@ -1,11 +1,11 @@
 import { View, Text, Button, TouchableOpacity, FlatList, StyleSheet } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../navigation/AppNavigator";
-import { Colors } from "../constants/Colors";
-import UserProfileHeader from "../components/Header/UserProfileHeader";
-import { PlanItem } from "../components/WorkoutPlan/PlanItem";
-import { WorkoutPlan } from "../models/WorkoutPlan";
-import ListHeader from "../components/ListHeader";
+import { RootStackParamList } from "../../navigation/AppNavigator";
+import { Colors } from "../../constants/Colors";
+import { PlanItem } from "../../components/WorkoutPlan/PlanItem";
+import { WorkoutPlan } from "../../models/WorkoutPlan";
+import UserProfileHeader from "../../components/Header/UserProfileHeader";
+import ListHeader from "../../components/ListHeader";
 
 type WorkoutPlansScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "WorkoutPlansMain">;
 

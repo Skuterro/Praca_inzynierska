@@ -1,12 +1,15 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
+import { useAuth } from "../context/AuthContext";
 import HomeScreen from "../screens/HomeScreen";
 import Navbar from "../components/Navbar/Navbar";
 import ProfileScreen from "../screens/ProfileScreen";
 import SettingsScreen from "../screens/SettingsScreen";
-import WorkoutPlansScreen from "../screens/WorkoutPlansScreen";
-import CreateWorkoutPlanScreen from "../screens/CreateWorkoutPlanScreen";
+import WorkoutPlansScreen from "../screens/WorkoutPlan/WorkoutPlansScreen";
+import CreateWorkoutPlanScreen from "../screens/WorkoutPlan/CreateWorkoutPlanScreen";
+import LoginScreen from "../screens/Auth/LoginScreen";
+import RegisterScreen from "../screens/Auth/RegisterScreen";
 
 export type RootStackParamList = {
 	HomeMain: undefined;
@@ -14,6 +17,8 @@ export type RootStackParamList = {
 	CreateWorkoutPlan: undefined;
 	ProfileMain: undefined;
 	SettingsMain: undefined;
+	Login: undefined;
+	Register: undefined;
 };
 
 export type RootTabParamList = {
@@ -59,15 +64,30 @@ function SettingsStack() {
 	);
 }
 
+function AuthStack() {
+	return (
+		<Stack.Navigator screenOptions={{ headerShown: false }}>
+			<Stack.Screen name="Login" component={LoginScreen} />
+			<Stack.Screen name="Register" component={RegisterScreen} />
+		</Stack.Navigator>
+	);
+}
+
 export default function AppNavigator() {
+	const { user } = useAuth();
+
 	return (
 		<NavigationContainer>
-			<Tab.Navigator tabBar={(props) => <Navbar {...props} />} screenOptions={{ headerShown: false }}>
-				<Tab.Screen name="Home" component={HomeStack} />
-				<Tab.Screen name="WorkoutPlans" component={WorkoutPlansStack} />
-				<Tab.Screen name="Profile" component={ProfileStack} />
-				<Tab.Screen name="Settings" component={SettingsStack} />
-			</Tab.Navigator>
+			{user ? (
+				<Tab.Navigator tabBar={(props) => <Navbar {...props} />} screenOptions={{ headerShown: false }}>
+					<Tab.Screen name="Home" component={HomeStack} />
+					<Tab.Screen name="WorkoutPlans" component={WorkoutPlansStack} />
+					<Tab.Screen name="Profile" component={ProfileStack} />
+					<Tab.Screen name="Settings" component={SettingsStack} />
+				</Tab.Navigator>
+			) : (
+				<AuthStack />
+			)}
 		</NavigationContainer>
 	);
 }

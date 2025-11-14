@@ -15,10 +15,11 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
 	const { register } = useAuth();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [username, setUsername] = useState("");
 
 	const handleRegister = async () => {
 		try {
-			await register(email, password);
+			await register(username, email, password);
 		} catch (err) {
 			alert("Registration failed");
 		}
@@ -26,6 +27,13 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
 
 	return (
 		<View style={styles.container}>
+			<TextInput
+				placeholder="Username"
+				style={styles.input}
+				value={username}
+				onChangeText={setUsername}
+				placeholderTextColor="#888"
+			/>
 			<TextInput
 				placeholder="Email"
 				style={styles.input}

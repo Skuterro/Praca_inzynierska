@@ -1,10 +1,5 @@
+import { AuthResponse } from "../../models/AuthResponse";
 import axiosClient from "../ApiClient";
-
-interface AuthResponse {
-	id: string;
-	email: string;
-	JWT: string;
-}
 
 const AuthService = {
 	login: async (Email: string, Password: string): Promise<AuthResponse> => {
@@ -12,8 +7,8 @@ const AuthService = {
 		return data;
 	},
 
-	register: async (Email: string, Password: string): Promise<AuthResponse> => {
-		const { data } = await axiosClient.post("auth/register", { Email, Password });
+	register: async (UserName: string, Email: string, Password: string): Promise<AuthResponse> => {
+		const { data } = await axiosClient.post("/auth/register", { UserName, Email, Password });
 		return data;
 	},
 };

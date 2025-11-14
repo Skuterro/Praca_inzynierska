@@ -1,16 +1,18 @@
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { Colors } from "../../constants/Colors";
+import { useAuth } from "../../context/AuthContext";
 
 const DUMMY_USER_DATA = {
-	nickname: "Kacperek",
 	profilePicUrl: "https://picsum.photos/id/64/200/200",
 };
 
 export default function UserProfileHeader() {
+	const { user } = useAuth();
+
 	return (
 		<View style={styles.headerContainer}>
-			<Text style={styles.nicknameText}>{DUMMY_USER_DATA.nickname}</Text>
+			<Text style={styles.nicknameText}>{user?.name}</Text>
 			<Image source={{ uri: DUMMY_USER_DATA.profilePicUrl }} style={styles.profileImage} />
 		</View>
 	);

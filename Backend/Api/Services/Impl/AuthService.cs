@@ -33,7 +33,7 @@ namespace Api.Services.Impl
 
             var user = new User
             {
-                UserName = registerDto.Email,
+                UserName = registerDto.UserName,
                 Email = registerDto.Email,
             };
 

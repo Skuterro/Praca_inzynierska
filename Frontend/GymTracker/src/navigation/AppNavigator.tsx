@@ -1,15 +1,13 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
+import { WorkoutPlansStack } from "./BottomTabs/WorkoutPlanStack";
 import { useAuth } from "../context/AuthContext";
-import HomeScreen from "../screens/HomeScreen";
+import { HomeStack } from "./BottomTabs/HomeStack";
+import { AuthStack } from "./BottomTabs/AuthStack";
 import Navbar from "../components/Navbar/Navbar";
 import ProfileScreen from "../screens/ProfileScreen";
 import SettingsScreen from "../screens/SettingsScreen";
-import WorkoutPlansScreen from "../screens/WorkoutPlan/WorkoutPlansScreen";
-import CreateWorkoutPlanScreen from "../screens/WorkoutPlan/CreateWorkoutPlanScreen";
-import LoginScreen from "../screens/Auth/LoginScreen";
-import RegisterScreen from "../screens/Auth/RegisterScreen";
 
 export type RootStackParamList = {
 	HomeMain: undefined;
@@ -28,25 +26,8 @@ export type RootTabParamList = {
 	Settings: undefined;
 };
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+export const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<RootTabParamList>();
-
-function HomeStack() {
-	return (
-		<Stack.Navigator screenOptions={{ headerShown: false }}>
-			<Stack.Screen name="HomeMain" component={HomeScreen} />
-		</Stack.Navigator>
-	);
-}
-
-function WorkoutPlansStack() {
-	return (
-		<Stack.Navigator screenOptions={{ headerShown: false }}>
-			<Stack.Screen name="WorkoutPlansMain" component={WorkoutPlansScreen} />
-			<Stack.Screen name="CreateWorkoutPlan" component={CreateWorkoutPlanScreen} />
-		</Stack.Navigator>
-	);
-}
 
 function ProfileStack() {
 	return (
@@ -60,15 +41,6 @@ function SettingsStack() {
 	return (
 		<Stack.Navigator screenOptions={{ headerShown: false }}>
 			<Stack.Screen name="SettingsMain" component={SettingsScreen} />
-		</Stack.Navigator>
-	);
-}
-
-function AuthStack() {
-	return (
-		<Stack.Navigator screenOptions={{ headerShown: false }}>
-			<Stack.Screen name="Login" component={LoginScreen} />
-			<Stack.Screen name="Register" component={RegisterScreen} />
 		</Stack.Navigator>
 	);
 }

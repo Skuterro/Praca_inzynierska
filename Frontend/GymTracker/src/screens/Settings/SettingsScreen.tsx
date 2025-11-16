@@ -1,7 +1,7 @@
 import { View, Text, Button } from "react-native";
 import { StyleSheet } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../navigation/AppNavigator";
+import { RootStackParamList } from "../../navigation/AppNavigator";
 
 type SettingsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "SettingsMain">;
 

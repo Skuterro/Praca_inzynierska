@@ -1,5 +1,5 @@
 import { Stack } from "../AppNavigator";
-import HomeScreen from "../../screens/HomeScreen";
+import HomeScreen from "../../screens/Home/HomeScreen";
 
 export function HomeStack() {
 	return (

@@ -21,10 +21,11 @@ export default function CreateWorkoutPlanScreen({ navigation }: CreateWorkoutPla
 			Alert.alert("Validation error", "Plan name is required");
 			return;
 		}
+
 		try {
-			await WorkoutPlanService.createWorkoutPlan(planName);
-			Alert.alert("Success", "Workout plan created successfully!");
-			navigation.goBack();
+			setLoading(true);
+			const data = await WorkoutPlanService.createWorkoutPlan(planName);
+			navigation.navigate("WorkoutPlanDetails", { planId: Number(data.id), planName: data.name });
 		} finally {
 			setLoading(false);
 		}

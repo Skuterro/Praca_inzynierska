@@ -1,14 +1,14 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../navigation/AppNavigator";
+import { RootStackParamList } from "../../navigation/AppNavigator";
 import { useState } from "react";
-import { Colors } from "../constants/Colors";
-import { PlanItem } from "../components/WorkoutPlan/PlanItem";
-import UserProfileHeader from "../components/Header/UserProfileHeader";
-import MonthDropdown from "../components/Home/MonthDropdown";
-import DayPicker from "../components/Home/DayPicker";
-import { WorkoutPlan } from "../models/WorkoutPlan";
-import ListHeader from "../components/ListHeader";
+import { Colors } from "../../constants/Colors";
+import { PlanItem } from "../../components/WorkoutPlan/PlanItem";
+import UserProfileHeader from "../../components/Header/UserProfileHeader";
+import MonthDropdown from "../../components/Home/MonthDropdown";
+import DayPicker from "../../components/Home/DayPicker";
+import { WorkoutPlan } from "../../models/WorkoutPlan";
+import ListHeader from "../../components/ListHeader";
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "HomeMain">;
 
@@ -18,16 +18,16 @@ type HomeScreenProps = {
 
 const WORKOUT_PLANS: WorkoutPlan[] = [
 	// Użycie interfejsu WorkoutPlan
-	{ id: "1", title: "Plan Cardio", exercises: 15, isActive: true },
-	{ id: "2", title: "Plan #2", exercises: 15, isActive: false },
-	{ id: "3", title: "Plan #3", exercises: 15, isActive: false },
-	{ id: "4", title: "Plan #4", exercises: 15, isActive: false },
-	{ id: "5", title: "Plan #5", exercises: 15, isActive: false },
-	{ id: "6", title: "Plan #6", exercises: 15, isActive: false },
-	{ id: "7", title: "Plan #7", exercises: 15, isActive: false },
-	{ id: "8", title: "Plan #8", exercises: 15, isActive: false },
-	{ id: "9", title: "Plan #9", exercises: 15, isActive: false },
-	{ id: "10", title: "Plan #10", exercises: 15, isActive: false },
+	{ id: "1", name: "Plan Cardio", isActive: true },
+	{ id: "2", name: "Plan #2", isActive: false },
+	{ id: "3", name: "Plan #3", isActive: false },
+	{ id: "4", name: "Plan #4", isActive: false },
+	{ id: "5", name: "Plan #5", isActive: false },
+	{ id: "6", name: "Plan #6", isActive: false },
+	{ id: "7", name: "Plan #7", isActive: false },
+	{ id: "8", name: "Plan #8", isActive: false },
+	{ id: "9", name: "Plan #9", isActive: false },
+	{ id: "10", name: "Plan #10", isActive: false },
 ];
 
 export default function HomeScreen({ navigation }: HomeScreenProps) {

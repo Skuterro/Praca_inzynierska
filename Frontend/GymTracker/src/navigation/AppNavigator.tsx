@@ -6,13 +6,15 @@ import { useAuth } from "../context/AuthContext";
 import { HomeStack } from "./BottomTabs/HomeStack";
 import { AuthStack } from "./BottomTabs/AuthStack";
 import Navbar from "../components/Navbar/Navbar";
-import ProfileScreen from "../screens/ProfileScreen";
-import SettingsScreen from "../screens/SettingsScreen";
+import ProfileScreen from "../screens/UserProfile/ProfileScreen";
+import SettingsScreen from "../screens/Settings/SettingsScreen";
 
 export type RootStackParamList = {
 	HomeMain: undefined;
 	WorkoutPlansMain: undefined;
+	WorkoutPlanDetails: { planId: number; planName: string };
 	CreateWorkoutPlan: undefined;
+	CreateWorkoutPlanDay: { planId: number; existingDays: string[] };
 	ProfileMain: undefined;
 	SettingsMain: undefined;
 	Login: undefined;

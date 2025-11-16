@@ -1,11 +1,15 @@
-import { View, Text, Button, TouchableOpacity, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, ActivityIndicator } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/AppNavigator";
 import { Colors } from "../../constants/Colors";
 import { PlanItem } from "../../components/WorkoutPlan/PlanItem";
 import { WorkoutPlan } from "../../models/WorkoutPlan";
+import { useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import React from "react";
 import UserProfileHeader from "../../components/Header/UserProfileHeader";
 import ListHeader from "../../components/ListHeader";
+import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
 
 type WorkoutPlansScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "WorkoutPlansMain">;
 
@@ -13,21 +17,34 @@ type WorkoutPlansScreenProps = {
 	navigation: WorkoutPlansScreenNavigationProp;
 };
 
-const WORKOUT_PLANS: WorkoutPlan[] = [
-	// Użycie interfejsu WorkoutPlan
-	{ id: "1", title: "Plan Cardio", exercises: 15, isActive: true },
-	{ id: "2", title: "Plan #2", exercises: 15, isActive: false },
-	{ id: "3", title: "Plan #3", exercises: 15, isActive: false },
-	{ id: "4", title: "Plan #4", exercises: 15, isActive: false },
-	{ id: "5", title: "Plan #5", exercises: 15, isActive: false },
-	{ id: "6", title: "Plan #6", exercises: 15, isActive: false },
-	{ id: "7", title: "Plan #7", exercises: 15, isActive: false },
-	{ id: "8", title: "Plan #8", exercises: 15, isActive: false },
-	{ id: "9", title: "Plan #9", exercises: 15, isActive: false },
-	{ id: "10", title: "Plan #10", exercises: 15, isActive: false },
-];
-
 export default function WorkoutPlansScreen({ navigation }: WorkoutPlansScreenProps) {
+	const [plans, setPlans] = useState<WorkoutPlan[]>([]);
+	const [loading, setLoading] = useState(true);
+
+	const fetchPlans = async () => {
+		try {
+			setLoading(true);
+			const data = await WorkoutPlanService.getUserWorkoutPlans();
+			setPlans(data);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	useFocusEffect(
+		React.useCallback(() => {
+			fetchPlans();
+		}, [])
+	);
+
+	if (loading) {
+		return (
+			<View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
+				<ActivityIndicator size="large" color={Colors.secondary} />
+			</View>
+		);
+	}
+
 	return (
 		<View style={styles.container}>
 			<UserProfileHeader />
@@ -38,10 +55,25 @@ export default function WorkoutPlansScreen({ navigation }: WorkoutPlansScreenPro
 					onButtonClick={() => navigation.navigate("CreateWorkoutPlan")}
 				/>
 				<FlatList
-					data={WORKOUT_PLANS}
+					data={plans}
 					keyExtractor={(item) => item.id}
-					renderItem={({ item }) => <PlanItem plan={item} onPress={() => undefined} />}
+					renderItem={({ item }) => (
+						<PlanItem
+							plan={item}
+							onPress={() =>
+								navigation.navigate("WorkoutPlanDetails", {
+									planId: Number(item.id),
+									planName: item.name,
+								})
+							}
+						/>
+					)}
 					showsVerticalScrollIndicator={false}
+					ListEmptyComponent={
+						<View style={{ alignItems: "center", marginTop: 50 }}>
+							<Text>There is nothing to show here</Text>
+						</View>
+					}
 				/>
 			</View>
 		</View>

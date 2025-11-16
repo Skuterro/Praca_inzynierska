@@ -38,17 +38,17 @@ namespace Api.Controllers
 
         [Authorize]
         [HttpPost("refresh")]
-        public async Task<ActionResult<AuthResponseDto>> Refresh([FromBody] string refreshToken)
+        public async Task<ActionResult<AuthResponseDto>> Refresh([FromBody] RefreshTokenRequestDto refreshTokenRequest)
         {
-            var result = await _authService.RefreshAsync(refreshToken);
+            var result = await _authService.RefreshAsync(refreshTokenRequest.RefreshToken);
             return Ok(result);
         }
 
         [Authorize]
         [HttpPost("logout")]
-        public async Task<ActionResult> Logout([FromBody] string refreshToken)
+        public async Task<ActionResult> Logout([FromBody] LogoutRequestDto logoutRequest)
         {
-            await _authService.LogoutAsync(refreshToken);
+            await _authService.LogoutAsync(logoutRequest.RefreshToken);
             return Ok(new { message = "Logged out from this session" });
         }
     }

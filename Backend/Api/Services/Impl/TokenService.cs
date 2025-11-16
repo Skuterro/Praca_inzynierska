@@ -21,6 +21,7 @@ namespace Api.Services.Impl
         {
             var claims = new[]
             {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Name, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email)
             };

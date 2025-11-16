@@ -11,7 +11,7 @@ interface PlanItemProps {
 export const PlanItem = ({ plan, onPress }: PlanItemProps) => (
 	<TouchableOpacity style={styles.planItem} onPress={onPress}>
 		<View style={styles.leftContent}>
-			<Text style={styles.planTitle}>{plan.title}</Text>
+			<Text style={styles.planName}>{plan.name}</Text>
 			{plan.isActive && <Text style={styles.activeLabel}>Active</Text>}
 		</View>
 		<IonIcon name="chevron-forward" size={24} color="white" />
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		gap: 10,
 	},
-	planTitle: {
+	planName: {
 		fontSize: 18,
 		fontWeight: "600",
 		color: "white",

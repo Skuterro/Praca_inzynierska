@@ -1,6 +1,5 @@
 export interface WorkoutPlan {
 	id: string;
-	title: string;
-	exercises: number;
+	name: string;
 	isActive: boolean;
 }

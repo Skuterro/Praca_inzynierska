@@ -27,7 +27,7 @@ export default function MonthDropdown({ monthIndex, setMonthIndex }: MonthDropdo
 	return (
 		<View style={styles.contentWrapper}>
 			<TouchableOpacity onPress={toggleDropdown}>
-				<Text style={styles.monthText}>{monthName} ▼</Text>
+				<Text style={styles.monthText}>{monthName}</Text>
 			</TouchableOpacity>
 			<Animated.View style={[styles.dropdown, { height: dropdownAnim }]}>
 				{Object.values(Months).map((name, index) => (

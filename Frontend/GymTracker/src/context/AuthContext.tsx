@@ -24,15 +24,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState(true);
 
-	useEffect(() => {
-		const loadUser = async () => {
-			const storedUser = await AsyncStorage.getItem("user");
-			if (storedUser) setUser(JSON.parse(storedUser));
-			setLoading(false);
-		};
-		loadUser();
-	}, []);
-
 	const decodeAndSetUser = async (token: string, refreshToken: string) => {
 		const payload = jwtDecode<JwtPayload>(token);
 
@@ -42,9 +33,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 			token,
 			refreshToken,
 		};
-		console.log(user);
+
 		setUser(user);
 		await AsyncStorage.setItem("user", JSON.stringify(user));
+	};
+
+	const logout = async () => {
+		if (user?.refreshToken) {
+			try {
+				await AuthService.logout(user.refreshToken);
+			} catch (err) {
+			} finally {
+			}
+		}
+		setUser(null);
+		await AsyncStorage.removeItem("user");
 	};
 
 	const login = async (email: string, password: string) => {
@@ -57,10 +60,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 		await decodeAndSetUser(response.token, response.refreshToken);
 	};
 
-	const logout = async () => {
-		setUser(null);
-		await AsyncStorage.removeItem("user");
-	};
+	useEffect(() => {
+		const init = async () => {
+			const stored = await AsyncStorage.getItem("user");
+
+			if (!stored) {
+				setLoading(false);
+				return;
+			}
+
+			const parsed: User = JSON.parse(stored);
+
+			try {
+				const refreshed = await AuthService.refreshToken(parsed.refreshToken);
+
+				await decodeAndSetUser(refreshed.token, refreshed.refreshToken ?? parsed.refreshToken);
+			} catch {
+				await logout();
+			}
+
+			setLoading(false);
+		};
+
+		init();
+	}, []);
 
 	if (loading) return null;
 

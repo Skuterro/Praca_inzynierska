@@ -1,3 +1,4 @@
+import { DayExercise } from "../../models/DayExercise";
 import { WorkoutPlan } from "../../models/WorkoutPlan";
 import { WorkoutPlanDay } from "../../models/WorkoutPlanDay";
 import axiosClient from "../ApiClient";
@@ -24,7 +25,12 @@ const WorkoutPlanService = {
 	},
 
 	getWorkoutPlanDays: async (planId: number): Promise<WorkoutPlanDay[]> => {
-		const { data } = await axiosClient.get(`/workout-plans/days/${planId}`);
+		const { data } = await axiosClient.get(`/workout-plans/${planId}/days`);
+		return data;
+	},
+
+	getWorkoutPlanDayExercises: async (dayId: number): Promise<DayExercise[]> => {
+		const { data } = await axiosClient.get(`/workout-plans/days/${dayId}/exercises`);
 		return data;
 	},
 };

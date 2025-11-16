@@ -13,6 +13,7 @@ export type RootStackParamList = {
 	HomeMain: undefined;
 	WorkoutPlansMain: undefined;
 	WorkoutPlanDetails: { planId: number; planName: string };
+	WorkoutPlanDayDetails: { dayId: number; dayName: string; weekDay: string };
 	CreateWorkoutPlan: undefined;
 	CreateWorkoutPlanDay: { planId: number; existingDays: string[] };
 	ProfileMain: undefined;

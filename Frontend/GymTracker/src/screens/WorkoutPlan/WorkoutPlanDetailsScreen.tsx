@@ -60,7 +60,18 @@ export default function WorkoutPlanDetailsScreen({ navigation, route }: WorkoutP
 				<FlatList
 					data={workoutPlanDays}
 					keyExtractor={(item) => item.id}
-					renderItem={({ item }) => <WorkoutDayItem workoutDay={item} onPress={() => undefined} />}
+					renderItem={({ item }) => (
+						<WorkoutDayItem
+							workoutDay={item}
+							onPress={() =>
+								navigation.navigate("WorkoutPlanDayDetails", {
+									dayId: Number(item.id),
+									dayName: item.name,
+									weekDay: item.weekDay,
+								})
+							}
+						/>
+					)}
 					showsVerticalScrollIndicator={false}
 					ListEmptyComponent={
 						<View style={{ alignItems: "center", marginTop: 50 }}>

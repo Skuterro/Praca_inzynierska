@@ -69,6 +69,22 @@ namespace Api.Services.Impl
             return _mapper.Map<WorkoutPlanDayResponseDto>(workoutDayEntity);
         }
 
+        public async Task<IEnumerable<WorkoutPlanDayResponseDto>> GetWorkoutPlanDaysAsync(string userId, int planId)
+        {
+            var workoutPlanExists = await _context.WorkoutPlans.AnyAsync(wp => wp.Id == planId && wp.UserId == userId);
+            if (!workoutPlanExists)
+            {
+                throw new BadRequestException("Workout plan does not exist or does not belong to provided user.");
+            }
+
+            var workoutPlanDaysEntities = await _context.WorkoutPlanDays
+                .Where(wpd => wpd.WorkoutPlanId == planId)
+                .OrderBy(wpd => wpd.WeekDay)
+                .ToListAsync();
+
+            return _mapper.Map<List<WorkoutPlanDayResponseDto>>(workoutPlanDaysEntities);
+        }
+
         public async Task<DayExerciseResponseDto> AddExerciseToDayAsync(string userId, DayExerciseCreateDto dto)
         {
             var day = await _context.WorkoutPlanDays
@@ -101,7 +117,6 @@ namespace Api.Services.Impl
 
             return _mapper.Map<DayExerciseResponseDto>(dayExerciseEntity);
         }
-
 
         public async Task<IEnumerable<WorkoutPlanResponseDto>> GetUserWorkoutPlansAsync(string userId)
         {

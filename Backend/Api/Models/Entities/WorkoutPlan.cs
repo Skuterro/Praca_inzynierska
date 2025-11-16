@@ -17,5 +17,7 @@ namespace Api.Models.Entities
         public ICollection<WorkoutPlanDay> WorkoutPlanDays { get; set; } = new List<WorkoutPlanDay>();
 
         public DateTime CreatedAt { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }

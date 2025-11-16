@@ -12,7 +12,7 @@
         public int Id { get; set; }
         public string Name { get; set; } = null!;
         public string WeekDay { get; set; } = null!;
-        public List<DayExerciseResponseDto> DayExercises { get; set; } = new List<DayExerciseResponseDto>();
+        //public List<DayExerciseResponseDto> DayExercises { get; set; } = new List<DayExerciseResponseDto>();
     }
     public class DayExerciseResponseDto
     {

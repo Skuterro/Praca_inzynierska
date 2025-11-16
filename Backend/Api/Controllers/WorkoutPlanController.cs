@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+﻿using Api.Extensions;
 using Api.Models.Requests.WorkoutPlanRequests;
 using Api.Models.Responses.WorkoutPlanResponses;
 using Api.Services.Interfaces;
@@ -13,18 +13,16 @@ namespace Api.Controllers
     public class WorkoutPlanController : ControllerBase
     {
         private readonly IWorkoutPlanService _workoutPlanService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public WorkoutPlanController(IWorkoutPlanService workoutPlanService, IHttpContextAccessor httpContextAccessor)
+        public WorkoutPlanController(IWorkoutPlanService workoutPlanService)
         {
             _workoutPlanService = workoutPlanService;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<WorkoutPlanResponseDto>>> GetUserWorkoutPlans()
         {
-            var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = HttpContext.GetUserId();
             if (userId == null)
             {
                 return Unauthorized();
@@ -49,7 +47,7 @@ namespace Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = HttpContext.GetUserId();
             if (userId == null)
             {
                 return Unauthorized();
@@ -59,15 +57,15 @@ namespace Api.Controllers
             return CreatedAtAction(nameof(GetWorkouPlanById), new { id = createdWorkoutPlan.Id }, createdWorkoutPlan);
         }
 
-        [HttpPost("{planId}/days")]
-        public async Task<IActionResult> AddDay([FromBody] WorkoutPlanDayCreateDto dto)
+        [HttpPost("addDay")]
+        public async Task<ActionResult> AddDay([FromBody] WorkoutPlanDayCreateDto dto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = HttpContext.GetUserId();
             if (userId == null)
             {
                 return Unauthorized();
@@ -77,15 +75,28 @@ namespace Api.Controllers
             return Ok(day);
         }
 
-        [HttpPost("days/{dayId}/exercises")]
-        public async Task<IActionResult> AddExerciseToDay([FromBody] DayExerciseCreateDto dto)
+        [HttpGet("days/{planId}")]
+        public async Task<ActionResult<List<WorkoutPlanDayResponseDto>>> GetWorkoutPlanDays([FromRoute] int planId)
+        {
+            var userId = HttpContext.GetUserId();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var days = await _workoutPlanService.GetWorkoutPlanDaysAsync(userId, planId);
+            return Ok(days);
+        }
+
+        [HttpPost("days/addExercise")]
+        public async Task<ActionResult> AddExerciseToDay([FromBody] DayExerciseCreateDto dto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = HttpContext.GetUserId();
             if (userId == null)
             {
                 return Unauthorized();

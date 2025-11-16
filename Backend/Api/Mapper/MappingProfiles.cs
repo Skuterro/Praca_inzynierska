@@ -41,7 +41,8 @@ namespace Api.Mapper
             CreateMap<WorkoutPlan, WorkoutPlanResponseDto>();
             CreateMap<WorkoutPlanDay, WorkoutPlanDayResponseDto>();
             CreateMap<DayExercise, DayExerciseResponseDto>()
-                .ForMember(dest => dest.ExerciseName, opt =>opt.MapFrom(src => src.Exercise.Name));
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ExerciseId))
+                .ForMember(dest => dest.Name, opt =>opt.MapFrom(src => src.Exercise.Name));
         }
     }
 

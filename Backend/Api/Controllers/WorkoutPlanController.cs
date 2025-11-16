@@ -75,7 +75,7 @@ namespace Api.Controllers
             return Ok(day);
         }
 
-        [HttpGet("days/{planId}")]
+        [HttpGet("{planId}/days")]
         public async Task<ActionResult<List<WorkoutPlanDayResponseDto>>> GetWorkoutPlanDays([FromRoute] int planId)
         {
             var userId = HttpContext.GetUserId();
@@ -104,6 +104,19 @@ namespace Api.Controllers
 
             var res = await _workoutPlanService.AddExerciseToDayAsync(userId, dto);
             return Ok(res);
+        }
+
+        [HttpGet("days/{dayId}/exercises")]
+        public async Task<ActionResult<List<DayExerciseResponseDto>>> GetWorkoutPlanDayExercises([FromRoute] int dayId)
+        {
+            var userId = HttpContext.GetUserId();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var exercises = await _workoutPlanService.GetWorkoutPlanDayExercisesAsync(userId, dayId);
+            return Ok(exercises);
         }
     }
 }

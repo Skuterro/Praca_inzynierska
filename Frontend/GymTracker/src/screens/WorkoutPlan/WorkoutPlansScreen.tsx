@@ -10,6 +10,7 @@ import React from "react";
 import UserProfileHeader from "../../components/Header/UserProfileHeader";
 import ListHeader from "../../components/ListHeader";
 import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
+import ListEmptyComponent from "../../components/ListEmptyComponent";
 
 type WorkoutPlansScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "WorkoutPlansMain">;
 
@@ -69,11 +70,7 @@ export default function WorkoutPlansScreen({ navigation }: WorkoutPlansScreenPro
 						/>
 					)}
 					showsVerticalScrollIndicator={false}
-					ListEmptyComponent={
-						<View style={{ alignItems: "center", marginTop: 50 }}>
-							<Text>There is nothing to show here</Text>
-						</View>
-					}
+					ListEmptyComponent={<ListEmptyComponent />}
 				/>
 			</View>
 		</View>

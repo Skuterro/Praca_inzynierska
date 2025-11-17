@@ -9,6 +9,7 @@ import { RouteProp } from "@react-navigation/native";
 import ListHeader from "../../components/ListHeader";
 import { WorkoutPlanDay } from "../../models/WorkoutPlanDay";
 import { WorkoutDayItem } from "../../components/WorkoutPlan/WorkoutDayItem";
+import ListEmptyComponent from "../../components/ListEmptyComponent";
 
 type WorkoutPlanDetailsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "WorkoutPlanDetails">;
 type WorkoutPlanDetailsScreenRouteProp = RouteProp<RootStackParamList, "WorkoutPlanDetails">;
@@ -73,11 +74,7 @@ export default function WorkoutPlanDetailsScreen({ navigation, route }: WorkoutP
 						/>
 					)}
 					showsVerticalScrollIndicator={false}
-					ListEmptyComponent={
-						<View style={{ alignItems: "center", marginTop: 50 }}>
-							<Text>There is nothing to show here</Text>
-						</View>
-					}
+					ListEmptyComponent={<ListEmptyComponent />}
 				/>
 			</View>
 		</View>

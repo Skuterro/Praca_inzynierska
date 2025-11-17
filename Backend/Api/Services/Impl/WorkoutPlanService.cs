@@ -140,6 +140,7 @@ namespace Api.Services.Impl
 
             var dayExerciseEntities = await _context.DayExercises
                 .Where(de => de.WorkoutPlanDayId == dayId)
+                .Include(de => de.Exercise)
                 .ToListAsync();
 
             return _mapper.Map<List<DayExerciseResponseDto>>(dayExerciseEntities);

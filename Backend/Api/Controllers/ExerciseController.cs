@@ -1,4 +1,5 @@
-﻿using Api.Models.Requests.ExerciseRequests;
+﻿using Api.Models.Entities;
+using Api.Models.Requests.ExerciseRequests;
 using Api.Models.Responses.ExerciseResponses;
 using Api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ExerciseResponseDto>>> GetAllExercises()
         {
-            var exercises = await _exerciseService.GettAllExercisesAsync();
+            var exercises = await _exerciseService.GetAllExercisesAsync();
             return Ok(exercises);
         }
 
@@ -28,6 +29,18 @@ namespace Api.Controllers
         {
             var exercise = await _exerciseService.GetExerciseById(id);
             return Ok(exercise);
+        }
+
+        [HttpGet("getByBodyPart/{bodyPart}")]
+        public async Task<ActionResult<List<ExerciseResponseDto>>> GetExercisesByBodyPart([FromRoute] BodyPartEnum bodyPart)
+        {
+            if (!Enum.IsDefined(typeof(BodyPartEnum), bodyPart))
+            {
+                return BadRequest("Invalid body part");
+            }
+
+            var exercises = await _exerciseService.GetExercisesByBodyPartAsync(bodyPart);
+            return Ok(exercises);
         }
 
         [HttpPost]

@@ -20,7 +20,7 @@ namespace Api.Services.Impl
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ExerciseResponseDto>> GettAllExercisesAsync()
+        public async Task<IEnumerable<ExerciseResponseDto>> GetAllExercisesAsync()
         {
             var exerciseEntities = await _context.Exercises.ToListAsync();
             return _mapper.Map<List<ExerciseResponseDto>>(exerciseEntities);
@@ -35,6 +35,15 @@ namespace Api.Services.Impl
             }
 
             return _mapper.Map<ExerciseResponseDto>(exerciseEntity);
+        }
+
+        public async Task<IEnumerable<ExerciseResponseDto>> GetExercisesByBodyPartAsync(BodyPartEnum bodyPart)
+        {
+            var exercisesEntites = await _context.Exercises
+                .Where(e => e.BodyPart == bodyPart)
+                .ToListAsync();
+
+            return _mapper.Map<List<ExerciseResponseDto>>(exercisesEntites);
         }
 
         public async Task<ExerciseResponseDto> CreateExercise(ExerciseCreateDto exericseDto)

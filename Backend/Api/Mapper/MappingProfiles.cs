@@ -23,6 +23,18 @@ namespace Api.Mapper
         }
     }
 
+    public class DayExerciseMappingProfile : Profile
+    {
+        public DayExerciseMappingProfile()
+        {
+            CreateMap<DayExercise, DayExerciseResponseDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ExerciseId))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Exercise.Name))
+                .ForMember(dest => dest.BodyPart, opt => opt.MapFrom(src => src.Exercise.BodyPart));
+        }
+    }
+
+
     public class WorkoutPlanMappingProfile : Profile
     {
         public WorkoutPlanMappingProfile()
@@ -42,7 +54,8 @@ namespace Api.Mapper
             CreateMap<WorkoutPlanDay, WorkoutPlanDayResponseDto>();
             CreateMap<DayExercise, DayExerciseResponseDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ExerciseId))
-                .ForMember(dest => dest.Name, opt =>opt.MapFrom(src => src.Exercise.Name));
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Exercise.Name))
+                .ForMember(dest => dest.BodyPart, opt => opt.MapFrom(src => src.Exercise.BodyPart));
         }
     }
 

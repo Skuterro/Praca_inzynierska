@@ -65,6 +65,7 @@ export default function WorkoutPlansScreen({ navigation }: WorkoutPlansScreenPro
 								navigation.navigate("WorkoutPlanDetails", {
 									planId: Number(item.id),
 									planName: item.name,
+									isActive: item.isActive,
 								})
 							}
 						/>

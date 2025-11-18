@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, FlatList, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, Alert, TouchableOpacity, Switch, FlatList, ActivityIndicator } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/AppNavigator";
 import { Colors } from "../../constants/Colors";
@@ -20,15 +20,27 @@ type WorkoutPlanDetailsScreenProps = {
 };
 
 export default function WorkoutPlanDetailsScreen({ navigation, route }: WorkoutPlanDetailsScreenProps) {
-	const { planId, planName } = route.params;
+	const { planId, planName, isActive: initialIsActive } = route.params;
 	const [workoutPlanDays, setWorkoutPlanDays] = useState<WorkoutPlanDay[]>([]);
 	const [loading, setLoading] = useState(false);
+	const [isActive, setIsActive] = useState<boolean>(initialIsActive);
+	const [loadingActive, setLoadingActive] = useState(false);
 
 	const handleAddDayNavigate = () => {
 		navigation.navigate("CreateWorkoutPlanDay", {
 			planId: planId,
 			existingDays: workoutPlanDays.map((d) => d.weekDay),
 		});
+	};
+
+	const handleToggleActive = async () => {
+		try {
+			setLoadingActive(true);
+			await WorkoutPlanService.toggleActive(planId);
+			setIsActive((prev) => !prev);
+		} finally {
+			setLoadingActive(false);
+		}
 	};
 
 	const fetchDays = async () => {
@@ -56,6 +68,16 @@ export default function WorkoutPlanDetailsScreen({ navigation, route }: WorkoutP
 	return (
 		<View style={styles.container}>
 			<Header title={planName} onButtonClick={() => navigation.popTo("WorkoutPlansMain")} />
+			<View style={styles.switchRow}>
+				<Text style={styles.switchLabel}>Set plan as active</Text>
+				<Switch
+					value={isActive}
+					onValueChange={handleToggleActive}
+					thumbColor={isActive ? Colors.secondary : "#ccc"}
+					trackColor={{ true: "#FFD76B", false: "#555" }}
+					disabled={loadingActive}
+				/>
+			</View>
 			<View style={styles.contentWrapper}>
 				<ListHeader title="Training days" buttonTitle="Create new" onButtonClick={handleAddDayNavigate} />
 				<FlatList
@@ -116,5 +138,17 @@ const styles = StyleSheet.create({
 		color: "black",
 		fontWeight: "bold",
 		fontSize: 16,
+	},
+	switchRow: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		paddingHorizontal: 20,
+		marginTop: 10,
+	},
+	switchLabel: {
+		fontSize: 16,
+		fontWeight: "600",
+		color: "white",
 	},
 });

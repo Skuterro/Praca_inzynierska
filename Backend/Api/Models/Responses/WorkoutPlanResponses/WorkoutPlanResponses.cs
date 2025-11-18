@@ -5,7 +5,8 @@
         public int Id { get; set; }
         public string Name { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
-        public List<WorkoutPlanDayResponseDto> WorkoutPlanDays { get; set; } = new List<WorkoutPlanDayResponseDto>();
+        public bool IsActive { get; set; }
+        //public List<WorkoutPlanDayResponseDto> WorkoutPlanDays { get; set; } = new List<WorkoutPlanDayResponseDto>();
     }
     public class WorkoutPlanDayResponseDto
     {

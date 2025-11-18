@@ -118,5 +118,18 @@ namespace Api.Controllers
             var exercises = await _workoutPlanService.GetWorkoutPlanDayExercisesAsync(userId, dayId);
             return Ok(exercises);
         }
+
+        [HttpPut("{planId}/toggle-active")]
+        public async Task<ActionResult> ToggleActive([FromRoute] int planId)
+        {
+            var userId = HttpContext.GetUserId();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            await _workoutPlanService.ToggleWorkoutPlanAsync(userId, planId);
+            return NoContent();
+        }
     }
 }

@@ -6,6 +6,7 @@ using Api.Models.Requests.WorkoutPlanRequests;
 using Api.Models.Responses.WorkoutPlanResponses;
 using Api.Services.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Services.Impl
@@ -100,6 +101,31 @@ namespace Api.Services.Impl
             await _context.Entry(dayExerciseEntity).Reference(de => de.Exercise).LoadAsync();
 
             return _mapper.Map<DayExerciseResponseDto>(dayExerciseEntity);
+        }
+
+        public async Task ToggleWorkoutPlanAsync( string userId, int planId)
+        {
+            var workoutPlan = await _context.WorkoutPlans
+                .FirstOrDefaultAsync(wp => wp.Id == planId && wp.UserId == userId);
+
+            if (workoutPlan == null)
+            {
+                throw new BadRequestException("Workout plan not found.");
+            }
+
+
+            workoutPlan.IsActive = !workoutPlan.IsActive;
+
+            if (workoutPlan.IsActive)
+            {
+                var previous = await _context.WorkoutPlans
+                    .FirstOrDefaultAsync(wp => wp.UserId == userId && wp.IsActive && wp.Id != planId);
+
+                if (previous != null)
+                    previous.IsActive = false;
+            }
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<WorkoutPlanResponseDto>> GetUserWorkoutPlansAsync(string userId)

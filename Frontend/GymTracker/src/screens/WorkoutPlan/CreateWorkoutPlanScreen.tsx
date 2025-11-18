@@ -25,7 +25,11 @@ export default function CreateWorkoutPlanScreen({ navigation }: CreateWorkoutPla
 		try {
 			setLoading(true);
 			const data = await WorkoutPlanService.createWorkoutPlan(planName);
-			navigation.navigate("WorkoutPlanDetails", { planId: Number(data.id), planName: data.name });
+			navigation.navigate("WorkoutPlanDetails", {
+				planId: Number(data.id),
+				planName: data.name,
+				isActive: false,
+			});
 		} finally {
 			setLoading(false);
 		}

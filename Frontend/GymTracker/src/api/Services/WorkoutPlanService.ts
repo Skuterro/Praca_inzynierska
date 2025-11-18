@@ -33,6 +33,10 @@ const WorkoutPlanService = {
 		const { data } = await axiosClient.get(`/workout-plans/days/${dayId}/exercises`);
 		return data;
 	},
+
+	toggleActive: async (planId: number): Promise<void> => {
+		await axiosClient.put(`/workout-plans/${planId}/toggle-active`);
+	},
 };
 
 export default WorkoutPlanService;

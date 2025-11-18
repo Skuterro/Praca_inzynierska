@@ -12,7 +12,7 @@ import SettingsScreen from "../screens/Settings/SettingsScreen";
 export type RootStackParamList = {
 	HomeMain: undefined;
 	WorkoutPlansMain: undefined;
-	WorkoutPlanDetails: { planId: number; planName: string };
+	WorkoutPlanDetails: { planId: number; planName: string; isActive: boolean };
 	WorkoutPlanDayDetails: { dayId: number; dayName: string; weekDay: string };
 	CreateWorkoutPlan: undefined;
 	CreateWorkoutPlanDay: { planId: number; existingDays: string[] };

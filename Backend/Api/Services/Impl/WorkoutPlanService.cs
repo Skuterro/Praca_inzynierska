@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 using Api.Database;
 using Api.Exceptions;
 using Api.Models.Entities;
@@ -126,6 +127,35 @@ namespace Api.Services.Impl
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<DayExerciseResponseDto>> GetWorkoutPlanByWeekDayAsync(string userId, int weekDayIndex)
+        {
+            var activeWorkoutPlan = await _context.WorkoutPlans
+                .FirstOrDefaultAsync(wp => wp.UserId == userId && wp.IsActive);
+
+            if (activeWorkoutPlan == null)
+            {
+                return new List<DayExerciseResponseDto>();
+            }
+
+            var today = (WeekDayEnum)weekDayIndex;
+
+            var todayWorkout = await _context.WorkoutPlanDays
+                .Where(wpd => wpd.WorkoutPlanId == activeWorkoutPlan.Id && wpd.WeekDay == today)
+                .FirstOrDefaultAsync();
+
+            if (todayWorkout == null)
+            {
+                return new List<DayExerciseResponseDto>();
+            }
+
+            var dayExerciseEntities = await _context.DayExercises
+                .Where(de => de.WorkoutPlanDayId == todayWorkout.Id)
+                .Include(de => de.Exercise)
+                .ToListAsync();
+
+            return _mapper.Map<List<DayExerciseResponseDto>>(dayExerciseEntities);
         }
 
         public async Task<IEnumerable<WorkoutPlanResponseDto>> GetUserWorkoutPlansAsync(string userId)

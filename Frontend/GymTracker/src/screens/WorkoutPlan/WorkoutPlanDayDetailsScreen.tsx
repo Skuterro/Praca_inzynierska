@@ -1,8 +1,9 @@
 import { View, StyleSheet, FlatList, ActivityIndicator } from "react-native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/AppNavigator";
 import { DayExercise } from "../../models/DayExercise";
+import { useFocusEffect } from "@react-navigation/native";
 import { RouteProp } from "@react-navigation/native";
 import { ExerciseItem } from "../../components/ExerciseItem";
 import { Exercise } from "../../models/Exercise";
@@ -13,6 +14,7 @@ import ListHeader from "../../components/ListHeader";
 import ExerciseService from "../../api/Services/ExerciseService";
 import AddExerciseModal from "../../components/Modal/AddExerciseModal";
 import ListEmptyComponent from "../../components/ListEmptyComponent";
+import React from "react";
 
 type WorkoutPlanDayDetailsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "WorkoutPlanDayDetails">;
 type WorkoutPlanDayDetailsScreenRouteProp = RouteProp<RootStackParamList, "WorkoutPlanDayDetails">;
@@ -23,7 +25,7 @@ type WorkoutPlanDayDetailsScreenProps = {
 };
 
 export default function WorkoutPlanDayDetailsScreen({ navigation, route }: WorkoutPlanDayDetailsScreenProps) {
-	const { dayId, dayName, weekDay } = route.params;
+	const { dayId, dayName } = route.params;
 	const [dayExercises, setDayExercises] = useState<DayExercise[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
@@ -58,9 +60,11 @@ export default function WorkoutPlanDayDetailsScreen({ navigation, route }: Worko
 		setModalVisible(true);
 	};
 
-	useEffect(() => {
-		fetchDayExercises();
-	}, []);
+	useFocusEffect(
+		React.useCallback(() => {
+			fetchDayExercises();
+		}, [])
+	);
 
 	if (loading) {
 		return (

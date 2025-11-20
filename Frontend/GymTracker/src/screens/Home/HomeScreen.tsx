@@ -1,14 +1,15 @@
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/AppNavigator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { DayExercise } from "../../models/DayExercise";
+import { ExerciseItem } from "../../components/ExerciseItem";
 import { Colors } from "../../constants/Colors";
-import { PlanItem } from "../../components/WorkoutPlan/PlanItem";
 import UserProfileHeader from "../../components/Header/UserProfileHeader";
 import MonthDropdown from "../../components/Home/MonthDropdown";
 import DayPicker from "../../components/Home/DayPicker";
-import { WorkoutPlan } from "../../models/WorkoutPlan";
 import ListHeader from "../../components/ListHeader";
+import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "HomeMain">;
 
@@ -16,24 +17,32 @@ type HomeScreenProps = {
 	navigation: HomeScreenNavigationProp;
 };
 
-const WORKOUT_PLANS: WorkoutPlan[] = [
-	// Użycie interfejsu WorkoutPlan
-	{ id: "1", name: "Plan Cardio", isActive: true },
-	{ id: "2", name: "Plan #2", isActive: false },
-	{ id: "3", name: "Plan #3", isActive: false },
-	{ id: "4", name: "Plan #4", isActive: false },
-	{ id: "5", name: "Plan #5", isActive: false },
-	{ id: "6", name: "Plan #6", isActive: false },
-	{ id: "7", name: "Plan #7", isActive: false },
-	{ id: "8", name: "Plan #8", isActive: false },
-	{ id: "9", name: "Plan #9", isActive: false },
-	{ id: "10", name: "Plan #10", isActive: false },
-];
-
 export default function HomeScreen({ navigation }: HomeScreenProps) {
 	const today = new Date();
 	const [monthIndex, setMonthIndex] = useState(today.getMonth());
 	const [selectedDay, setSelectedDay] = useState(today.getDate());
+	const [selectedDayExercises, setSelectedDayExercises] = useState<DayExercise[]>([]);
+	const [loading, setLoading] = useState(false);
+
+	const isToday = selectedDay === today.getDate() && monthIndex === today.getMonth();
+
+	const fetchSelectedDayExercises = async () => {
+		try {
+			setLoading(true);
+			const selectedDate = new Date(today.getFullYear(), monthIndex, selectedDay);
+			let jsDay = selectedDate.getDay();
+			const weekDay = jsDay === 0 ? 7 : jsDay;
+
+			const data = await WorkoutPlanService.getWorkoutByWeekDay(weekDay);
+			setSelectedDayExercises(data ?? []);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		fetchSelectedDayExercises();
+	}, [selectedDay, monthIndex]);
 
 	return (
 		<View style={styles.container}>
@@ -47,13 +56,24 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 			/>
 			<View style={styles.contentWrapper}>
 				<Text style={styles.borderBottom}></Text>
-				<ListHeader title="Today's workout" buttonTitle="Start session" />
-				<FlatList
-					data={WORKOUT_PLANS}
-					keyExtractor={(item) => item.id}
-					renderItem={({ item }) => <PlanItem plan={item} onPress={() => undefined} />}
-					showsVerticalScrollIndicator={false}
+				<ListHeader
+					title="Today's workout"
+					buttonTitle="Start session"
+					disabled={!isToday || selectedDayExercises.length === 0}
 				/>
+
+				{loading ? (
+					<ActivityIndicator size="small" color="white" />
+				) : selectedDayExercises.length === 0 ? (
+					<Text style={styles.restDayText}>Rest day — no workout today</Text>
+				) : (
+					<FlatList
+						data={selectedDayExercises}
+						keyExtractor={(item) => item.id}
+						renderItem={({ item }) => <ExerciseItem exercise={item} />}
+						showsVerticalScrollIndicator={false}
+					/>
+				)}
 			</View>
 		</View>
 	);
@@ -96,5 +116,12 @@ const styles = StyleSheet.create({
 		color: "black",
 		fontWeight: "600",
 		fontSize: 14,
+	},
+	restDayText: {
+		textAlign: "center",
+		marginTop: 40,
+		fontSize: 16,
+		color: "#999",
+		fontWeight: "500",
 	},
 });

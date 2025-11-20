@@ -2,14 +2,16 @@ import { View, Text, StyleSheet, Alert, TouchableOpacity, Switch, FlatList, Acti
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/AppNavigator";
 import { Colors } from "../../constants/Colors";
-import { useEffect, useState } from "react";
-import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
-import Header from "../../components/Header/Header";
+import { useState } from "react";
 import { RouteProp } from "@react-navigation/native";
-import ListHeader from "../../components/ListHeader";
 import { WorkoutPlanDay } from "../../models/WorkoutPlanDay";
 import { WorkoutDayItem } from "../../components/WorkoutPlan/WorkoutDayItem";
+import { useFocusEffect } from "@react-navigation/native";
+import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
+import Header from "../../components/Header/Header";
+import ListHeader from "../../components/ListHeader";
 import ListEmptyComponent from "../../components/ListEmptyComponent";
+import React from "react";
 
 type WorkoutPlanDetailsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "WorkoutPlanDetails">;
 type WorkoutPlanDetailsScreenRouteProp = RouteProp<RootStackParamList, "WorkoutPlanDetails">;
@@ -53,9 +55,11 @@ export default function WorkoutPlanDetailsScreen({ navigation, route }: WorkoutP
 		}
 	};
 
-	useEffect(() => {
-		fetchDays();
-	}, []);
+	useFocusEffect(
+		React.useCallback(() => {
+			fetchDays();
+		}, [])
+	);
 
 	if (loading) {
 		return (
@@ -90,7 +94,6 @@ export default function WorkoutPlanDetailsScreen({ navigation, route }: WorkoutP
 								navigation.navigate("WorkoutPlanDayDetails", {
 									dayId: Number(item.id),
 									dayName: item.name,
-									weekDay: item.weekDay,
 								})
 							}
 						/>

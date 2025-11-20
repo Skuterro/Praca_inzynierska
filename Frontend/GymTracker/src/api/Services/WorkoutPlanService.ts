@@ -34,6 +34,11 @@ const WorkoutPlanService = {
 		return data;
 	},
 
+	getWorkoutByWeekDay: async (weekDayIndex: number): Promise<DayExercise[]> => {
+		const { data } = await axiosClient.get(`/workout-plans/weekDay/${weekDayIndex}`);
+		return data;
+	},
+
 	toggleActive: async (planId: number): Promise<void> => {
 		await axiosClient.put(`/workout-plans/${planId}/toggle-active`);
 	},

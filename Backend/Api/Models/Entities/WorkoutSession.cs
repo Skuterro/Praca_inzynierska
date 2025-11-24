@@ -13,8 +13,11 @@ namespace Api.Models.Entities
         public int WorkoutPlanDayId {  get; set; }
         public WorkoutPlanDay WorkoutPlanDay { get; set; } = null!;
 
-        public ICollection<WorkoutSessionSet> SessionSets { get; set; } = new List<WorkoutSessionSet>();
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
 
-        public DateTime SessionDate { get; set; }
+        public bool IsFinished { get; set; } = false;
+
+        public ICollection<WorkoutSessionExercise> SessionExercises { get; set; } = new List<WorkoutSessionExercise>();
     }
 }

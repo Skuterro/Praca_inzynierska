@@ -3,7 +3,7 @@ using Api.Models.Entities;
 
 namespace Api.Models.Requests.WorkoutSessionRequests
 {
-    public class WorkoutSessionCreateDto
+    public class StartWorkoutSessionRequest
     {
         [Required]
         public int WorkoutPlanDayId { get; set; }

@@ -51,7 +51,11 @@ namespace Api.Mapper
             CreateMap<DayExerciseCreateDto, DayExercise>();
 
             CreateMap<WorkoutPlan, WorkoutPlanResponseDto>();
-            CreateMap<WorkoutPlanDay, WorkoutPlanDayResponseDto>();
+            CreateMap<WorkoutPlanDay, SimpleWorkoutPlanDayResponseDto>();
+
+            CreateMap<WorkoutPlanDay, WorkoutPlanDayResponseDto>()
+                .ForMember(dest => dest.DayExercises, opt => opt.MapFrom(src => src.DayExercises));
+
             CreateMap<DayExercise, DayExerciseResponseDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ExerciseId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Exercise.Name))
@@ -88,11 +92,13 @@ namespace Api.Mapper
     {
         public WorkoutSessionMappingProfie()
         {
-            CreateMap<WorkoutSessionCreateDto, WorkoutSession>()
+            CreateMap<StartWorkoutSessionRequest, WorkoutSession>()
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
-                .ForMember(dest => dest.SessionDate, opt => opt.Ignore());
+                .ForMember(dest => dest.Start, opt => opt.Ignore())
+                .ForMember(dest => dest.End, opt => opt.Ignore())
+                .ForMember(dest => dest.IsFinished, opt => opt.Ignore());
 
-            CreateMap<WorkoutSession, WorkoutSessionResponseDto>()
+            /*CreateMap<WorkoutSession, WorkoutSessionResponseDto>()
                 .ForMember(dest => dest.WorkoutPlanDayName, opt => opt.MapFrom(src => src.WorkoutPlanDay.Name))
                 .ForMember(dest => dest.Exercises, opt => opt.MapFrom(src =>
                     src.SessionSets
@@ -110,11 +116,12 @@ namespace Api.Mapper
                             }).ToList()
                         })
                         .ToList()
-                ));
+                ));*/
 
-            CreateMap<WorkoutSessionSetCreateDto, WorkoutSessionSet>();
-            CreateMap<WorkoutSessionSet, WorkoutSessionSetResponseDto>()
-                .ForMember(dest => dest.ExerciseName, opt => opt.MapFrom(src => src.Exercise.Name));
+            CreateMap<AddWorkouSessionSetRequest, WorkoutSessionSet>()
+                .ForMember(dest => dest.WorkoutSessionExerciseId, opt => opt.Ignore());
+
+            CreateMap<WorkoutSessionSet, WorkoutSessionSetResponseDto>();
         }
     }
 }

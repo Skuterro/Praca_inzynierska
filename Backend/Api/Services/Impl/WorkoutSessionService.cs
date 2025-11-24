@@ -20,50 +20,87 @@ namespace Api.Services.Impl
             _mapper = mapper;
         }
 
-        public async Task<WorkoutSessionResponseDto> CreateWorkoutSessionAsync(string userId, WorkoutSessionCreateDto workoutSessionCreateDto)
+        public async Task<StartWorkoutSessionResponse> StartWorkoutSessionAsync(string userId, StartWorkoutSessionRequest request)
         {
-            var workoutSessionEntity = _mapper.Map<WorkoutSession>(workoutSessionCreateDto);
+            var workoutPlanDayExists = await _context.WorkoutPlanDays
+                .FirstOrDefaultAsync(wpd => wpd.Id == request.WorkoutPlanDayId);
+
+            if (workoutPlanDayExists == null)
+            {
+                throw new BadRequestException("Workout day does not exist");
+            }
+
+            var workoutSessionEntity = _mapper.Map<WorkoutSession>(request);
             workoutSessionEntity.UserId = userId;
-            workoutSessionEntity.SessionDate = DateTime.UtcNow;
+            workoutSessionEntity.Start = DateTime.UtcNow;
 
             _context.WorkoutSessions.Add(workoutSessionEntity);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<WorkoutSessionResponseDto>(workoutSessionEntity);
+            return new StartWorkoutSessionResponse
+            {
+                SessionId = workoutSessionEntity.Id
+            };
         }
 
-        public async Task<WorkoutSessionSetResponseDto> CreateWorkoutSessionSetAsync(WorkoutSessionSetCreateDto workoutSessionSetCreateDto)
+        public async Task<WorkoutSessionSetResponseDto> AddSetAsync(AddWorkouSessionSetRequest request)
         {
             var workoutSession = await _context.WorkoutSessions
-                .Include(ws => ws.WorkoutPlanDay)    
-                    .ThenInclude(wpd => wpd.DayExercises)
-                .Include(ws => ws.SessionSets)
-                .FirstOrDefaultAsync(ws => ws.Id == workoutSessionSetCreateDto.WorkoutSessionId);
+                .Include(ws => ws.SessionExercises)
+                    .ThenInclude(se => se.Sets)
+                .FirstOrDefaultAsync(ws => ws.Id == request.WorkoutSessionId);
 
             if (workoutSession == null)
             {
                throw new BadRequestException("Workout session does not exist");
             }
             
-            var dayExercise = workoutSession.WorkoutPlanDay.DayExercises.FirstOrDefault(de => de.ExerciseId == workoutSessionSetCreateDto.ExerciseId);
-            if (dayExercise == null)
+            var workoutSessionExercise = workoutSession.SessionExercises.FirstOrDefault(se => se.DayExerciseId == request.DayExerciseId);
+            if (workoutSessionExercise == null)
             {
-                throw new BadRequestException("This exercise does not belong to this workout");
+                workoutSessionExercise = new WorkoutSessionExercise
+                {
+                    WorkoutSessionId = request.WorkoutSessionId,
+                    DayExerciseId = request.DayExerciseId
+                };
+
+                _context.WorkoutSessionExercises.Add(workoutSessionExercise);
+                await _context.SaveChangesAsync();
             }
 
-            var existingSetsCount = workoutSession.SessionSets.Count(s => s.ExerciseId == workoutSessionSetCreateDto.ExerciseId);
-            if (existingSetsCount >= dayExercise.Sets)
-            {
-                throw new BadRequestException($"You already logged all {dayExercise.Sets} sets for this exercise.");
-            }
-
-            var workoutSessionSetEntity = _mapper.Map<WorkoutSessionSet>(workoutSessionSetCreateDto);
-            workoutSessionSetEntity.SetNumber = existingSetsCount + 1;
-
+            var workoutSessionSetEntity = _mapper.Map<WorkoutSessionSet>(request);
+            workoutSessionSetEntity.WorkoutSessionExerciseId = workoutSessionExercise.Id;
+      
             _context.WorkoutSessionSets.Add(workoutSessionSetEntity);
             await _context.SaveChangesAsync();
 
             return _mapper.Map<WorkoutSessionSetResponseDto>(workoutSessionSetEntity);
+        }
+
+        public async Task FinishWorkoutSessionAsync(string userId, FinishWorkoutSessionRequest request)
+        {
+            var workoutSession = await _context.WorkoutSessions
+                .FirstOrDefaultAsync(ws => ws.Id == request.SessionId);
+
+            if (workoutSession == null)
+            {
+                throw new BadRequestException("Workout session does not exist");
+            }
+
+            if (workoutSession.UserId != userId) 
+            {
+                throw new BadRequestException("User is not the owner of this workout session");
+            }
+
+            workoutSession.End = DateTime.UtcNow;
+            workoutSession.IsFinished = true;
+            await _context.SaveChangesAsync();
+        }
+
+
+        public Task<IEnumerable<WorkoutSessionExerciseResponseDto>> GetWorkoutSessionDetailsByIdAsync(string userId, int id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<WorkoutSessionResponseDto>> GetAllUserWorkoutSessionsAsync(string userId)
@@ -71,8 +108,6 @@ namespace Api.Services.Impl
             var workoutSessionEntities = await _context.WorkoutSessions
                 .Where(ws => ws.UserId == userId)
                 .Include(ws => ws.WorkoutPlanDay)
-                .Include(ws => ws.SessionSets)
-                    .ThenInclude(ss => ss.Exercise)
                 .ToListAsync();
 
             return _mapper.Map<List<WorkoutSessionResponseDto>>(workoutSessionEntities);

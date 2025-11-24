@@ -49,8 +49,8 @@ namespace Api.Controllers
             return Ok(workoutSessions);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<WorkoutSessionResponseDto>> StartWorkoutSession([FromBody] WorkoutSessionCreateDto workoutSessionCreateDto)
+        [HttpPost("start")]
+        public async Task<ActionResult<StartWorkoutSessionResponse>> StartWorkoutSession([FromBody] StartWorkoutSessionRequest request)
         {
             var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -58,12 +58,12 @@ namespace Api.Controllers
                 return Unauthorized();
             }
 
-            var createdWorkoutSession = await _workoutSessionService.CreateWorkoutSessionAsync(userId, workoutSessionCreateDto);
-            return CreatedAtAction(nameof(GetWorkoutSessionById), new { id = createdWorkoutSession.Id }, createdWorkoutSession);
+            var workoutSessionResponse = await _workoutSessionService.StartWorkoutSessionAsync(userId, request);
+            return Ok(workoutSessionResponse);
         }
 
         [HttpPost("add-set")]
-        public async Task<ActionResult<WorkoutSessionSetResponseDto>> AddSetToWorkoutSession([FromBody] WorkoutSessionSetCreateDto workoutSessionSetCreateDto)
+        public async Task<ActionResult<WorkoutSessionSetResponseDto>> AddSetToWorkoutSession([FromBody] AddWorkouSessionSetRequest workoutSessionSetCreateDto)
         {
             var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -71,8 +71,21 @@ namespace Api.Controllers
                 return Unauthorized();
             }
 
-            var createdWorkoutSessionSet = await _workoutSessionService.CreateWorkoutSessionSetAsync(workoutSessionSetCreateDto);
-            return CreatedAtAction(nameof(GetWorkoutSessionSetById), new { id = createdWorkoutSessionSet.Id }, createdWorkoutSessionSet);
+            var createdWorkoutSessionSet = await _workoutSessionService.AddSetAsync(workoutSessionSetCreateDto);
+            return Ok(createdWorkoutSessionSet);
+        }
+
+        [HttpPost("finish")]
+        public async Task<ActionResult> FinishWorkoutSession([FromBody] FinishWorkoutSessionRequest request)
+        {
+            var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            await _workoutSessionService.FinishWorkoutSessionAsync(userId, request);
+            return Ok();
         }
     }
 }

@@ -273,7 +273,13 @@ namespace Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("SessionDate")
+                    b.Property<DateTime>("End")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsFinished")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Start")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
@@ -292,13 +298,31 @@ namespace Api.Migrations
                     b.ToTable("WorkoutSessions");
                 });
 
-            modelBuilder.Entity("Api.Models.Entities.WorkoutSessionSet", b =>
+            modelBuilder.Entity("Api.Models.Entities.WorkoutSessionExercise", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ExerciseId")
+                    b.Property<int>("DayExerciseId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("WorkoutSessionId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DayExerciseId");
+
+                    b.HasIndex("WorkoutSessionId");
+
+                    b.ToTable("WorkoutSessionExercises");
+                });
+
+            modelBuilder.Entity("Api.Models.Entities.WorkoutSessionSet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Reps")
@@ -310,14 +334,12 @@ namespace Api.Migrations
                     b.Property<decimal>("WeightKg")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("WorkoutSessionId")
+                    b.Property<int>("WorkoutSessionExerciseId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExerciseId");
-
-                    b.HasIndex("WorkoutSessionId");
+                    b.HasIndex("WorkoutSessionExerciseId");
 
                     b.ToTable("WorkoutSessionSets");
                 });
@@ -551,23 +573,34 @@ namespace Api.Migrations
                     b.Navigation("WorkoutPlanDay");
                 });
 
-            modelBuilder.Entity("Api.Models.Entities.WorkoutSessionSet", b =>
+            modelBuilder.Entity("Api.Models.Entities.WorkoutSessionExercise", b =>
                 {
-                    b.HasOne("Api.Models.Entities.Exercise", "Exercise")
+                    b.HasOne("Api.Models.Entities.DayExercise", "DayExercise")
                         .WithMany()
-                        .HasForeignKey("ExerciseId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("DayExerciseId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Api.Models.Entities.WorkoutSession", "WorkoutSession")
-                        .WithMany("SessionSets")
+                        .WithMany("SessionExercises")
                         .HasForeignKey("WorkoutSessionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Exercise");
+                    b.Navigation("DayExercise");
 
                     b.Navigation("WorkoutSession");
+                });
+
+            modelBuilder.Entity("Api.Models.Entities.WorkoutSessionSet", b =>
+                {
+                    b.HasOne("Api.Models.Entities.WorkoutSessionExercise", "WorkoutSessionExercise")
+                        .WithMany("Sets")
+                        .HasForeignKey("WorkoutSessionExerciseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("WorkoutSessionExercise");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -648,7 +681,12 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Api.Models.Entities.WorkoutSession", b =>
                 {
-                    b.Navigation("SessionSets");
+                    b.Navigation("SessionExercises");
+                });
+
+            modelBuilder.Entity("Api.Models.Entities.WorkoutSessionExercise", b =>
+                {
+                    b.Navigation("Sets");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Api.Database;
 using Api.Models.Requests.WorkoutSessionRequests;
+using Api.Models.Responses.ActiveSessionResponses;
 using Api.Models.Responses.WorkoutSessionResponses;
 using Api.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -63,7 +64,7 @@ namespace Api.Controllers
         }
 
         [HttpPost("add-set")]
-        public async Task<ActionResult<WorkoutSessionSetResponseDto>> AddSetToWorkoutSession([FromBody] AddWorkouSessionSetRequest workoutSessionSetCreateDto)
+        public async Task<ActionResult<WorkoutSessionSetResponseDto>> AddSetToWorkoutSession([FromBody] AddWorkouSessionSetRequest request)
         {
             var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -71,7 +72,7 @@ namespace Api.Controllers
                 return Unauthorized();
             }
 
-            var createdWorkoutSessionSet = await _workoutSessionService.AddSetAsync(workoutSessionSetCreateDto);
+            var createdWorkoutSessionSet = await _workoutSessionService.AddSetAsync(userId, request);
             return Ok(createdWorkoutSessionSet);
         }
 
@@ -86,6 +87,32 @@ namespace Api.Controllers
 
             await _workoutSessionService.FinishWorkoutSessionAsync(userId, request);
             return Ok();
+        }
+
+        [HttpGet("today-status")]
+        public async Task<ActionResult<SessionStatusResponse>> GetTodayWorkoutStatus()
+        {
+            var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var response = await _workoutSessionService.GetTodaySessionStatusAsync(userId);
+            return Ok(response);
+        }
+
+        [HttpGet("session/active")]
+        public async Task<ActionResult<ActiveWorkoutSessionResponse?>> GetActiveWorkoutSession()
+        {
+            var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var response = await _workoutSessionService.GetActiveSessionAsync(userId);
+            return Ok(response);
         }
     }
 }

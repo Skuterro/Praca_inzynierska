@@ -1,7 +1,9 @@
 ﻿using Api.Database;
 using Api.Exceptions;
 using Api.Models.Entities;
+using Api.Models.Requests.ActiveSessionRequests;
 using Api.Models.Requests.WorkoutSessionRequests;
+using Api.Models.Responses.ActiveSessionResponses;
 using Api.Models.Responses.WorkoutSessionResponses;
 using Api.Services.Interfaces;
 using AutoMapper;
@@ -43,7 +45,7 @@ namespace Api.Services.Impl
             };
         }
 
-        public async Task<WorkoutSessionSetResponseDto> AddSetAsync(AddWorkouSessionSetRequest request)
+        public async Task<WorkoutSessionSetResponseDto> AddSetAsync(string userId, AddWorkouSessionSetRequest request)
         {
             var workoutSession = await _context.WorkoutSessions
                 .Include(ws => ws.SessionExercises)
@@ -53,6 +55,11 @@ namespace Api.Services.Impl
             if (workoutSession == null)
             {
                throw new BadRequestException("Workout session does not exist");
+            }
+
+            if (workoutSession.UserId != userId)
+            {
+                throw new BadRequestException("User is not the owner of this workout session");
             }
             
             var workoutSessionExercise = workoutSession.SessionExercises.FirstOrDefault(se => se.DayExerciseId == request.DayExerciseId);
@@ -97,10 +104,97 @@ namespace Api.Services.Impl
             await _context.SaveChangesAsync();
         }
 
-
-        public Task<IEnumerable<WorkoutSessionExerciseResponseDto>> GetWorkoutSessionDetailsByIdAsync(string userId, int id)
+        public async Task<SessionStatusResponse> GetTodaySessionStatusAsync(string userId)
         {
-            throw new NotImplementedException();
+            var today = DateTime.UtcNow.Date;
+
+            var lastSession = await _context.WorkoutSessions
+                .Where(ws => ws.UserId == userId)
+                .OrderByDescending(ws => ws.Start)
+                .FirstOrDefaultAsync();
+
+            if (lastSession == null)
+            {
+                return new SessionStatusResponse
+                {
+                    Status = SessionStatusEnum.StartWorkout
+                };
+            }
+
+            if (!lastSession.IsFinished && lastSession.Start.Date < today) 
+            {
+                lastSession.End = DateTime.UtcNow;
+                lastSession.IsFinished = true;
+                await _context.SaveChangesAsync();
+
+                return new SessionStatusResponse
+                {
+                    Status = SessionStatusEnum.StartWorkout
+                };
+            }
+
+            if (lastSession.Start.Date == today)
+            {
+                if (!lastSession.IsFinished)
+                {
+                    return new SessionStatusResponse
+                    {
+                        Status = SessionStatusEnum.ContinueWorkout,
+                        SessionId = lastSession.Id
+                    };
+                }
+                else
+                {
+                    return new SessionStatusResponse
+                    {
+                        Status = SessionStatusEnum.FinishedWorkout
+                    };
+                }
+            }
+
+            return new SessionStatusResponse
+            {
+                Status = SessionStatusEnum.StartWorkout
+            };
+        }
+
+        public async Task<ActiveWorkoutSessionResponse?> GetActiveSessionAsync(string userId)
+        {
+            var today = DateTime.UtcNow.Date;
+
+            var activeSession = await _context.WorkoutSessions
+                .Where(ws => ws.UserId == userId && !ws.IsFinished && ws.Start.Date == today)
+                .Include(ws => ws.SessionExercises)
+                    .ThenInclude(se => se.Sets)
+                .Include(ws => ws.SessionExercises)
+                    .ThenInclude(se => se.DayExercise)
+                        .ThenInclude(de => de.Exercise)
+                .FirstOrDefaultAsync();
+
+            if (activeSession == null)
+            {
+                throw new BadRequestException("No active workout session found for today.");
+            }
+
+            return new ActiveWorkoutSessionResponse
+            {
+                SessionId = activeSession.Id,
+                Exercises = activeSession.SessionExercises.Select(se => new ActiveWorkoutExerciseResponse
+                {
+                    DayExerciseId = se.DayExerciseId,
+                    ExerciseName = se.DayExercise.Exercise.Name,
+
+                    Sets = se.Sets
+                        .OrderBy(s => s.SetNumber)
+                        .Select(s => new ActiveWorkoutSetResponse
+                        {
+                            SetNumber = s.SetNumber,
+                            Reps = s.Reps,
+                            WeightKg = s.WeightKg
+                        })
+                        .ToList()
+                }).ToList()
+            };
         }
 
         public async Task<IEnumerable<WorkoutSessionResponseDto>> GetAllUserWorkoutSessionsAsync(string userId)
@@ -133,6 +227,11 @@ namespace Api.Services.Impl
             }
 
             return _mapper.Map<WorkoutSessionSetResponseDto>(workoutSessionSetEntity);
+        }
+
+        public Task<IEnumerable<WorkoutSessionExerciseResponseDto>> GetWorkoutSessionDetailsByIdAsync(string userId, int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

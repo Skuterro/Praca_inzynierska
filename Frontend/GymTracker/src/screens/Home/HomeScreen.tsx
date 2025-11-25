@@ -1,15 +1,17 @@
 import { View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/AppNavigator";
-import { useEffect, useState } from "react";
-import { DayExercise } from "../../models/DayExercise";
-import { ExerciseItem } from "../../components/ExerciseItem";
+import { useWorkoutButton } from "../../hooks/homeScreen/useWorkoutButton";
+import { CalendarSection } from "../../components/Home/CalendarSection";
+import { useWorkoutData } from "../../hooks/homeScreen/useWorkoutData";
+import { ExerciseItem } from "../../components/Exercise/ExerciseItem";
+import { AppStyles } from "../../constants/AppStyles";
+import { useState } from "react";
 import { Colors } from "../../constants/Colors";
 import UserProfileHeader from "../../components/Header/UserProfileHeader";
-import MonthDropdown from "../../components/Home/MonthDropdown";
-import DayPicker from "../../components/Home/DayPicker";
-import ListHeader from "../../components/ListHeader";
-import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
+import ListHeader from "../../components/List/ListHeader";
+import React from "react";
+import { WorkoutContent } from "../../components/Home/WorkoutContent";
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "HomeMain">;
 
@@ -21,79 +23,52 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 	const today = new Date();
 	const [monthIndex, setMonthIndex] = useState(today.getMonth());
 	const [selectedDay, setSelectedDay] = useState(today.getDate());
-	const [selectedDayExercises, setSelectedDayExercises] = useState<DayExercise[]>([]);
-	const [loading, setLoading] = useState(false);
-
 	const isToday = selectedDay === today.getDate() && monthIndex === today.getMonth();
 
-	const fetchSelectedDayExercises = async () => {
-		try {
-			setLoading(true);
-			const selectedDate = new Date(today.getFullYear(), monthIndex, selectedDay);
-			let jsDay = selectedDate.getDay();
-			const weekDay = jsDay === 0 ? 7 : jsDay;
+	const { loading, selectedDayExercises, workoutDayId, sessionStatus } = useWorkoutData({
+		selectedDay,
+		monthIndex,
+		isToday,
+	});
 
-			const data = await WorkoutPlanService.getWorkoutByWeekDay(weekDay);
-			setSelectedDayExercises(data ?? []);
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	useEffect(() => {
-		fetchSelectedDayExercises();
-	}, [selectedDay, monthIndex]);
+	const { getButtonLabel, isButtonDisabled, handleMainButton } = useWorkoutButton({
+		sessionStatus,
+		isToday,
+		selectedDayExercises,
+		workoutDayId,
+		navigation,
+	});
 
 	return (
-		<View style={styles.container}>
+		<View style={AppStyles.mainContainer}>
 			<UserProfileHeader />
-			<MonthDropdown monthIndex={monthIndex} setMonthIndex={setMonthIndex} />
-			<DayPicker
+			<CalendarSection
 				today={today}
 				monthIndex={monthIndex}
 				selectedDay={selectedDay}
+				setMonthIndex={setMonthIndex}
 				setSelectedDay={setSelectedDay}
 			/>
-			<View style={styles.contentWrapper}>
+			<View style={AppStyles.contentWrapper}>
 				<Text style={styles.borderBottom}></Text>
 				<ListHeader
 					title="Today's workout"
-					buttonTitle="Start session"
-					disabled={!isToday || selectedDayExercises.length === 0}
+					buttonTitle={getButtonLabel()}
+					disabled={isButtonDisabled}
+					onButtonClick={handleMainButton}
 				/>
 
-				{loading ? (
-					<ActivityIndicator size="small" color="white" />
-				) : selectedDayExercises.length === 0 ? (
-					<Text style={styles.restDayText}>Rest day — no workout today</Text>
-				) : (
-					<FlatList
-						data={selectedDayExercises}
-						keyExtractor={(item) => item.id}
-						renderItem={({ item }) => <ExerciseItem exercise={item} />}
-						showsVerticalScrollIndicator={false}
-					/>
-				)}
+				<WorkoutContent loading={loading} exercises={selectedDayExercises} />
 			</View>
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: Colors.primary,
-	},
 	borderBottom: {
 		borderBottomWidth: 2,
 		borderBottomColor: Colors.secondary,
 		marginBottom: 10,
-	},
-	contentWrapper: {
-		flex: 1,
-		paddingHorizontal: 20,
-		paddingTop: 10,
-		marginBottom: 15,
 	},
 	sectionHeader: {
 		flexDirection: "row",
@@ -107,7 +82,7 @@ const styles = StyleSheet.create({
 		color: "white",
 	},
 	addButton: {
-		backgroundColor: "#ffc107",
+		backgroundColor: Colors.color1,
 		paddingVertical: 6,
 		paddingHorizontal: 12,
 		borderRadius: 8,
@@ -116,12 +91,5 @@ const styles = StyleSheet.create({
 		color: "black",
 		fontWeight: "600",
 		fontSize: 14,
-	},
-	restDayText: {
-		textAlign: "center",
-		marginTop: 40,
-		fontSize: 16,
-		color: "#999",
-		fontWeight: "500",
 	},
 });

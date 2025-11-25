@@ -29,9 +29,8 @@ export default function DayPicker({ today, monthIndex, selectedDay, setSelectedD
 		const todayIndex = today.getDate() - 1;
 		const circleWidth = 40;
 		const circleMargin = 10;
-		const padding = 20;
 
-		const offset = todayIndex * (circleWidth + circleMargin * 2) + padding - screenWidth / 2 + circleWidth / 2;
+		const offset = todayIndex * (circleWidth + circleMargin * 2) - screenWidth / 2 + circleWidth / 2;
 		scrollRef.current?.scrollTo({ x: offset, animated: false });
 	}, [monthIndex, screenWidth]);
 

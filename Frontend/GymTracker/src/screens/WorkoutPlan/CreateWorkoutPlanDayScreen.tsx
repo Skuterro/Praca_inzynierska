@@ -3,10 +3,10 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/AppNavigator";
 import { Colors } from "../../constants/Colors";
 import { useRef, useState } from "react";
-import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
-import Header from "../../components/Header/Header";
 import { RouteProp } from "@react-navigation/native";
 import { WeekDays } from "../../constants/WeekDays";
+import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
+import Header from "../../components/Header/Header";
 
 type CreateWorkoutPlanDayScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "CreateWorkoutPlanDay">;
 type CreateWorkoutPlanDayScreenRouteProp = RouteProp<RootStackParamList, "CreateWorkoutPlanDay">;
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 	},
 	button: {
-		backgroundColor: "#ffc107",
+		backgroundColor: Colors.color1,
 		paddingVertical: 12,
 		borderRadius: 8,
 		alignItems: "center",

@@ -1,20 +1,21 @@
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
-import { WorkoutPlanDay } from "../../models/WorkoutPlanDay";
+import { SimpleWorkoutPlanDay } from "../../models/SimpleWorkoutPlanDay";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import { Colors } from "../../constants/Colors";
+import { AppStyles } from "../../constants/AppStyles";
 
 interface WorkoutDayItemProps {
-	workoutDay: WorkoutPlanDay;
+	workoutDay: SimpleWorkoutPlanDay;
 	onPress: () => void;
 }
 
 export const WorkoutDayItem = ({ workoutDay, onPress }: WorkoutDayItemProps) => (
 	<TouchableOpacity style={styles.WorkoutDayItem} onPress={onPress}>
 		<View style={styles.leftContent}>
-			<Text style={styles.name}>{workoutDay.name}</Text>
-			<Text style={styles.weekDay}>{workoutDay.weekDay}</Text>
+			<Text style={AppStyles.title}>{workoutDay.name}</Text>
+			<Text style={AppStyles.subTitle}>{workoutDay.weekDay}</Text>
 		</View>
-		<IonIcon name="chevron-forward" size={24} color="white" />
+		<IonIcon name="chevron-forward" size={24} color={Colors.subTitle} />
 	</TouchableOpacity>
 );
 

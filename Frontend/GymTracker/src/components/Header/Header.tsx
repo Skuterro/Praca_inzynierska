@@ -15,10 +15,7 @@ export default function Header({ title, onButtonClick }: HeaderProps) {
 					<FeatherIcon name="arrow-left-circle" size={32} color="white" />
 				</TouchableOpacity>
 			</View>
-
 			<Text style={styles.title}>{title}</Text>
-
-			{/* Placeholder dla wyrównania (pusty element po prawej) */}
 			<View style={styles.sideContainer} />
 		</View>
 	);

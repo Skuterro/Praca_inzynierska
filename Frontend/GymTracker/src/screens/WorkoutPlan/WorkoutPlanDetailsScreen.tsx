@@ -4,13 +4,13 @@ import { RootStackParamList } from "../../navigation/AppNavigator";
 import { Colors } from "../../constants/Colors";
 import { useState } from "react";
 import { RouteProp } from "@react-navigation/native";
-import { WorkoutPlanDay } from "../../models/WorkoutPlanDay";
+import { SimpleWorkoutPlanDay } from "../../models/SimpleWorkoutPlanDay";
 import { WorkoutDayItem } from "../../components/WorkoutPlan/WorkoutDayItem";
 import { useFocusEffect } from "@react-navigation/native";
 import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
 import Header from "../../components/Header/Header";
-import ListHeader from "../../components/ListHeader";
-import ListEmptyComponent from "../../components/ListEmptyComponent";
+import ListHeader from "../../components/List/ListHeader";
+import ListEmptyComponent from "../../components/List/ListEmptyComponent";
 import React from "react";
 
 type WorkoutPlanDetailsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "WorkoutPlanDetails">;
@@ -23,7 +23,7 @@ type WorkoutPlanDetailsScreenProps = {
 
 export default function WorkoutPlanDetailsScreen({ navigation, route }: WorkoutPlanDetailsScreenProps) {
 	const { planId, planName, isActive: initialIsActive } = route.params;
-	const [workoutPlanDays, setWorkoutPlanDays] = useState<WorkoutPlanDay[]>([]);
+	const [workoutPlanDays, setWorkoutPlanDays] = useState<SimpleWorkoutPlanDay[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [isActive, setIsActive] = useState<boolean>(initialIsActive);
 	const [loadingActive, setLoadingActive] = useState(false);
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 	},
 	button: {
-		backgroundColor: "#ffc107",
+		backgroundColor: Colors.color1,
 		paddingVertical: 12,
 		borderRadius: 8,
 		alignItems: "center",
@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
+		marginBottom: 10,
 		paddingHorizontal: 20,
 		marginTop: 10,
 	},

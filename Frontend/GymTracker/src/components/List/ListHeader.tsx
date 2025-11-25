@@ -1,7 +1,8 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Colors } from "../../constants/Colors";
 
 interface ListHeaderProps {
-	title: string;
+	title?: string;
 	buttonTitle: string;
 	disabled?: boolean;
 	onButtonClick?: () => void;
@@ -10,7 +11,7 @@ interface ListHeaderProps {
 export default function ListHeader({ title, buttonTitle, disabled, onButtonClick }: ListHeaderProps) {
 	return (
 		<View style={styles.sectionHeader}>
-			<Text style={styles.sectionTitle}>{title}</Text>
+			{title && <Text style={styles.sectionTitle}>{title}</Text>}
 			<TouchableOpacity
 				style={[styles.button, disabled && styles.buttonDisabled]}
 				disabled={disabled}
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
 		color: "white",
 	},
 	button: {
-		backgroundColor: "#ffc107",
+		backgroundColor: Colors.color1,
 		paddingVertical: 6,
 		paddingHorizontal: 12,
 		borderRadius: 8,

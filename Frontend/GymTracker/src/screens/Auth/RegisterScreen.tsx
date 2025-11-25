@@ -20,8 +20,7 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
 	const handleRegister = async () => {
 		try {
 			await register(username, email, password);
-		} catch (err) {
-			alert("Registration failed");
+		} finally {
 		}
 	};
 
@@ -70,7 +69,7 @@ const styles = StyleSheet.create({
 		color: "white",
 		marginBottom: 20,
 	},
-	button: { backgroundColor: "#ffc107", padding: 12, borderRadius: 8, alignItems: "center" },
+	button: { backgroundColor: Colors.color1, padding: 12, borderRadius: 8, alignItems: "center" },
 	buttonText: { color: "black", fontWeight: "bold", fontSize: 16 },
-	linkText: { color: "#ffc107", textAlign: "center", marginTop: 15, fontWeight: "500" },
+	linkText: { color: Colors.color1, textAlign: "center", marginTop: 15, fontWeight: "500" },
 });

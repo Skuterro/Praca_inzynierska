@@ -1,4 +1,4 @@
-import { View, Text, FlatList, StyleSheet, ActivityIndicator } from "react-native";
+import { View, FlatList, StyleSheet, ActivityIndicator } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/AppNavigator";
 import { Colors } from "../../constants/Colors";
@@ -8,9 +8,9 @@ import { useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import React from "react";
 import UserProfileHeader from "../../components/Header/UserProfileHeader";
-import ListHeader from "../../components/ListHeader";
+import ListHeader from "../../components/List/ListHeader";
 import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
-import ListEmptyComponent from "../../components/ListEmptyComponent";
+import ListEmptyComponent from "../../components/List/ListEmptyComponent";
 
 type WorkoutPlansScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "WorkoutPlansMain">;
 
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
 		color: "white",
 	},
 	addButton: {
-		backgroundColor: "#ffc107",
+		backgroundColor: Colors.color1,
 		paddingVertical: 6,
 		paddingHorizontal: 12,
 		borderRadius: 8,

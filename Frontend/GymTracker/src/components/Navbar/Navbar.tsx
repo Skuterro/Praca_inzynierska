@@ -30,7 +30,7 @@ export default function Navbar({ state, navigation }: BottomTabBarProps) {
 const styles = StyleSheet.create({
 	navContainer: {
 		flexDirection: "row",
-		backgroundColor: "#1C1C1E",
+		backgroundColor: "#1E1E1E",
 		height: 90,
 		paddingBottom: 30,
 		paddingTop: 10,

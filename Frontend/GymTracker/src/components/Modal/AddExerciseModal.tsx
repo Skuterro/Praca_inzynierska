@@ -3,7 +3,7 @@ import { Modal, View, Text, TouchableOpacity, StyleSheet, FlatList, ActivityIndi
 import { Exercise } from "../../models/Exercise";
 import { Colors } from "../../constants/Colors";
 import EntypoIcon from "react-native-vector-icons/Entypo";
-import ListEmptyComponent from "../ListEmptyComponent";
+import ListEmptyComponent from "../List/ListEmptyComponent";
 
 interface AddExerciseModalProps {
 	bodyParts: string[];
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.primary,
 	},
 	partButtonActive: {
-		backgroundColor: "#ffc107",
+		backgroundColor: Colors.color1,
 	},
 	partButtonText: {
 		color: "white",
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 	},
 	confirmButton: {
-		backgroundColor: "#ffc107",
+		backgroundColor: Colors.color1,
 		paddingVertical: 8,
 		paddingHorizontal: 20,
 		borderRadius: 8,

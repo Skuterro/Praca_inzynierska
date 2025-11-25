@@ -1,7 +1,8 @@
 import { DayExercise } from "../../models/DayExercise";
 import { WorkoutPlan } from "../../models/WorkoutPlan";
-import { WorkoutPlanDay } from "../../models/WorkoutPlanDay";
+import { SimpleWorkoutPlanDay } from "../../models/SimpleWorkoutPlanDay";
 import axiosClient from "../ApiClient";
+import { WorkoutPlanDay } from "../../models/WorkoutPlanDay";
 
 const WorkoutPlanService = {
 	createWorkoutPlan: async (Name: string): Promise<WorkoutPlan> => {
@@ -24,7 +25,7 @@ const WorkoutPlanService = {
 		return data;
 	},
 
-	getWorkoutPlanDays: async (planId: number): Promise<WorkoutPlanDay[]> => {
+	getWorkoutPlanDays: async (planId: number): Promise<SimpleWorkoutPlanDay[]> => {
 		const { data } = await axiosClient.get(`/workout-plans/${planId}/days`);
 		return data;
 	},
@@ -34,7 +35,7 @@ const WorkoutPlanService = {
 		return data;
 	},
 
-	getWorkoutByWeekDay: async (weekDayIndex: number): Promise<DayExercise[]> => {
+	getWorkoutByWeekDay: async (weekDayIndex: number): Promise<WorkoutPlanDay> => {
 		const { data } = await axiosClient.get(`/workout-plans/weekDay/${weekDayIndex}`);
 		return data;
 	},

@@ -1,4 +1,6 @@
+import { SessionStatusResponse } from "../../models/SessionStatusResponse";
 import { StartSessionResponse } from "../../models/StartSessionResponse";
+import { WorkoutSession } from "../../models/WorkoutSession";
 import axiosClient from "../ApiClient";
 
 const WorkoutSessionService = {
@@ -7,7 +9,7 @@ const WorkoutSessionService = {
 		return data;
 	},
 
-	endWorkoutSession: async (SessionId: number): Promise<void> => {
+	finishWorkoutSession: async (SessionId: number): Promise<void> => {
 		await axiosClient.post("/workout-sessions/finish", { SessionId });
 	},
 
@@ -25,6 +27,16 @@ const WorkoutSessionService = {
 			Reps,
 			WeightKg,
 		});
+	},
+
+	getTodayWorkoutSessionStatus: async (): Promise<SessionStatusResponse> => {
+		const { data } = await axiosClient.get("/workout-sessions/today-status");
+		return data;
+	},
+
+	getWorkoutSessionDetials: async (sessionId: number): Promise<WorkoutSession> => {
+		const { data } = await axiosClient.get(`/workout-sessions/${sessionId}`);
+		return data;
 	},
 };
 

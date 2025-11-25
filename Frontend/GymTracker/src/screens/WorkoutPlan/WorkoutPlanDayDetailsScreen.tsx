@@ -5,15 +5,15 @@ import { RootStackParamList } from "../../navigation/AppNavigator";
 import { DayExercise } from "../../models/DayExercise";
 import { useFocusEffect } from "@react-navigation/native";
 import { RouteProp } from "@react-navigation/native";
-import { ExerciseItem } from "../../components/ExerciseItem";
+import { ExerciseItem } from "../../components/Exercise/ExerciseItem";
 import { Exercise } from "../../models/Exercise";
 import { Colors } from "../../constants/Colors";
 import Header from "../../components/Header/Header";
 import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
-import ListHeader from "../../components/ListHeader";
+import ListHeader from "../../components/List/ListHeader";
 import ExerciseService from "../../api/Services/ExerciseService";
 import AddExerciseModal from "../../components/Modal/AddExerciseModal";
-import ListEmptyComponent from "../../components/ListEmptyComponent";
+import ListEmptyComponent from "../../components/List/ListEmptyComponent";
 import React from "react";
 
 type WorkoutPlanDayDetailsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "WorkoutPlanDayDetails">;

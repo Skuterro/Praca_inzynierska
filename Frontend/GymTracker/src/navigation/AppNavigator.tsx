@@ -5,6 +5,7 @@ import { WorkoutPlansStack } from "./BottomTabs/WorkoutPlanStack";
 import { useAuth } from "../context/AuthContext";
 import { HomeStack } from "./BottomTabs/HomeStack";
 import { AuthStack } from "./BottomTabs/AuthStack";
+import { DayExercise } from "../models/DayExercise";
 import Navbar from "../components/Navbar/Navbar";
 import ProfileScreen from "../screens/UserProfile/ProfileScreen";
 import SettingsScreen from "../screens/Settings/SettingsScreen";
@@ -14,6 +15,7 @@ export type RootStackParamList = {
 	WorkoutPlansMain: undefined;
 	WorkoutPlanDetails: { planId: number; planName: string; isActive: boolean };
 	WorkoutPlanDayDetails: { dayId: number; dayName: string };
+	WorkoutSession: { exercises: DayExercise[]; sessionId: number };
 	CreateWorkoutPlan: undefined;
 	CreateWorkoutPlanDay: { planId: number; existingDays: string[] };
 	ProfileMain: undefined;

@@ -6,6 +6,7 @@ import { PlanItem } from "../../components/WorkoutPlan/PlanItem";
 import { WorkoutPlan } from "../../models/WorkoutPlan";
 import { useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
+import { AppStyles } from "../../constants/AppStyles";
 import React from "react";
 import UserProfileHeader from "../../components/Header/UserProfileHeader";
 import ListHeader from "../../components/List/ListHeader";
@@ -40,16 +41,16 @@ export default function WorkoutPlansScreen({ navigation }: WorkoutPlansScreenPro
 
 	if (loading) {
 		return (
-			<View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
+			<View style={[AppStyles.mainContainer, { justifyContent: "center", alignItems: "center" }]}>
 				<ActivityIndicator size="large" color={Colors.secondary} />
 			</View>
 		);
 	}
 
 	return (
-		<View style={styles.container}>
+		<View style={AppStyles.mainContainer}>
 			<UserProfileHeader />
-			<View style={styles.contentWrapper}>
+			<View style={AppStyles.contentWrapper}>
 				<ListHeader
 					title="Your workout plans"
 					buttonTitle="Create new"

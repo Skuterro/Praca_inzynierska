@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
 		padding: 15,
 		marginBottom: 12,
 	},
-
 	leftContent: {
 		flexDirection: "row",
 		alignItems: "center",
@@ -48,13 +47,8 @@ const styles = StyleSheet.create({
 		color: "white",
 		marginTop: 4,
 	},
-	rightContent: {
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 10,
-	},
 	activeLabel: {
-		color: "green",
+		color: "#4CAF50",
 		fontSize: 14,
 		fontWeight: "bold",
 		marginRight: 10,

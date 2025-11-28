@@ -5,11 +5,20 @@ interface WorkoutSessionExerciseSet {
 }
 
 interface WorkoutSessionExercise {
-	dayExerciseId: number;
+	dayExerciseId: string;
 	sets: WorkoutSessionExerciseSet[];
 }
 
-export interface WorkoutSession {
-	id: number;
+export interface WorkoutSessionDetails {
+	id: string;
 	exercises: WorkoutSessionExercise[];
+}
+
+export interface WorkoutSession {
+	id: string;
+	workoutPlanDayName: string;
+	workoutPlanName: string;
+	isFinished: boolean;
+	start: Date;
+	end: Date;
 }

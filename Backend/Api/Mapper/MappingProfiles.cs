@@ -79,12 +79,11 @@ namespace Api.Mapper
     {
         public OneRepMaxMappingProfile()
         {
-            CreateMap<OneRepMaxCreateDto, OneRepMax>()
+            CreateMap<CreateOneRepMaxRequest, OneRepMax>()
                 .ForMember(dest => dest.Date, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
 
-            CreateMap<OneRepMax, OneRepMaxResponseDto>()
-                .ForMember(dest => dest.ExerciseName, opt => opt.MapFrom(src => src.Exercise.Name));
+            CreateMap<OneRepMax, OneRepMaxResponse>();
         }
     }
 
@@ -118,10 +117,14 @@ namespace Api.Mapper
                         .ToList()
                 ));*/
 
+            CreateMap<WorkoutSession, WorkoutSessionResponse>()
+                .ForMember(dest => dest.WorkoutPlanName, opt => opt.MapFrom(src => src.WorkoutPlanDay.WorkoutPlan.Name))
+                .ForMember(dest => dest.WorkoutPlanDayName, opt => opt.MapFrom(src => src.WorkoutPlanDay.Name));
+
             CreateMap<AddWorkouSessionSetRequest, WorkoutSessionSet>()
                 .ForMember(dest => dest.WorkoutSessionExerciseId, opt => opt.Ignore());
 
-            CreateMap<WorkoutSessionSet, WorkoutSessionSetResponseDto>();
+            CreateMap<WorkoutSessionSet, WorkoutSessionSetResponse>();
         }
     }
 }

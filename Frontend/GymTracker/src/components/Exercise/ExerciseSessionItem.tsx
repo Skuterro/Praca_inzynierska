@@ -10,7 +10,7 @@ interface ExerciseSessionItemProps {
 }
 
 export default function ExerciseSessionItem({ exercise, onSave }: ExerciseSessionItemProps) {
-	const { expanded, toggleExpand, sets, updateSet, saveSet, isExerciseFinished } = useExerciseSets(exercise, onSave);
+	const { expanded, sets, toggleExpand, updateSet, saveSet, isExerciseFinished } = useExerciseSets(exercise, onSave);
 
 	return (
 		<View style={styles.card}>

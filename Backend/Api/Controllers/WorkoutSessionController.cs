@@ -23,22 +23,22 @@ namespace Api.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        [HttpGet("{id}")]
+        /*[HttpGet("{id}")]
         public async Task<ActionResult<WorkoutSessionResponseDto>> GetWorkoutSessionById([FromRoute] int id)
         {
             var workoutSession = await _workoutSessionService.GetWorkoutSessionByIdAsync(id);
             return Ok(workoutSession);
-        }
+        }*/
 
-        [HttpGet("set/{id}")]
+        /*[HttpGet("set/{id}")]
         public async Task<ActionResult<WorkoutSessionSetResponseDto>> GetWorkoutSessionSetById([FromRoute] int id)
         {
             var workoutSessionSet = await _workoutSessionService.GetWorkoutSessionSetByIdAsync(id);
             return Ok(workoutSessionSet);
-        }
+        }*/
 
         [HttpGet]
-        public async Task<ActionResult<List<WorkoutSessionResponseDto>>> GetAllUserWorkoutSessions()
+        public async Task<ActionResult<List<WorkoutSessionResponse>>> GetAllUserWorkoutSessions()
         {
             var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -64,7 +64,7 @@ namespace Api.Controllers
         }
 
         [HttpPost("add-set")]
-        public async Task<ActionResult<WorkoutSessionSetResponseDto>> AddSetToWorkoutSession([FromBody] AddWorkouSessionSetRequest request)
+        public async Task<ActionResult<WorkoutSessionSetResponse>> AddSetToWorkoutSession([FromBody] AddWorkouSessionSetRequest request)
         {
             var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -102,8 +102,9 @@ namespace Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("session/active")]
-        public async Task<ActionResult<ActiveWorkoutSessionResponse?>> GetActiveWorkoutSession()
+
+        [HttpGet("{sessionId}")]
+        public async Task<ActionResult<WorkoutSessionDetailsResponse>> GetWorkoutSessionDetails([FromRoute] int sessionId)
         {
             var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -111,7 +112,7 @@ namespace Api.Controllers
                 return Unauthorized();
             }
 
-            var response = await _workoutSessionService.GetActiveSessionAsync(userId);
+            var response = await _workoutSessionService.GetWorkoutSessionDetailsByIdAsync(userId, sessionId);
             return Ok(response);
         }
     }

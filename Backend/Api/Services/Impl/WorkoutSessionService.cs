@@ -1,7 +1,6 @@
 ﻿using Api.Database;
 using Api.Exceptions;
 using Api.Models.Entities;
-using Api.Models.Requests.ActiveSessionRequests;
 using Api.Models.Requests.WorkoutSessionRequests;
 using Api.Models.Responses.ActiveSessionResponses;
 using Api.Models.Responses.WorkoutSessionResponses;
@@ -45,7 +44,7 @@ namespace Api.Services.Impl
             };
         }
 
-        public async Task<WorkoutSessionSetResponseDto> AddSetAsync(string userId, AddWorkouSessionSetRequest request)
+        public async Task<WorkoutSessionSetResponse> AddSetAsync(string userId, AddWorkouSessionSetRequest request)
         {
             var workoutSession = await _context.WorkoutSessions
                 .Include(ws => ws.SessionExercises)
@@ -81,7 +80,7 @@ namespace Api.Services.Impl
             _context.WorkoutSessionSets.Add(workoutSessionSetEntity);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<WorkoutSessionSetResponseDto>(workoutSessionSetEntity);
+            return _mapper.Map<WorkoutSessionSetResponse>(workoutSessionSetEntity);
         }
 
         public async Task FinishWorkoutSessionAsync(string userId, FinishWorkoutSessionRequest request)
@@ -158,56 +157,19 @@ namespace Api.Services.Impl
             };
         }
 
-        public async Task<ActiveWorkoutSessionResponse?> GetActiveSessionAsync(string userId)
-        {
-            var today = DateTime.UtcNow.Date;
-
-            var activeSession = await _context.WorkoutSessions
-                .Where(ws => ws.UserId == userId && !ws.IsFinished && ws.Start.Date == today)
-                .Include(ws => ws.SessionExercises)
-                    .ThenInclude(se => se.Sets)
-                .Include(ws => ws.SessionExercises)
-                    .ThenInclude(se => se.DayExercise)
-                        .ThenInclude(de => de.Exercise)
-                .FirstOrDefaultAsync();
-
-            if (activeSession == null)
-            {
-                throw new BadRequestException("No active workout session found for today.");
-            }
-
-            return new ActiveWorkoutSessionResponse
-            {
-                SessionId = activeSession.Id,
-                Exercises = activeSession.SessionExercises.Select(se => new ActiveWorkoutExerciseResponse
-                {
-                    DayExerciseId = se.DayExerciseId,
-                    ExerciseName = se.DayExercise.Exercise.Name,
-
-                    Sets = se.Sets
-                        .OrderBy(s => s.SetNumber)
-                        .Select(s => new ActiveWorkoutSetResponse
-                        {
-                            SetNumber = s.SetNumber,
-                            Reps = s.Reps,
-                            WeightKg = s.WeightKg
-                        })
-                        .ToList()
-                }).ToList()
-            };
-        }
-
-        public async Task<IEnumerable<WorkoutSessionResponseDto>> GetAllUserWorkoutSessionsAsync(string userId)
+        public async Task<IEnumerable<WorkoutSessionResponse>> GetAllUserWorkoutSessionsAsync(string userId)
         {
             var workoutSessionEntities = await _context.WorkoutSessions
                 .Where(ws => ws.UserId == userId)
+                .OrderByDescending(ws => ws.Start)
                 .Include(ws => ws.WorkoutPlanDay)
+                    .ThenInclude(wpd => wpd.WorkoutPlan) 
                 .ToListAsync();
 
-            return _mapper.Map<List<WorkoutSessionResponseDto>>(workoutSessionEntities);
+            return _mapper.Map<List<WorkoutSessionResponse>>(workoutSessionEntities);
         }
 
-        public async Task<WorkoutSessionResponseDto> GetWorkoutSessionByIdAsync(int id)
+        public async Task<WorkoutSessionResponse> GetWorkoutSessionByIdAsync(int id)
         {
             var workoutSessionEntity = await _context.WorkoutSessions.FirstOrDefaultAsync(ws => ws.Id == id);
             if (workoutSessionEntity == null)
@@ -215,10 +177,10 @@ namespace Api.Services.Impl
                 throw new NotFoundException("Workout session does not exist");
             }
 
-            return _mapper.Map<WorkoutSessionResponseDto>(workoutSessionEntity);
+            return _mapper.Map<WorkoutSessionResponse>(workoutSessionEntity);
         }
 
-        public async Task<WorkoutSessionSetResponseDto> GetWorkoutSessionSetByIdAsync(int id)
+        public async Task<WorkoutSessionSetResponse> GetWorkoutSessionSetByIdAsync(int id)
         {
             var workoutSessionSetEntity = await _context.WorkoutSessionSets.FirstOrDefaultAsync(wss => wss.Id == id);
             if (workoutSessionSetEntity == null)
@@ -226,12 +188,41 @@ namespace Api.Services.Impl
                 throw new NotFoundException("Workout session does not exist");
             }
 
-            return _mapper.Map<WorkoutSessionSetResponseDto>(workoutSessionSetEntity);
+            return _mapper.Map<WorkoutSessionSetResponse>(workoutSessionSetEntity);
         }
 
-        public Task<IEnumerable<WorkoutSessionExerciseResponseDto>> GetWorkoutSessionDetailsByIdAsync(string userId, int id)
+        public async Task<WorkoutSessionDetailsResponse> GetWorkoutSessionDetailsByIdAsync(string userId, int sessionId)
         {
-            throw new NotImplementedException();
+            var workoutSession = await _context.WorkoutSessions
+                .Where(ws => ws.Id == sessionId && ws.UserId == userId)
+                .Include(ws => ws.SessionExercises)
+                    .ThenInclude(se => se.Sets)
+                .Include(ws => ws.SessionExercises)
+                    .ThenInclude(se => se.DayExercise)
+                        .ThenInclude(de => de.Exercise)
+                .FirstOrDefaultAsync();
+
+            if (workoutSession == null)
+            {
+                throw new NotFoundException("Workout session does not exist or user is not the owner");
+            }
+
+            return new WorkoutSessionDetailsResponse
+            {
+                SessionId = workoutSession.Id,
+                Exercises = workoutSession.SessionExercises.Select(se => new WorkoutSessionExerciseResponse
+                {
+                    DayExerciseId = se.DayExerciseId,
+                    Sets = se.Sets
+                        .OrderBy(s => s.SetNumber)
+                        .Select(s => new WorkoutSessionSetResponse
+                        {
+                            SetNumber = s.SetNumber,
+                            Reps = s.Reps,
+                            WeightKg = s.WeightKg
+                        }).ToList()
+                }).ToList()
+            };
         }
     }
 }

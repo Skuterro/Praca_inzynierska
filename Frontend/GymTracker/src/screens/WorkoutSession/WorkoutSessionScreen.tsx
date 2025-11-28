@@ -1,72 +1,69 @@
-import { ActivityIndicator, Alert, FlatList, StyleSheet, View } from "react-native";
+import { View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useEffect, useState } from "react";
 import { RootStackParamList } from "../../navigation/AppNavigator";
-import { useWorkoutSession } from "../../hooks/workoutSessionScreen/useWorkoutSession";
+import { WorkoutSession } from "../../models/WorkoutSession";
+import { SessionItem } from "../../components/FlatListItem/SessionItem";
 import { RouteProp } from "@react-navigation/native";
-import { Colors } from "../../constants/Colors";
-import Header from "../../components/Header/Header";
-import ListHeader from "../../components/List/ListHeader";
-import ExerciseSessionItem from "../../components/Exercise/ExerciseSessionItem";
+import { AppStyles } from "../../constants/AppStyles";
+import WorkoutSessionService from "../../api/Services/WorkoutSessionService";
+import ListEmptyComponent from "../../components/List/ListEmptyComponent";
+import UserProfileHeader from "../../components/Header/UserProfileHeader";
 
-type SessionScreenRouteProp = RouteProp<RootStackParamList, "WorkoutSession">;
-type SessionScreenNavProp = NativeStackNavigationProp<RootStackParamList, "WorkoutSession">;
+type WorkoutSessionScreenRouteProp = RouteProp<RootStackParamList, "WorkoutSessions">;
+type WorkoutSessionsScreenNavProp = NativeStackNavigationProp<RootStackParamList, "WorkoutSessions">;
 
-type Props = {
-	route: SessionScreenRouteProp;
-	navigation: SessionScreenNavProp;
-};
+interface WorkoutSessionScreenProps {
+	route: WorkoutSessionScreenRouteProp;
+	navigation: WorkoutSessionsScreenNavProp;
+}
 
-export default function WorkoutSessionScreen({ route, navigation }: Props) {
-	const { exercises, sessionId } = route.params;
+export default function WorkoutSessionScreen({}: WorkoutSessionScreenProps) {
+	const [sessions, setSessions] = useState<WorkoutSession[]>([]);
+	const [loading, setLoading] = useState<boolean>(false);
 
-	const { loading, isSaving, exerciseList, addSet, finishWorkout } = useWorkoutSession(sessionId, exercises);
+	const fetchWorkoutSessions = async () => {
+		try {
+			setLoading(true);
 
-	const handleFinishWorkout = () => {
-		Alert.alert("Finish Workout", "Are you sure you want to finish?", [
-			{ text: "Cancel", style: "cancel" },
-			{
-				text: "Finish",
-				onPress: async () => {
-					await finishWorkout();
-					navigation.popToTop();
-				},
-			},
-		]);
+			const data = await WorkoutSessionService.getAllUserSessions();
+			setSessions(data);
+		} finally {
+			setLoading(false);
+		}
 	};
 
-	if (loading) {
-		return (
-			<View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
-				<ActivityIndicator size="large" color={Colors.secondary} />
-			</View>
-		);
-	}
+	useEffect(() => {
+		fetchWorkoutSessions();
+	}, []);
+
 	return (
-		<View style={styles.container}>
-			<Header title="Workout session" onButtonClick={() => navigation.goBack()} />
-			<View style={styles.contentWrapper}>
-				<ListHeader buttonTitle="Finish workout" onButtonClick={handleFinishWorkout} />
-				<FlatList
-					data={exerciseList}
-					keyExtractor={(item) => item.id}
-					renderItem={({ item }) => <ExerciseSessionItem exercise={item} onSave={addSet} />}
-					showsVerticalScrollIndicator={false}
-				/>
+		<View style={AppStyles.mainContainer}>
+			<UserProfileHeader />
+			<View style={AppStyles.contentWrapper}>
+				<Text style={styles.title}>Your sessions</Text>
+				{loading ? (
+					<ActivityIndicator size="small" color="white" />
+				) : (
+					<FlatList
+						data={sessions}
+						keyExtractor={(item) => item.id}
+						renderItem={({ item }) => <SessionItem session={item} onPress={() => {}} />}
+						showsVerticalScrollIndicator={false}
+						ListEmptyComponent={<ListEmptyComponent />}
+					/>
+				)}
 			</View>
-			{isSaving && <ActivityIndicator style={{ marginTop: 10 }} color="white" />}
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: Colors.primary,
-	},
-	contentWrapper: {
-		flex: 1,
-		paddingHorizontal: 20,
-		paddingTop: 10,
+	title: {
+		fontSize: 22,
+		fontWeight: "bold",
+		color: "white",
+		textAlign: "center",
 		marginBottom: 15,
 	},
 });

@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Route } from "@react-navigation/native";
 import IonIcon from "react-native-vector-icons/Ionicons";
-import FeatherIcon from "react-native-vector-icons/Feather";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 interface NavItemProps {
 	route: Route<string, object | undefined>;
@@ -21,18 +21,19 @@ export const NavItem = ({ route, isFocused, onPress }: NavItemProps) => {
 			IconComponent = IonIcon;
 			iconName = isFocused ? "home" : "home-outline";
 			break;
+		case "WorkoutSessions":
+			IconComponent = IonIcon;
+			iconName = isFocused ? "calendar-sharp" : "calendar-outline";
+			displayText = "Workout Sessions";
+			break;
 		case "WorkoutPlans":
 			IconComponent = IonIcon;
 			iconName = "barbell";
 			displayText = "Workout Plans";
 			break;
-		case "Settings":
-			IconComponent = IonIcon;
-			iconName = isFocused ? "settings" : "settings-outline";
-			break;
 		case "Profile":
-			IconComponent = FeatherIcon;
-			iconName = "user";
+			IconComponent = FontAwesome;
+			iconName = isFocused ? "user" : "user-o";
 			break;
 		default:
 			return null;

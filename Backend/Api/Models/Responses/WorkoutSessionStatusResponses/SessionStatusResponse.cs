@@ -2,9 +2,9 @@
 {
     public enum SessionStatusEnum
     {
-        StartWorkout,    
-        ContinueWorkout,  
-        FinishedWorkout  
+        StartWorkout = 1,    
+        ContinueWorkout = 2,  
+        FinishedWorkout = 3  
     }
     public class SessionStatusResponse
     {

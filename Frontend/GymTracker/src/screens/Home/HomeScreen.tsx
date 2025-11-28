@@ -1,17 +1,16 @@
-import { View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { View, Text, StyleSheet } from "react-native";
 import { RootStackParamList } from "../../navigation/AppNavigator";
 import { useWorkoutButton } from "../../hooks/homeScreen/useWorkoutButton";
 import { CalendarSection } from "../../components/Home/CalendarSection";
 import { useWorkoutData } from "../../hooks/homeScreen/useWorkoutData";
-import { ExerciseItem } from "../../components/Exercise/ExerciseItem";
+import { WorkoutContent } from "../../components/Home/WorkoutContent";
 import { AppStyles } from "../../constants/AppStyles";
 import { useState } from "react";
 import { Colors } from "../../constants/Colors";
 import UserProfileHeader from "../../components/Header/UserProfileHeader";
 import ListHeader from "../../components/List/ListHeader";
 import React from "react";
-import { WorkoutContent } from "../../components/Home/WorkoutContent";
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "HomeMain">;
 
@@ -67,8 +66,8 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 const styles = StyleSheet.create({
 	borderBottom: {
 		borderBottomWidth: 2,
-		borderBottomColor: Colors.secondary,
-		marginBottom: 10,
+		borderBottomColor: Colors.subTitle,
+		marginBottom: 15,
 	},
 	sectionHeader: {
 		flexDirection: "row",

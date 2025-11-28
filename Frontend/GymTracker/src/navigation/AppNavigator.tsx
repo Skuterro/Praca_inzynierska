@@ -9,13 +9,15 @@ import { DayExercise } from "../models/DayExercise";
 import Navbar from "../components/Navbar/Navbar";
 import ProfileScreen from "../screens/UserProfile/ProfileScreen";
 import SettingsScreen from "../screens/Settings/SettingsScreen";
+import WorkoutSessionScreen from "../screens/WorkoutSession/WorkoutSessionScreen";
 
 export type RootStackParamList = {
 	HomeMain: undefined;
 	WorkoutPlansMain: undefined;
 	WorkoutPlanDetails: { planId: number; planName: string; isActive: boolean };
 	WorkoutPlanDayDetails: { dayId: number; dayName: string };
-	WorkoutSession: { exercises: DayExercise[]; sessionId: number };
+	WorkoutSessions: undefined;
+	TrackWorkout: { exercises: DayExercise[]; sessionId: number };
 	CreateWorkoutPlan: undefined;
 	CreateWorkoutPlanDay: { planId: number; existingDays: string[] };
 	ProfileMain: undefined;
@@ -26,6 +28,7 @@ export type RootStackParamList = {
 
 export type RootTabParamList = {
 	Home: undefined;
+	WorkoutSessions: undefined;
 	WorkoutPlans: undefined;
 	Profile: undefined;
 	Settings: undefined;
@@ -58,6 +61,7 @@ export default function AppNavigator() {
 			{user ? (
 				<Tab.Navigator tabBar={(props) => <Navbar {...props} />} screenOptions={{ headerShown: false }}>
 					<Tab.Screen name="Home" component={HomeStack} />
+					<Tab.Screen name="WorkoutSessions" component={WorkoutSessionScreen} />
 					<Tab.Screen name="WorkoutPlans" component={WorkoutPlansStack} />
 					<Tab.Screen name="Profile" component={ProfileStack} />
 					<Tab.Screen name="Settings" component={SettingsStack} />

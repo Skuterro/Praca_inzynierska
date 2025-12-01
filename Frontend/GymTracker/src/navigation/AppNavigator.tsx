@@ -1,15 +1,16 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { WorkoutSessionStack } from "./BottomTabs/WorkoutSessionStack";
 import { NavigationContainer } from "@react-navigation/native";
+import { ExerciseRecordEnum } from "../models/enums/ExerciseRecordEnum";
 import { WorkoutPlansStack } from "./BottomTabs/WorkoutPlanStack";
-import { useAuth } from "../context/AuthContext";
+import { PersonalRecord } from "../models/PersonalRecord";
+import { ProfileStack } from "./BottomTabs/ProfileStack";
+import { DayExercise } from "../models/DayExercise";
 import { HomeStack } from "./BottomTabs/HomeStack";
 import { AuthStack } from "./BottomTabs/AuthStack";
-import { DayExercise } from "../models/DayExercise";
-import Navbar from "../components/Navbar/Navbar";
-import ProfileScreen from "../screens/UserProfile/ProfileScreen";
-import SettingsScreen from "../screens/Settings/SettingsScreen";
-import WorkoutSessionScreen from "../screens/WorkoutSession/WorkoutSessionScreen";
+import { useAuth } from "../context/AuthContext";
+import { Navbar } from "../components/Navbar/Navbar";
 
 export type RootStackParamList = {
 	HomeMain: undefined;
@@ -21,37 +22,22 @@ export type RootStackParamList = {
 	CreateWorkoutPlan: undefined;
 	CreateWorkoutPlanDay: { planId: number; existingDays: string[] };
 	ProfileMain: undefined;
-	SettingsMain: undefined;
+	PersonalRecords: { personalRecordExercise: ExerciseRecordEnum };
+	StrengthChart: { records: PersonalRecord[] };
+	Settings: undefined;
 	Login: undefined;
 	Register: undefined;
 };
 
 export type RootTabParamList = {
 	Home: undefined;
-	WorkoutSessions: undefined;
+	Sessions: undefined;
 	WorkoutPlans: undefined;
 	Profile: undefined;
-	Settings: undefined;
 };
 
 export const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<RootTabParamList>();
-
-function ProfileStack() {
-	return (
-		<Stack.Navigator screenOptions={{ headerShown: false }}>
-			<Stack.Screen name="ProfileMain" component={ProfileScreen} />
-		</Stack.Navigator>
-	);
-}
-
-function SettingsStack() {
-	return (
-		<Stack.Navigator screenOptions={{ headerShown: false }}>
-			<Stack.Screen name="SettingsMain" component={SettingsScreen} />
-		</Stack.Navigator>
-	);
-}
 
 export default function AppNavigator() {
 	const { user } = useAuth();
@@ -61,10 +47,9 @@ export default function AppNavigator() {
 			{user ? (
 				<Tab.Navigator tabBar={(props) => <Navbar {...props} />} screenOptions={{ headerShown: false }}>
 					<Tab.Screen name="Home" component={HomeStack} />
-					<Tab.Screen name="WorkoutSessions" component={WorkoutSessionScreen} />
+					<Tab.Screen name="Sessions" component={WorkoutSessionStack} />
 					<Tab.Screen name="WorkoutPlans" component={WorkoutPlansStack} />
 					<Tab.Screen name="Profile" component={ProfileStack} />
-					<Tab.Screen name="Settings" component={SettingsStack} />
 				</Tab.Navigator>
 			) : (
 				<AuthStack />

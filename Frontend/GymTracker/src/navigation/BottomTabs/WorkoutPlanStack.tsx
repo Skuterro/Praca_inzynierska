@@ -1,9 +1,9 @@
 import { Stack } from "../AppNavigator";
-import WorkoutPlansScreen from "../../screens/WorkoutPlan/WorkoutPlansScreen";
-import CreateWorkoutPlanScreen from "../../screens/WorkoutPlan/CreateWorkoutPlanScreen";
-import WorkoutPlanDetailsScreen from "../../screens/WorkoutPlan/WorkoutPlanDetailsScreen";
-import CreateWorkoutPlanDayScreen from "../../screens/WorkoutPlan/CreateWorkoutPlanDayScreen";
 import WorkoutPlanDayDetailsScreen from "../../screens/WorkoutPlan/WorkoutPlanDayDetailsScreen";
+import CreateWorkoutPlanDayScreen from "../../screens/WorkoutPlan/CreateWorkoutPlanDayScreen";
+import WorkoutPlanDetailsScreen from "../../screens/WorkoutPlan/WorkoutPlanDetailsScreen";
+import CreateWorkoutPlanScreen from "../../screens/WorkoutPlan/CreateWorkoutPlanScreen";
+import WorkoutPlansScreen from "../../screens/WorkoutPlan/WorkoutPlansScreen";
 
 export function WorkoutPlansStack() {
 	return (

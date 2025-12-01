@@ -1,6 +1,6 @@
 import { Stack } from "../AppNavigator";
-import LoginScreen from "../../screens/Auth/LoginScreen";
 import RegisterScreen from "../../screens/Auth/RegisterScreen";
+import LoginScreen from "../../screens/Auth/LoginScreen";
 
 export function AuthStack() {
 	return (

@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { ExerciseWithSets } from "../../models/ExerciseWithSets";
 import { DayExercise } from "../../models/DayExercise";
 import WorkoutSessionService from "../../api/Services/WorkoutSessionService";
+import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
 
-export function useWorkoutSession(sessionId: number, exercises: DayExercise[]) {
+export function useWorkoutSession(sessionId: number, workoutPlanDayId: number) {
 	const [loading, setLoading] = useState(false);
 	const [isSaving, setIsSaving] = useState(false);
 	const [isFinishing, setIsFinishing] = useState(false);
@@ -12,10 +13,11 @@ export function useWorkoutSession(sessionId: number, exercises: DayExercise[]) {
 	const loadSessionData = async () => {
 		try {
 			setLoading(true);
-			const response = await WorkoutSessionService.getWorkoutSessionDetials(sessionId);
+			const exercises = await WorkoutPlanService.getWorkoutPlanDayExercises(workoutPlanDayId);
+			const session = await WorkoutSessionService.getWorkoutSessionDetials(sessionId);
 
 			const filledExercises: ExerciseWithSets[] = exercises.map((ex) => {
-				const existing = response.exercises.find((x) => x.dayExerciseId === Number(ex.id));
+				const existing = session.exercises.find((x) => x.dayExerciseId === ex.id);
 
 				const mappedSets = existing
 					? existing.sets.map((s) => ({

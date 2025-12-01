@@ -46,16 +46,16 @@ export function useWorkoutButton({
 				if (workoutDayId) {
 					const response = await WorkoutSessionService.startWorkoutSession(workoutDayId);
 					navigation.navigate("TrackWorkout", {
-						exercises: selectedDayExercises,
+						workoutPlanDayId: workoutDayId,
 						sessionId: response.sessionId,
 					});
 				}
 				break;
 
 			case SessionStatusEnum.ContinueWorkout:
-				if (sessionStatus.sessionId) {
+				if (sessionStatus.sessionId && workoutDayId) {
 					navigation.navigate("TrackWorkout", {
-						exercises: selectedDayExercises,
+						workoutPlanDayId: workoutDayId,
 						sessionId: sessionStatus.sessionId,
 					});
 				}

@@ -6,7 +6,6 @@ import { ExerciseRecordEnum } from "../models/enums/ExerciseRecordEnum";
 import { WorkoutPlansStack } from "./BottomTabs/WorkoutPlanStack";
 import { PersonalRecord } from "../models/PersonalRecord";
 import { ProfileStack } from "./BottomTabs/ProfileStack";
-import { DayExercise } from "../models/DayExercise";
 import { HomeStack } from "./BottomTabs/HomeStack";
 import { AuthStack } from "./BottomTabs/AuthStack";
 import { useAuth } from "../context/AuthContext";
@@ -18,7 +17,7 @@ export type RootStackParamList = {
 	WorkoutPlanDetails: { planId: number; planName: string; isActive: boolean };
 	WorkoutPlanDayDetails: { dayId: number; dayName: string };
 	WorkoutSessions: undefined;
-	TrackWorkout: { exercises: DayExercise[]; sessionId: number };
+	TrackWorkout: { workoutPlanDayId: number; sessionId: number };
 	CreateWorkoutPlan: undefined;
 	CreateWorkoutPlanDay: { planId: number; existingDays: string[] };
 	ProfileMain: undefined;

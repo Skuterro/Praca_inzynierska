@@ -1,5 +1,5 @@
 export interface SimpleWorkoutPlanDay {
-	id: string;
+	id: number;
 	name: string;
 	weekDay: string;
 }

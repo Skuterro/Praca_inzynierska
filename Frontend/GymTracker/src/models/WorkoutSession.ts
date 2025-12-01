@@ -5,18 +5,19 @@ interface WorkoutSessionExerciseSet {
 }
 
 interface WorkoutSessionExercise {
-	dayExerciseId: string;
+	dayExerciseId: number;
 	sets: WorkoutSessionExerciseSet[];
 }
 
 export interface WorkoutSessionDetails {
-	id: string;
+	id: number;
 	exercises: WorkoutSessionExercise[];
 }
 
 export interface WorkoutSession {
-	id: string;
+	id: number;
 	workoutPlanDayName: string;
+	workoutPlanDayId: number;
 	workoutPlanName: string;
 	isFinished: boolean;
 	start: Date;

@@ -1,9 +1,10 @@
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { LoadingDataContainer } from "../../components/LoadingDataContainer";
+import { RootStackParamList } from "../../navigation/AppNavigator";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Colors } from "../../constants/Colors";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../navigation/AppNavigator";
 
 type RegisterScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "Register">;
 
@@ -16,13 +17,20 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [username, setUsername] = useState("");
+	const [registering, setRegistering] = useState(false);
 
 	const handleRegister = async () => {
 		try {
+			setRegistering(true);
 			await register(username, email, password);
 		} finally {
+			setRegistering(false);
 		}
 	};
+
+	if (registering) {
+		return <LoadingDataContainer />;
+	}
 
 	return (
 		<View style={styles.container}>
@@ -69,7 +77,7 @@ const styles = StyleSheet.create({
 		color: "white",
 		marginBottom: 20,
 	},
-	button: { backgroundColor: Colors.color1, padding: 12, borderRadius: 8, alignItems: "center" },
+	button: { backgroundColor: Colors.colorYellow, padding: 12, borderRadius: 8, alignItems: "center" },
 	buttonText: { color: "black", fontWeight: "bold", fontSize: 16 },
-	linkText: { color: Colors.color1, textAlign: "center", marginTop: 15, fontWeight: "500" },
+	linkText: { color: Colors.colorYellow, textAlign: "center", marginTop: 15, fontWeight: "500" },
 });

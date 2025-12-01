@@ -1,9 +1,10 @@
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { LoadingDataContainer } from "../../components/LoadingDataContainer";
+import { RootStackParamList } from "../../navigation/AppNavigator";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Colors } from "../../constants/Colors";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../navigation/AppNavigator";
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "Login">;
 
@@ -15,13 +16,20 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 	const { login } = useAuth();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [logging, setLogging] = useState(false);
 
 	const handleLogin = async () => {
 		try {
+			setLogging(true);
 			await login(email, password);
 		} finally {
+			setLogging(false);
 		}
 	};
+
+	if (logging) {
+		return <LoadingDataContainer />;
+	}
 
 	return (
 		<View style={styles.container}>
@@ -61,7 +69,7 @@ const styles = StyleSheet.create({
 		color: "white",
 		marginBottom: 20,
 	},
-	button: { backgroundColor: Colors.color1, padding: 12, borderRadius: 8, alignItems: "center" },
+	button: { backgroundColor: Colors.colorYellow, padding: 12, borderRadius: 8, alignItems: "center" },
 	buttonText: { color: "black", fontWeight: "bold", fontSize: 16 },
-	linkText: { color: Colors.color1, textAlign: "center", marginTop: 15, fontWeight: "500" },
+	linkText: { color: Colors.colorYellow, textAlign: "center", marginTop: 15, fontWeight: "500" },
 });

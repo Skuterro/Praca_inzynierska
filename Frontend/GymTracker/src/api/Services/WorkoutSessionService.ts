@@ -40,8 +40,10 @@ const WorkoutSessionService = {
 		return data;
 	},
 
-	getAllUserSessions: async (pageNumber: number): Promise<PagedResult<WorkoutSession>> => {
-		const { data } = await axiosClient.get(`/workout-sessions/?pageNumber=${pageNumber}`);
+	getAllUserSessions: async (pageNumber: number, pageSize?: number): Promise<PagedResult<WorkoutSession>> => {
+		const url = `/workout-sessions/?pageNumber=${pageNumber}` + (pageSize ? `&pageSize=${pageSize}` : "");
+
+		const { data } = await axiosClient.get(url);
 		return data;
 	},
 };

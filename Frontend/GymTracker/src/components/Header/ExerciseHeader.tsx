@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Colors } from "../../constants/Colors";
 
 interface ExerciseHeaderProps {
 	name: string;
@@ -9,16 +10,16 @@ interface ExerciseHeaderProps {
 	onPress: () => void;
 }
 
-export function ExerciseHeader({ name, setsCount, expanded, isFinished, onPress }: ExerciseHeaderProps) {
+export default function ExerciseHeader({ name, setsCount, expanded, isFinished, onPress }: ExerciseHeaderProps) {
 	return (
 		<TouchableOpacity style={styles.cardHeader} onPress={onPress} activeOpacity={0.7}>
 			<View style={{ flex: 1 }}>
-				<Text style={[styles.exerciseName, isFinished && { color: "#4CAF50" }]}>{name}</Text>
+				<Text style={[styles.exerciseName, isFinished && { color: Colors.colorGreen }]}>{name}</Text>
 				<Text style={styles.subtitle}>{setsCount} sets</Text>
 			</View>
 
 			{isFinished ? (
-				<Ionicons name="checkmark-circle" size={28} color="#4CAF50" />
+				<Ionicons name="checkmark-circle" size={28} color={Colors.colorGreen} />
 			) : (
 				<Ionicons name={expanded ? "chevron-up" : "chevron-down"} size={24} color="#666" />
 			)}
@@ -40,6 +41,6 @@ const styles = StyleSheet.create({
 	},
 	subtitle: {
 		fontSize: 12,
-		color: "#888",
+		color: Colors.subTitle,
 	},
 });

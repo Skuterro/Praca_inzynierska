@@ -1,5 +1,5 @@
-import DayPicker from "./DayPicker";
 import MonthDropdown from "./MonthDropdown";
+import DayPicker from "./DayPicker";
 
 interface CalendarSectionProps {
 	today: Date;
@@ -9,7 +9,7 @@ interface CalendarSectionProps {
 	setSelectedDay: (day: number) => void;
 }
 
-export function CalendarSection({
+export default function CalendarSection({
 	today,
 	monthIndex,
 	setMonthIndex,

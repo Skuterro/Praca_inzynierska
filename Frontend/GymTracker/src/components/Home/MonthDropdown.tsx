@@ -1,6 +1,7 @@
-import React, { useRef, useState } from "react";
 import { View, Text, TouchableOpacity, Animated, StyleSheet } from "react-native";
+import React, { useRef, useState } from "react";
 import { Months } from "../../constants/Months";
+import { Colors } from "../../constants/Colors";
 
 interface MonthDropdownProps {
 	monthIndex: number;
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
 	monthText: {
 		fontSize: 16,
 		fontWeight: "bold",
-		color: "white",
+		color: Colors.colorWhite,
 		marginBottom: 20,
 	},
 	dropdown: {
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 10,
 	},
 	dropdownItemText: {
-		color: "white",
+		color: Colors.colorWhite,
 		fontSize: 16,
 	},
 	contentWrapper: {

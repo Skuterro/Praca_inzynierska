@@ -1,40 +1,25 @@
-import { View, Text, StyleSheet } from "react-native";
-import { Ionicons, FontAwesome6 } from "@expo/vector-icons";
+import { View, Text } from "react-native";
+import { AppStyles } from "../../constants/AppStyles";
+import { Ionicons } from "@expo/vector-icons";
+import { Colors } from "../../constants/Colors";
 
 interface BodyMetricsItemProps {
 	icon: keyof typeof Ionicons.glyphMap;
-	value: string;
+	value: number | undefined;
 	label: string;
+	unit?: string;
 }
 
-export default function BodyMetricsItem({ icon, value, label }: BodyMetricsItemProps) {
+export default function BodyMetricsItem({ icon, value, label, unit = "kg" }: BodyMetricsItemProps) {
+	const displayValue = value !== undefined ? `${value} ${unit}` : " - ";
+
 	return (
-		<View style={styles.row}>
-			<Ionicons name={icon} size={26} color="#ccc" style={{ marginRight: 12 }} />
-			<View style={styles.column}>
-				<Text style={styles.value}>{value}</Text>
-				<Text style={styles.label}>{label}</Text>
+		<View style={{ flexDirection: "row", alignItems: "center" }}>
+			<Ionicons name={icon} size={24} color={Colors.colorWhite} style={{ marginRight: 12 }} />
+			<View style={{ flexDirection: "column" }}>
+				<Text style={AppStyles.title}>{displayValue}</Text>
+				<Text style={AppStyles.subTitle}>{label}</Text>
 			</View>
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	row: {
-		flexDirection: "row",
-		alignItems: "center",
-	},
-	column: {
-		flexDirection: "column",
-	},
-	value: {
-		fontSize: 20,
-		fontWeight: "bold",
-		color: "white",
-	},
-	label: {
-		fontSize: 14,
-		color: "#aaa",
-		marginTop: -2,
-	},
-});

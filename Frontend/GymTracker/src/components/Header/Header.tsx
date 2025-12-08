@@ -1,36 +1,35 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { AppStyles } from "../../constants/AppStyles";
 import { Colors } from "../../constants/Colors";
 import FeatherIcon from "react-native-vector-icons/Feather";
 
 interface HeaderProps {
 	title: string;
 	onButtonClick: () => void;
+	onDelete?: () => void;
 }
 
-export default function Header({ title, onButtonClick }: HeaderProps) {
+export default function Header({ title, onButtonClick, onDelete }: HeaderProps) {
 	return (
-		<View style={styles.headerContainer}>
+		<View style={AppStyles.screenHeader}>
 			<View style={styles.sideContainer}>
 				<TouchableOpacity onPress={onButtonClick}>
 					<FeatherIcon name="arrow-left-circle" size={32} color="white" />
 				</TouchableOpacity>
 			</View>
 			<Text style={styles.title}>{title}</Text>
-			<View style={styles.sideContainer} />
+			<View style={styles.sideContainer}>
+				{onDelete && (
+					<TouchableOpacity onPress={onDelete}>
+						<FeatherIcon name="trash-2" size={30} color={Colors.colorRed} />
+					</TouchableOpacity>
+				)}
+			</View>
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	headerContainer: {
-		height: 90,
-		backgroundColor: Colors.primary,
-		marginTop: 50,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		paddingHorizontal: 20,
-	},
 	sideContainer: {
 		width: 32,
 		height: 32,

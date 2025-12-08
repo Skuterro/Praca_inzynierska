@@ -13,7 +13,7 @@ export default function ListHeader({ title, buttonTitle, disabled, onButtonClick
 		<View style={styles.sectionHeader}>
 			{title && <Text style={styles.sectionTitle}>{title}</Text>}
 			<TouchableOpacity
-				style={[styles.button, disabled && styles.buttonDisabled]}
+				style={[styles.button, disabled && { opacity: 0.4 }]}
 				disabled={disabled}
 				onPress={onButtonClick}
 				activeOpacity={disabled ? 1 : 0.7}
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 		color: "white",
 	},
 	button: {
-		backgroundColor: Colors.color1,
+		backgroundColor: Colors.colorYellow,
 		paddingVertical: 6,
 		paddingHorizontal: 12,
 		borderRadius: 8,
@@ -46,9 +46,6 @@ const styles = StyleSheet.create({
 		color: "black",
 		fontWeight: "600",
 		fontSize: 14,
-	},
-	buttonDisabled: {
-		opacity: 0.4,
 	},
 	buttonTextDisabled: {
 		color: "#333",

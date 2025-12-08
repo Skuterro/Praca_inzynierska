@@ -1,8 +1,9 @@
 import { View, StyleSheet } from "react-native";
 import { ExerciseWithSets } from "../../models/ExerciseWithSets";
 import { useExerciseSets } from "../../hooks/workoutSessionScreen/useExerciseSets";
-import { ExerciseHeader } from "../Header/ExerciseHeader";
-import { ExerciseSetRow } from "./ExerciseSetRow";
+import { Colors } from "../../constants/Colors";
+import ExerciseHeader from "../Header/ExerciseHeader";
+import ExerciseSetRow from "./ExerciseSetRow";
 
 interface ExerciseSessionItemProps {
 	exercise: ExerciseWithSets;
@@ -44,25 +45,13 @@ export default function ExerciseSessionItem({ exercise, onSave }: ExerciseSessio
 
 const styles = StyleSheet.create({
 	card: {
-		backgroundColor: "#1E1E1E",
+		backgroundColor: Colors.colorDarkGray,
 		marginVertical: 8,
 		borderRadius: 12,
 		overflow: "hidden",
 	},
 	setsContainer: {
 		padding: 16,
-		paddingTop: 0,
-		backgroundColor: "#1E1E1E",
-	},
-	rowHeader: {
-		flexDirection: "row",
-		marginBottom: 10,
-	},
-	colHeader: {
-		flex: 1,
-		color: "#666",
-		fontSize: 10,
-		fontWeight: "bold",
-		textAlign: "center",
+		backgroundColor: Colors.colorDarkGray,
 	},
 });

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useMemo } from "react";
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
+import React, { useEffect, useRef, useMemo } from "react";
 import { Colors } from "../../constants/Colors";
 
 interface DayPickerProps {
@@ -8,6 +8,8 @@ interface DayPickerProps {
 	selectedDay: number;
 	setSelectedDay: (day: number) => void;
 }
+
+const ITEM_WIDTH = 60;
 
 export default function DayPicker({ today, monthIndex, selectedDay, setSelectedDay }: DayPickerProps) {
 	const scrollRef = useRef<ScrollView>(null);
@@ -22,17 +24,20 @@ export default function DayPicker({ today, monthIndex, selectedDay, setSelectedD
 			arr.push({ day: i, isToday: monthIndex === today.getMonth() && i === today.getDate() });
 		}
 		return arr;
-	}, [monthIndex]);
+	}, [monthIndex, today]);
 
 	useEffect(() => {
-		if (monthIndex !== today.getMonth()) return;
-		const todayIndex = today.getDate() - 1;
-		const circleWidth = 40;
-		const circleMargin = 10;
+		if (monthIndex !== today.getMonth()) {
+			scrollRef.current?.scrollTo({ x: 0, animated: false });
+			return;
+		}
 
-		const offset = todayIndex * (circleWidth + circleMargin * 2) - screenWidth / 2 + circleWidth / 2;
+		const todayIndex = today.getDate() - 1;
+		const centerOfTarget = todayIndex * ITEM_WIDTH + ITEM_WIDTH / 2;
+		const offset = centerOfTarget - screenWidth / 2;
+
 		scrollRef.current?.scrollTo({ x: offset, animated: false });
-	}, [monthIndex, screenWidth]);
+	}, [monthIndex, screenWidth, today]);
 
 	return (
 		<View>
@@ -87,20 +92,20 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.secondary,
 		justifyContent: "center",
 		alignItems: "center",
-		marginHorizontal: 9.2,
+		marginHorizontal: 8,
 	},
 	dayCircleToday: {
 		width: 55,
 		height: 55,
 		borderRadius: 27.5,
-		backgroundColor: Colors.color1,
+		backgroundColor: Colors.colorYellow,
 	},
 	dayCircleTodayOnlyBorder: {
 		width: 55,
 		height: 55,
 		borderRadius: 27.5,
 		borderWidth: 2,
-		borderColor: Colors.color1,
+		borderColor: Colors.colorYellow,
 		backgroundColor: "transparent",
 		justifyContent: "center",
 		alignItems: "center",
@@ -109,7 +114,7 @@ const styles = StyleSheet.create({
 		width: 40,
 		height: 40,
 		borderRadius: 20,
-		backgroundColor: Colors.color1,
+		backgroundColor: Colors.colorYellow,
 		justifyContent: "center",
 		alignItems: "center",
 	},
@@ -124,7 +129,7 @@ const styles = StyleSheet.create({
 		color: Colors.primary,
 	},
 	dayTextTodayBorder: {
-		color: Colors.color1,
+		color: Colors.colorYellow,
 		fontSize: 18,
 		fontWeight: "bold",
 	},

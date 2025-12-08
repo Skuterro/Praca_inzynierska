@@ -1,25 +1,28 @@
-import { ActivityIndicator, Text, FlatList, StyleSheet } from "react-native";
+import { Text, FlatList, StyleSheet } from "react-native";
 import { DayExercise } from "../../models/DayExercise";
-import { ExerciseItem } from "../Exercise/ExerciseItem";
+import { constants } from "../../constants/Constants";
+import { Colors } from "../../constants/Colors";
+import LoadingDataContainer from "../LoadingDataContainer";
+import ExerciseItem from "../Exercise/ExerciseItem";
 
 interface WorkoutContentProps {
 	loading: boolean;
 	exercises: DayExercise[];
 }
 
-export function WorkoutContent({ loading, exercises }: WorkoutContentProps) {
+export default function WorkoutContent({ loading, exercises }: WorkoutContentProps) {
 	if (loading) {
-		return <ActivityIndicator size="small" color="white" />;
+		return <LoadingDataContainer />;
 	}
 
 	if (exercises.length === 0) {
-		return <Text style={styles.restDayText}>Rest day — no workout today</Text>;
+		return <Text style={styles.restDayText}>{constants.restDay}</Text>;
 	}
 
 	return (
 		<FlatList
 			data={exercises}
-			keyExtractor={(item) => item.id}
+			keyExtractor={(item) => item.id.toString()}
 			renderItem={({ item }) => <ExerciseItem exercise={item} />}
 			showsVerticalScrollIndicator={false}
 		/>
@@ -31,7 +34,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		marginTop: 40,
 		fontSize: 16,
-		color: "#999",
+		color: Colors.subTitle,
 		fontWeight: "500",
 	},
 });

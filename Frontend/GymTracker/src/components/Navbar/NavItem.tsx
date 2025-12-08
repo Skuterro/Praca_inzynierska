@@ -1,7 +1,10 @@
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
+import { constants } from "../../constants/Constants";
+import { AppStyles } from "../../constants/AppStyles";
+import { Colors } from "../../constants/Colors";
 import { Route } from "@react-navigation/native";
-import IonIcon from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import IonIcon from "react-native-vector-icons/Ionicons";
 
 interface NavItemProps {
 	route: Route<string, object | undefined>;
@@ -9,9 +12,9 @@ interface NavItemProps {
 	onPress: () => void;
 }
 
-export const NavItem = ({ route, isFocused, onPress }: NavItemProps) => {
+export default function NavItem({ route, isFocused, onPress }: NavItemProps) {
 	const label = route.name;
-	const iconColor = isFocused ? "white" : "gray";
+	const iconColor = isFocused ? Colors.colorWhite : Colors.subTitle;
 	let IconComponent;
 	let iconName;
 	let displayText = label;
@@ -21,15 +24,15 @@ export const NavItem = ({ route, isFocused, onPress }: NavItemProps) => {
 			IconComponent = IonIcon;
 			iconName = isFocused ? "home" : "home-outline";
 			break;
-		case "WorkoutSessions":
+		case "Sessions":
 			IconComponent = IonIcon;
 			iconName = isFocused ? "calendar-sharp" : "calendar-outline";
-			displayText = "Workout Sessions";
+			displayText = constants.navbar.sessions;
 			break;
 		case "WorkoutPlans":
 			IconComponent = IonIcon;
 			iconName = "barbell";
-			displayText = "Workout Plans";
+			displayText = constants.navbar.workoutPlans;
 			break;
 		case "Profile":
 			IconComponent = FontAwesome;
@@ -45,27 +48,15 @@ export const NavItem = ({ route, isFocused, onPress }: NavItemProps) => {
 		<TouchableOpacity
 			key={route.key}
 			onPress={onPress}
-			style={[styles.navItem, isFocused ? styles.navItemActive : null]}
+			style={[AppStyles.navItem, isFocused ? { backgroundColor: Colors.secondary } : null]}
 		>
 			<IconComponent name={iconName} size={24} color={iconColor} />
 			{isFocused && <Text style={styles.navText}>{displayText}</Text>}
 		</TouchableOpacity>
 	);
-};
+}
 
 const styles = StyleSheet.create({
-	navItem: {
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "center",
-		borderRadius: 20,
-		marginHorizontal: 4,
-		paddingHorizontal: 12,
-		paddingVertical: 8,
-	},
-	navItemActive: {
-		backgroundColor: "#3A3A3C",
-	},
 	navText: {
 		fontSize: 14,
 		marginLeft: 8,

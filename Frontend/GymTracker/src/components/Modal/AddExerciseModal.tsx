@@ -1,9 +1,11 @@
-import React, { useState } from "react";
 import { Modal, View, Text, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator } from "react-native";
+import React, { useState } from "react";
+import { constants } from "../../constants/Constants";
 import { Exercise } from "../../models/Exercise";
 import { Colors } from "../../constants/Colors";
-import EntypoIcon from "react-native-vector-icons/Entypo";
 import ListEmptyComponent from "../List/ListEmptyComponent";
+import EntypoIcon from "react-native-vector-icons/Entypo";
+import { AppStyles } from "../../constants/AppStyles";
 
 interface AddExerciseModalProps {
 	bodyParts: string[];
@@ -31,35 +33,38 @@ export default function AddExerciseModal({
 
 	return (
 		<Modal visible={visible} transparent animationType="fade">
-			<View style={styles.overlay}>
+			<View style={AppStyles.modalOverlay}>
 				<View style={styles.modal}>
 					<View style={styles.modalHeader}>
-						<Text style={styles.title}>Add exercise</Text>
+						<Text style={AppStyles.title}>{constants.exercise.add}</Text>
 						<TouchableOpacity onPress={onClose}>
-							<EntypoIcon name="cross" size={32} color={"white"} />
+							<EntypoIcon name="cross" size={32} color={Colors.colorWhite} />
 						</TouchableOpacity>
 					</View>
 
-					<Text style={styles.sectionTitle}>Choose body part</Text>
+					<Text style={styles.sectionTitle}>{constants.exercise.chooseBodyPart}</Text>
 
 					<View style={styles.partList}>
 						{bodyParts.map((part) => (
 							<TouchableOpacity
 								key={part}
-								style={[styles.partButton, selectedBodyPart === part && styles.partButtonActive]}
+								style={[
+									styles.partButton,
+									selectedBodyPart === part && { backgroundColor: Colors.colorYellow },
+								]}
 								onPress={() => onSelectBodyPart(part)}
 							>
-								<Text style={styles.partButtonText}>{part}</Text>
+								<Text style={{ color: Colors.colorWhite }}>{part}</Text>
 							</TouchableOpacity>
 						))}
 					</View>
 
 					{selectedBodyPart && (
 						<>
-							<Text style={styles.sectionTitle}>Choose exercise</Text>
+							<Text style={styles.sectionTitle}>{constants.exercise.choose}</Text>
 
 							{loading ? (
-								<ActivityIndicator size="small" color="white" />
+								<ActivityIndicator size="small" color={Colors.colorWhite} />
 							) : (
 								<FlatList
 									data={exercises}
@@ -70,7 +75,7 @@ export default function AddExerciseModal({
 											style={styles.exerciseItem}
 											onPress={() => setSelectedExercise(item)}
 										>
-											<Text style={styles.exerciseText}>{item.name}</Text>
+											<Text style={{ color: Colors.colorWhite }}>{item.name}</Text>
 										</TouchableOpacity>
 									)}
 									ListEmptyComponent={<ListEmptyComponent />}
@@ -81,9 +86,10 @@ export default function AddExerciseModal({
 
 					{selectedExercise && (
 						<View style={styles.seriesPopup}>
-							<Text style={styles.popupTitle}>{selectedExercise.name}</Text>
-							<Text style={{ color: "white" }}>Series: {sets}</Text>
-
+							<Text style={AppStyles.title}>{selectedExercise.name}</Text>
+							<Text style={{ color: Colors.colorWhite }}>
+								{constants.exercise.series} {sets}
+							</Text>
 							<View style={styles.seriesControls}>
 								<TouchableOpacity onPress={() => setSets((s) => Math.max(1, s - 1))}>
 									<Text style={styles.seriesButton}>-</Text>
@@ -109,12 +115,6 @@ export default function AddExerciseModal({
 }
 
 const styles = StyleSheet.create({
-	overlay: {
-		flex: 1,
-		backgroundColor: "rgba(0,0,0,0.7)",
-		justifyContent: "center",
-		alignItems: "center",
-	},
 	modalHeader: {
 		flexDirection: "row",
 		justifyContent: "space-between",
@@ -128,15 +128,10 @@ const styles = StyleSheet.create({
 		padding: 20,
 		borderRadius: 15,
 	},
-	title: {
-		fontSize: 20,
-		fontWeight: "bold",
-		color: "white",
-	},
 	sectionTitle: {
 		fontSize: 14,
 		marginVertical: 10,
-		color: "#ccc",
+		color: Colors.colorWhite,
 	},
 	partList: {
 		flexDirection: "row",
@@ -148,20 +143,11 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		backgroundColor: Colors.primary,
 	},
-	partButtonActive: {
-		backgroundColor: Colors.color1,
-	},
-	partButtonText: {
-		color: "white",
-	},
 	exerciseItem: {
 		padding: 10,
 		backgroundColor: Colors.primary,
 		borderRadius: 8,
 		marginBottom: 6,
-	},
-	exerciseText: {
-		color: "white",
 	},
 	seriesPopup: {
 		marginTop: 20,
@@ -170,38 +156,25 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		alignItems: "center",
 	},
-	popupTitle: {
-		fontSize: 16,
-		color: "white",
-		marginBottom: 10,
-	},
 	seriesControls: {
 		flexDirection: "row",
 		gap: 20,
 		marginVertical: 10,
 	},
 	seriesButton: {
-		color: "white",
+		color: Colors.colorWhite,
 		fontSize: 32,
 		fontWeight: "bold",
 	},
 	confirmButton: {
-		backgroundColor: Colors.color1,
+		backgroundColor: Colors.colorYellow,
 		paddingVertical: 8,
 		paddingHorizontal: 20,
 		borderRadius: 8,
 		marginTop: 10,
 	},
 	confirmButtonText: {
-		color: "black",
+		color: Colors.colorBlack,
 		fontWeight: "bold",
-	},
-	closeButton: {
-		marginTop: 15,
-		alignSelf: "center",
-	},
-	closeButtonText: {
-		color: "#ddd",
-		fontSize: 16,
 	},
 });

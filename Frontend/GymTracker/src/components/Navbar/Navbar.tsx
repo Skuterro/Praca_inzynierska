@@ -1,11 +1,12 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { NavItem } from "./NavItem";
+import { AppStyles } from "../../constants/AppStyles";
+import { View } from "react-native";
+import NavItem from "./NavItem";
+import React from "react";
 
 export default function Navbar({ state, navigation }: BottomTabBarProps) {
 	return (
-		<View style={styles.navContainer}>
+		<View style={AppStyles.navbar}>
 			{state.routes.map((route, index) => {
 				const isFocused = state.index === index;
 
@@ -26,18 +27,3 @@ export default function Navbar({ state, navigation }: BottomTabBarProps) {
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	navContainer: {
-		flexDirection: "row",
-		backgroundColor: "#1E1E1E",
-		height: 90,
-		paddingBottom: 30,
-		paddingTop: 10,
-		paddingHorizontal: 10,
-		borderTopLeftRadius: 20,
-		borderTopRightRadius: 20,
-		justifyContent: "space-around",
-		marginTop: -18,
-	},
-});

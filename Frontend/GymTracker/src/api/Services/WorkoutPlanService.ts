@@ -43,6 +43,14 @@ const WorkoutPlanService = {
 	toggleActive: async (planId: number): Promise<void> => {
 		await axiosClient.put(`/workout-plans/${planId}/toggle-active`);
 	},
+
+	deleteWorkoutPlan: async (planId: number): Promise<void> => {
+		await axiosClient.delete(`/workout-plans/${planId}`);
+	},
+
+	deleteWorkoutPlanDay: async (planDayId: number): Promise<void> => {
+		await axiosClient.delete(`/workout-plans/days/${planDayId}`);
+	},
 };
 
 export default WorkoutPlanService;

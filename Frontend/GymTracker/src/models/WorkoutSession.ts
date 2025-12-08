@@ -11,6 +11,7 @@ interface WorkoutSessionExercise {
 
 export interface WorkoutSessionDetails {
 	id: number;
+	isFinished: boolean;
 	exercises: WorkoutSessionExercise[];
 }
 
@@ -21,5 +22,4 @@ export interface WorkoutSession {
 	workoutPlanName: string;
 	isFinished: boolean;
 	start: Date;
-	end: Date;
 }

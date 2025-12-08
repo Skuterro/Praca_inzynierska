@@ -1,7 +1,8 @@
+import { WorkoutSession, WorkoutSessionDetails } from "../../models/WorkoutSession";
 import { SessionStatusResponse } from "../../models/SessionStatusResponse";
 import { StartSessionResponse } from "../../models/StartSessionResponse";
-import { WorkoutSession } from "../../models/WorkoutSession";
 import axiosClient from "../ApiClient";
+import { PagedResult } from "../../models/PagedResult";
 
 const WorkoutSessionService = {
 	startWorkoutSession: async (WorkoutPlanDayId: number): Promise<StartSessionResponse> => {
@@ -34,8 +35,13 @@ const WorkoutSessionService = {
 		return data;
 	},
 
-	getWorkoutSessionDetials: async (sessionId: number): Promise<WorkoutSession> => {
+	getWorkoutSessionDetials: async (sessionId: number): Promise<WorkoutSessionDetails> => {
 		const { data } = await axiosClient.get(`/workout-sessions/${sessionId}`);
+		return data;
+	},
+
+	getAllUserSessions: async (pageNumber: number): Promise<PagedResult<WorkoutSession>> => {
+		const { data } = await axiosClient.get(`/workout-sessions/?pageNumber=${pageNumber}`);
 		return data;
 	},
 };

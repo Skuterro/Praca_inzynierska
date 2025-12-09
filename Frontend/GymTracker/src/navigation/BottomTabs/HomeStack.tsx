@@ -1,4 +1,5 @@
-import { Stack } from "../AppNavigator";
+import { Stack } from "../Stack";
+
 import TrackWorkoutScreen from "../../screens/WorkoutSession/TrackWorkoutScreen";
 import HomeScreen from "../../screens/Home/HomeScreen";
 

@@ -1,7 +1,6 @@
-import { Stack } from "../AppNavigator";
+import { Stack } from "../Stack";
 import PersonalRecordsScreen from "../../screens/UserProfile/PersonalRecordsScreen";
 import StrengthChartScreen from "../../screens/UserProfile/StrengthChartScreen";
-import SettingsScreen from "../../screens/Settings/SettingsScreen";
 import ProfileScreen from "../../screens/UserProfile/ProfileScreen";
 
 export function ProfileStack() {
@@ -10,7 +9,6 @@ export function ProfileStack() {
 			<Stack.Screen name="ProfileMain" component={ProfileScreen} />
 			<Stack.Screen name="PersonalRecords" component={PersonalRecordsScreen} />
 			<Stack.Screen name="StrengthChart" component={StrengthChartScreen} />
-			<Stack.Screen name="Settings" component={SettingsScreen} />
 		</Stack.Navigator>
 	);
 }

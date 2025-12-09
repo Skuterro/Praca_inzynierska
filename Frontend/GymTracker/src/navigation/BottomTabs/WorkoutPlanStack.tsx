@@ -1,4 +1,4 @@
-import { Stack } from "../AppNavigator";
+import { Stack } from "../Stack";
 import WorkoutPlanDayDetailsScreen from "../../screens/WorkoutPlan/WorkoutPlanDayDetailsScreen";
 import CreateWorkoutPlanDayScreen from "../../screens/WorkoutPlan/CreateWorkoutPlanDayScreen";
 import WorkoutPlanDetailsScreen from "../../screens/WorkoutPlan/WorkoutPlanDetailsScreen";

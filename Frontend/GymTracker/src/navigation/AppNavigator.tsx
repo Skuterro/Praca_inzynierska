@@ -1,4 +1,3 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { WorkoutSessionStack } from "./BottomTabs/WorkoutSessionStack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -9,7 +8,7 @@ import { ProfileStack } from "./BottomTabs/ProfileStack";
 import { HomeStack } from "./BottomTabs/HomeStack";
 import { AuthStack } from "./BottomTabs/AuthStack";
 import { useAuth } from "../context/AuthContext";
-import { Navbar } from "../components/Navbar/Navbar";
+import Navbar from "../components/Navbar/Navbar";
 
 export type RootStackParamList = {
 	HomeMain: undefined;
@@ -35,7 +34,6 @@ export type RootTabParamList = {
 	Profile: undefined;
 };
 
-export const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
 export default function AppNavigator() {

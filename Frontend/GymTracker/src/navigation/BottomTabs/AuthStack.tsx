@@ -1,4 +1,4 @@
-import { Stack } from "../AppNavigator";
+import { Stack } from "../Stack";
 import RegisterScreen from "../../screens/Auth/RegisterScreen";
 import LoginScreen from "../../screens/Auth/LoginScreen";
 

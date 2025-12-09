@@ -1,10 +1,12 @@
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { View, TextInput, TouchableOpacity, Text, Image } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { LoadingDataContainer } from "../../components/LoadingDataContainer";
 import { RootStackParamList } from "../../navigation/AppNavigator";
+import { constants } from "../../constants/Constants";
+import { AppStyles } from "../../constants/AppStyles";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Colors } from "../../constants/Colors";
+import LoadingDataContainer from "../../components/LoadingDataContainer";
 
 type RegisterScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "Register">;
 
@@ -33,51 +35,37 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
 	}
 
 	return (
-		<View style={styles.container}>
+		<View style={AppStyles.authContainer}>
+			<Image source={require("../../../assets/logo.png")} style={AppStyles.logoImage} />
 			<TextInput
 				placeholder="Username"
-				style={styles.input}
+				style={AppStyles.authInput}
 				value={username}
 				onChangeText={setUsername}
-				placeholderTextColor="#888"
+				placeholderTextColor={Colors.subTitle}
 			/>
 			<TextInput
 				placeholder="Email"
-				style={styles.input}
+				style={AppStyles.authInput}
 				value={email}
 				onChangeText={setEmail}
 				keyboardType="email-address"
-				placeholderTextColor="#888"
+				placeholderTextColor={Colors.subTitle}
 			/>
 			<TextInput
 				placeholder="Password"
-				style={styles.input}
+				style={AppStyles.authInput}
 				value={password}
 				onChangeText={setPassword}
 				secureTextEntry
-				placeholderTextColor="#888"
+				placeholderTextColor={Colors.subTitle}
 			/>
-			<TouchableOpacity style={styles.button} onPress={handleRegister}>
-				<Text style={styles.buttonText}>Register</Text>
+			<TouchableOpacity style={AppStyles.authButton} onPress={handleRegister}>
+				<Text style={[AppStyles.title, { color: Colors.colorBlack }]}>{constants.auth.register}</Text>
 			</TouchableOpacity>
 			<TouchableOpacity onPress={() => navigation.navigate("Login")}>
-				<Text style={styles.linkText}>Already have an account? Login</Text>
+				<Text style={AppStyles.authLink}>{constants.auth.account}</Text>
 			</TouchableOpacity>
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: { flex: 1, justifyContent: "center", padding: 20, backgroundColor: Colors.primary },
-	input: {
-		borderWidth: 1,
-		borderColor: Colors.secondary,
-		borderRadius: 8,
-		padding: 12,
-		color: "white",
-		marginBottom: 20,
-	},
-	button: { backgroundColor: Colors.colorYellow, padding: 12, borderRadius: 8, alignItems: "center" },
-	buttonText: { color: "black", fontWeight: "bold", fontSize: 16 },
-	linkText: { color: Colors.colorYellow, textAlign: "center", marginTop: 15, fontWeight: "500" },
-});

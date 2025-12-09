@@ -1,10 +1,12 @@
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { View, TextInput, TouchableOpacity, Text, Image } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { LoadingDataContainer } from "../../components/LoadingDataContainer";
 import { RootStackParamList } from "../../navigation/AppNavigator";
+import { constants } from "../../constants/Constants";
+import { AppStyles } from "../../constants/AppStyles";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Colors } from "../../constants/Colors";
+import LoadingDataContainer from "../../components/LoadingDataContainer";
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "Login">;
 
@@ -32,44 +34,30 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 	}
 
 	return (
-		<View style={styles.container}>
+		<View style={AppStyles.authContainer}>
+			<Image source={require("../../../assets/logo.png")} style={AppStyles.logoImage} />
 			<TextInput
 				placeholder="Email"
-				style={styles.input}
+				style={AppStyles.authInput}
 				value={email}
 				onChangeText={setEmail}
 				keyboardType="email-address"
-				placeholderTextColor="#888"
+				placeholderTextColor={Colors.subTitle}
 			/>
 			<TextInput
 				placeholder="Password"
-				style={styles.input}
+				style={AppStyles.authInput}
 				value={password}
 				onChangeText={setPassword}
 				secureTextEntry
-				placeholderTextColor="#888"
+				placeholderTextColor={Colors.subTitle}
 			/>
-			<TouchableOpacity style={styles.button} onPress={handleLogin}>
-				<Text style={styles.buttonText}>Login</Text>
+			<TouchableOpacity style={AppStyles.authButton} onPress={handleLogin}>
+				<Text style={[AppStyles.title, { color: Colors.colorBlack }]}>{constants.auth.login}</Text>
 			</TouchableOpacity>
 			<TouchableOpacity onPress={() => navigation.navigate("Register")}>
-				<Text style={styles.linkText}>Don't have an account? Register</Text>
+				<Text style={AppStyles.authLink}>{constants.auth.noAccount}</Text>
 			</TouchableOpacity>
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: { flex: 1, justifyContent: "center", padding: 20, backgroundColor: Colors.primary },
-	input: {
-		borderWidth: 1,
-		borderColor: Colors.secondary,
-		borderRadius: 8,
-		padding: 12,
-		color: "white",
-		marginBottom: 20,
-	},
-	button: { backgroundColor: Colors.colorYellow, padding: 12, borderRadius: 8, alignItems: "center" },
-	buttonText: { color: "black", fontWeight: "bold", fontSize: 16 },
-	linkText: { color: Colors.colorYellow, textAlign: "center", marginTop: 15, fontWeight: "500" },
-});

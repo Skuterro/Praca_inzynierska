@@ -1,19 +1,22 @@
-import { View, StyleSheet, FlatList, ActivityIndicator } from "react-native";
-import { useState } from "react";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { View, FlatList, Alert } from "react-native";
 import { RootStackParamList } from "../../navigation/AppNavigator";
-import { DayExercise } from "../../models/DayExercise";
 import { useFocusEffect } from "@react-navigation/native";
+import { DayExercise } from "../../models/DayExercise";
 import { RouteProp } from "@react-navigation/native";
-import { ExerciseItem } from "../../components/Exercise/ExerciseItem";
+import { bodyParts } from "../../constants/BodyParts";
+import { AppStyles } from "../../constants/AppStyles";
+import { constants } from "../../constants/Constants";
 import { Exercise } from "../../models/Exercise";
-import { Colors } from "../../constants/Colors";
-import Header from "../../components/Header/Header";
+import { useState } from "react";
+import LoadingDataContainer from "../../components/LoadingDataContainer";
 import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
-import ListHeader from "../../components/List/ListHeader";
-import ExerciseService from "../../api/Services/ExerciseService";
-import AddExerciseModal from "../../components/Modal/AddExerciseModal";
 import ListEmptyComponent from "../../components/List/ListEmptyComponent";
+import AddExerciseModal from "../../components/Modal/AddExerciseModal";
+import ExerciseService from "../../api/Services/ExerciseService";
+import ExerciseItem from "../../components/Exercise/ExerciseItem";
+import ListHeader from "../../components/Header/ListHeader";
+import Header from "../../components/Header/Header";
 import React from "react";
 
 type WorkoutPlanDayDetailsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "WorkoutPlanDayDetails">;
@@ -33,12 +36,9 @@ export default function WorkoutPlanDayDetailsScreen({ navigation, route }: Worko
 	const [availableExercises, setAvailableExercises] = useState<Exercise[]>([]);
 	const [exerciseLoading, setExerciseLoading] = useState(false);
 
-	const BODY_PARTS = ["Chest", "Back", "Legs", "Shoulders", "Arms", "Abs"];
-
 	const fetchDayExercises = async () => {
 		try {
 			setLoading(true);
-
 			const data = await WorkoutPlanService.getWorkoutPlanDayExercises(dayId);
 			setDayExercises(data);
 		} finally {
@@ -56,6 +56,24 @@ export default function WorkoutPlanDayDetailsScreen({ navigation, route }: Worko
 		}
 	};
 
+	const handleDelete = async () => {
+		Alert.alert("Delete workout plan day", "Are you sure you want to delete this day?", [
+			{ text: "Cancel", style: "cancel" },
+			{
+				text: "Delete",
+				style: "destructive",
+				onPress: async () => {
+					try {
+						setLoading(true);
+						await WorkoutPlanService.deleteWorkoutPlanDay(dayId);
+						navigation.goBack();
+					} finally {
+						setLoading(false);
+					}
+				},
+			},
+		]);
+	};
 	const handleAddExercise = () => {
 		setModalVisible(true);
 	};
@@ -67,21 +85,21 @@ export default function WorkoutPlanDayDetailsScreen({ navigation, route }: Worko
 	);
 
 	if (loading) {
-		return (
-			<View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
-				<ActivityIndicator size="large" color={Colors.secondary} />
-			</View>
-		);
+		return <LoadingDataContainer />;
 	}
 
 	return (
-		<View style={styles.container}>
-			<Header title={dayName} onButtonClick={() => navigation.goBack()} />
-			<View style={styles.contentWrapper}>
-				<ListHeader title="Exercises in this plan" buttonTitle="Add more" onButtonClick={handleAddExercise} />
+		<View style={AppStyles.mainContainer}>
+			<Header title={dayName} onButtonClick={() => navigation.goBack()} onDelete={handleDelete} />
+			<View style={AppStyles.contentWrapper}>
+				<ListHeader
+					title={constants.workoutPlan.exercises}
+					buttonTitle={constants.exercise.addMore}
+					onButtonClick={handleAddExercise}
+				/>
 				<FlatList
 					data={dayExercises}
-					keyExtractor={(item) => item.id}
+					keyExtractor={(item) => item.id.toString()}
 					renderItem={({ item }) => <ExerciseItem exercise={item} />}
 					showsVerticalScrollIndicator={false}
 					ListEmptyComponent={<ListEmptyComponent />}
@@ -89,7 +107,7 @@ export default function WorkoutPlanDayDetailsScreen({ navigation, route }: Worko
 			</View>
 
 			<AddExerciseModal
-				bodyParts={BODY_PARTS}
+				bodyParts={bodyParts}
 				visible={modalVisible}
 				selectedBodyPart={selectedBodyPart}
 				loading={exerciseLoading}
@@ -109,16 +127,3 @@ export default function WorkoutPlanDayDetailsScreen({ navigation, route }: Worko
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: Colors.primary,
-	},
-	contentWrapper: {
-		flex: 1,
-		paddingHorizontal: 20,
-		paddingTop: 10,
-		marginBottom: 15,
-	},
-});

@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { ExerciseWithSets } from "../../models/ExerciseWithSets";
-import { DayExercise } from "../../models/DayExercise";
 import WorkoutSessionService from "../../api/Services/WorkoutSessionService";
 import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
 
 export function useWorkoutSession(sessionId: number, workoutPlanDayId: number) {
 	const [loading, setLoading] = useState(false);
-	const [isSaving, setIsSaving] = useState(false);
-	const [isFinishing, setIsFinishing] = useState(false);
+	const [finishing, setFinishing] = useState(false);
+	const [isFinished, setIsFinished] = useState(false);
 	const [exerciseList, setExerciseList] = useState<ExerciseWithSets[]>([]);
 
 	const loadSessionData = async () => {
@@ -32,7 +31,7 @@ export function useWorkoutSession(sessionId: number, workoutPlanDayId: number) {
 					existingSets: mappedSets,
 				};
 			});
-
+			setIsFinished(session.isFinished);
 			setExerciseList(filledExercises);
 		} finally {
 			setLoading(false);
@@ -41,19 +40,17 @@ export function useWorkoutSession(sessionId: number, workoutPlanDayId: number) {
 
 	const addSet = async (exerciseId: number, setNr: number, reps: number, weight: number) => {
 		try {
-			setIsSaving(true);
 			await WorkoutSessionService.addSet(sessionId, exerciseId, setNr, reps, weight);
 		} finally {
-			setIsSaving(false);
 		}
 	};
 
 	const finishWorkout = async () => {
-		setIsFinishing(true);
+		setFinishing(true);
 		try {
 			await WorkoutSessionService.finishWorkoutSession(sessionId);
 		} finally {
-			setIsFinishing(false);
+			setFinishing(false);
 		}
 	};
 
@@ -63,8 +60,8 @@ export function useWorkoutSession(sessionId: number, workoutPlanDayId: number) {
 
 	return {
 		loading,
-		isSaving,
-		isFinishing,
+		finishing,
+		isFinished,
 		exerciseList,
 		addSet,
 		finishWorkout,

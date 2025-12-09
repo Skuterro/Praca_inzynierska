@@ -1,6 +1,6 @@
 import { LayoutAnimation } from "react-native";
 import { ExerciseWithSets } from "../../models/ExerciseWithSets";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function useExerciseSets(
 	exercise: ExerciseWithSets,
@@ -56,12 +56,14 @@ export function useExerciseSets(
 		}
 	};
 
+	useEffect(() => {}, []);
+
 	return {
 		expanded,
-		toggleExpand,
 		sets,
+		isExerciseFinished,
 		updateSet,
 		saveSet,
-		isExerciseFinished,
+		toggleExpand,
 	};
 }

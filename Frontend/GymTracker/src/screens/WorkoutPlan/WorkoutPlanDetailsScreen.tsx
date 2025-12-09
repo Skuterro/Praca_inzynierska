@@ -1,16 +1,19 @@
-import { View, Text, StyleSheet, Alert, TouchableOpacity, Switch, FlatList, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, Alert, Switch, FlatList } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../navigation/AppNavigator";
-import { Colors } from "../../constants/Colors";
-import { useState } from "react";
-import { RouteProp } from "@react-navigation/native";
 import { SimpleWorkoutPlanDay } from "../../models/SimpleWorkoutPlanDay";
+import { RootStackParamList } from "../../navigation/AppNavigator";
 import { WorkoutDayItem } from "../../components/WorkoutPlan/WorkoutDayItem";
 import { useFocusEffect } from "@react-navigation/native";
+import { RouteProp } from "@react-navigation/native";
+import { AppStyles } from "../../constants/AppStyles";
+import { constants } from "../../constants/Constants";
+import { useState } from "react";
+import { Colors } from "../../constants/Colors";
+import LoadingDataContainer from "../../components/LoadingDataContainer";
 import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
-import Header from "../../components/Header/Header";
-import ListHeader from "../../components/List/ListHeader";
 import ListEmptyComponent from "../../components/List/ListEmptyComponent";
+import ListHeader from "../../components/Header/ListHeader";
+import Header from "../../components/Header/Header";
 import React from "react";
 
 type WorkoutPlanDetailsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "WorkoutPlanDetails">;
@@ -45,6 +48,25 @@ export default function WorkoutPlanDetailsScreen({ navigation, route }: WorkoutP
 		}
 	};
 
+	const handleDelete = async () => {
+		Alert.alert("Delete workout plan", "Are you sure you want to delete this plan?", [
+			{ text: "Cancel", style: "cancel" },
+			{
+				text: "Delete",
+				style: "destructive",
+				onPress: async () => {
+					try {
+						setLoading(true);
+						await WorkoutPlanService.deleteWorkoutPlan(planId);
+						navigation.goBack();
+					} finally {
+						setLoading(false);
+					}
+				},
+			},
+		]);
+	};
+
 	const fetchDays = async () => {
 		try {
 			setLoading(true);
@@ -62,31 +84,31 @@ export default function WorkoutPlanDetailsScreen({ navigation, route }: WorkoutP
 	);
 
 	if (loading) {
-		return (
-			<View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
-				<ActivityIndicator size="large" color={Colors.secondary} />
-			</View>
-		);
+		return <LoadingDataContainer />;
 	}
 
 	return (
-		<View style={styles.container}>
-			<Header title={planName} onButtonClick={() => navigation.popTo("WorkoutPlansMain")} />
-			<View style={styles.switchRow}>
-				<Text style={styles.switchLabel}>Set plan as active</Text>
-				<Switch
-					value={isActive}
-					onValueChange={handleToggleActive}
-					thumbColor={isActive ? Colors.secondary : "#ccc"}
-					trackColor={{ true: "#FFD76B", false: "#555" }}
-					disabled={loadingActive}
-				/>
-			</View>
-			<View style={styles.contentWrapper}>
+		<View style={AppStyles.mainContainer}>
+			<Header
+				title={planName}
+				onButtonClick={() => navigation.popTo("WorkoutPlansMain")}
+				onDelete={handleDelete}
+			/>
+			<View style={AppStyles.contentWrapper}>
+				<View style={styles.switchRow}>
+					<Text style={styles.switchLabel}>{constants.workoutPlan.setActive}</Text>
+					<Switch
+						value={isActive}
+						onValueChange={handleToggleActive}
+						thumbColor={isActive ? Colors.secondary : "#ccc"}
+						trackColor={{ true: Colors.colorYellow, false: "#555" }}
+						disabled={loadingActive}
+					/>
+				</View>
 				<ListHeader title="Training days" buttonTitle="Create new" onButtonClick={handleAddDayNavigate} />
 				<FlatList
 					data={workoutPlanDays}
-					keyExtractor={(item) => item.id}
+					keyExtractor={(item) => item.id.toString()}
 					renderItem={({ item }) => (
 						<WorkoutDayItem
 							workoutDay={item}
@@ -107,48 +129,11 @@ export default function WorkoutPlanDetailsScreen({ navigation, route }: WorkoutP
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: Colors.primary,
-	},
-	contentWrapper: {
-		flex: 1,
-		paddingHorizontal: 20,
-		paddingTop: 10,
-		marginBottom: 15,
-	},
-	title: {
-		fontSize: 24,
-		fontWeight: "bold",
-		color: "white",
-		marginBottom: 20,
-	},
-	input: {
-		borderWidth: 1,
-		borderColor: Colors.secondary,
-		borderRadius: 8,
-		padding: 12,
-		color: "white",
-		marginBottom: 20,
-	},
-	button: {
-		backgroundColor: Colors.color1,
-		paddingVertical: 12,
-		borderRadius: 8,
-		alignItems: "center",
-	},
-	buttonText: {
-		color: "black",
-		fontWeight: "bold",
-		fontSize: 16,
-	},
 	switchRow: {
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
-		marginBottom: 10,
-		paddingHorizontal: 20,
-		marginTop: 10,
+		marginBottom: 20,
 	},
 	switchLabel: {
 		fontSize: 16,

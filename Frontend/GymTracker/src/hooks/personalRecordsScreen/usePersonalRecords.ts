@@ -7,12 +7,16 @@ export function usePersonalRecords(personalRecordExercise: number) {
 	const [loading, setLoading] = useState(false);
 	const [records, setRecords] = useState<PersonalRecord[]>([]);
 	const [modalVisible, setModalVisible] = useState(false);
+	const [page, setPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(1);
 
-	const fetchRecords = async () => {
+	const fetchRecords = async (pageNumber = page) => {
 		try {
 			setLoading(true);
-			const data = await UserProfileService.getUserPersonalRecordsOfExercise(personalRecordExercise);
-			setRecords(data);
+			const data = await UserProfileService.getUserPersonalRecordsOfExercise(personalRecordExercise, pageNumber);
+			setRecords(data.items);
+			setPage(data.pageNumber);
+			setTotalPages(data.totalPages);
 		} finally {
 			setLoading(false);
 		}
@@ -42,9 +46,18 @@ export function usePersonalRecords(personalRecordExercise: number) {
 			setLoading(true);
 			await UserProfileService.createPersonalRecord(personalRecordExercise, weightKg);
 			setModalVisible(false);
-			fetchRecords();
+			fetchRecords(1);
 		} finally {
 			setLoading(false);
+		}
+	};
+
+	const changePage = (direction: "prev" | "next") => {
+		if (direction === "prev" && page > 1) {
+			fetchRecords(page - 1);
+		}
+		if (direction === "next" && page < totalPages) {
+			fetchRecords(page + 1);
 		}
 	};
 
@@ -62,17 +75,19 @@ export function usePersonalRecords(personalRecordExercise: number) {
 	};
 
 	useEffect(() => {
-		fetchRecords();
+		fetchRecords(1);
 	}, []);
 
 	return {
 		records,
 		loading,
 		modalVisible,
+		page,
+		totalPages,
 		getTitle,
 		setModalVisible,
-		fetchRecords,
 		handleAddRecord,
 		handleDelete,
+		changePage,
 	};
 }

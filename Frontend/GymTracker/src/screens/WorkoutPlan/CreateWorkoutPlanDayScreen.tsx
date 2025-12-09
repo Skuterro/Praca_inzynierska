@@ -1,10 +1,12 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Animated } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/AppNavigator";
-import { Colors } from "../../constants/Colors";
 import { useRef, useState } from "react";
 import { RouteProp } from "@react-navigation/native";
+import { constants } from "../../constants/Constants";
+import { AppStyles } from "../../constants/AppStyles";
 import { WeekDays } from "../../constants/WeekDays";
+import { Colors } from "../../constants/Colors";
 import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
 import Header from "../../components/Header/Header";
 
@@ -38,17 +40,14 @@ export default function CreateWorkoutPlanDayScreen({ navigation, route }: Create
 	};
 
 	const handleCreateDay = async () => {
-		console.log("s");
 		if (!dayName.trim() || !selectedWeekDay) {
 			Alert.alert("Validation", "Please enter a day name and select a weekday");
 			return;
 		}
-		console.log("s");
 
 		try {
 			setLoading(true);
-			const data = await WorkoutPlanService.addDayToPlan(planId, dayName, selectedWeekDay);
-			console.log(data);
+			await WorkoutPlanService.addDayToPlan(planId, dayName, selectedWeekDay);
 			navigation.goBack();
 		} finally {
 			setLoading(false);
@@ -56,18 +55,18 @@ export default function CreateWorkoutPlanDayScreen({ navigation, route }: Create
 	};
 
 	return (
-		<View style={styles.container}>
-			<Header title="Create training day" onButtonClick={() => navigation.goBack()} />
-			<View style={styles.contentWrapper}>
+		<View style={AppStyles.mainContainer}>
+			<Header title={constants.workoutPlan.createTrainingDay} onButtonClick={() => navigation.goBack()} />
+			<View style={AppStyles.contentWrapper}>
 				<TextInput
-					style={styles.input}
-					placeholder="Day name"
-					placeholderTextColor="#888"
+					style={AppStyles.textInput}
+					placeholder={constants.workoutPlan.dayName}
+					placeholderTextColor={Colors.subTitle}
 					value={dayName}
 					onChangeText={setDayName}
 				/>
 				<TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
-					<Text style={styles.dropdownButtonText}>{selectedWeekDay || "Select day of the week ↓"}</Text>
+					<Text style={styles.dropdownButtonText}>{selectedWeekDay || constants.workoutPlan.selectDay}</Text>
 				</TouchableOpacity>
 
 				<Animated.View style={[styles.dropdownList, { height: dropdownAnim }]}>
@@ -77,7 +76,7 @@ export default function CreateWorkoutPlanDayScreen({ navigation, route }: Create
 							onPress={() => handleSelectWeekDay(day)}
 							style={styles.dropdownItem}
 						>
-							<Text style={[styles.dropdownItemText, selectedWeekDay === day && styles.selectedDay]}>
+							<Text style={[styles.dropdownItemText, selectedWeekDay === day && { fontWeight: "bold" }]}>
 								{day}
 							</Text>
 						</TouchableOpacity>
@@ -85,7 +84,9 @@ export default function CreateWorkoutPlanDayScreen({ navigation, route }: Create
 				</Animated.View>
 
 				<TouchableOpacity style={styles.button} onPress={handleCreateDay}>
-					<Text style={styles.buttonText}>{loading ? "Creating..." : "Create"}</Text>
+					<Text style={[AppStyles.title, { color: Colors.colorBlack }]}>
+						{loading ? "Creating..." : "Create"}
+					</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -93,34 +94,11 @@ export default function CreateWorkoutPlanDayScreen({ navigation, route }: Create
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: Colors.primary,
-	},
-	contentWrapper: {
-		flex: 1,
-		paddingHorizontal: 20,
-		paddingTop: 10,
-		marginBottom: 15,
-	},
-	input: {
-		borderWidth: 1,
-		borderColor: Colors.secondary,
-		borderRadius: 8,
-		padding: 12,
-		color: "white",
-		marginBottom: 20,
-	},
 	button: {
-		backgroundColor: Colors.color1,
+		backgroundColor: Colors.colorYellow,
 		paddingVertical: 12,
 		borderRadius: 8,
 		alignItems: "center",
-	},
-	buttonText: {
-		color: "black",
-		fontWeight: "bold",
-		fontSize: 16,
 	},
 	dropdownButton: {
 		borderWidth: 1,
@@ -130,7 +108,7 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 	},
 	dropdownButtonText: {
-		color: "white",
+		color: Colors.colorWhite,
 		fontSize: 16,
 	},
 	dropdownList: {
@@ -144,10 +122,7 @@ const styles = StyleSheet.create({
 		borderBottomColor: Colors.primary,
 	},
 	dropdownItemText: {
-		color: "white",
+		color: Colors.colorWhite,
 		fontSize: 16,
-	},
-	selectedDay: {
-		fontWeight: "bold",
 	},
 });

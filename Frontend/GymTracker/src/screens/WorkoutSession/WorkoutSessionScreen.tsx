@@ -1,58 +1,89 @@
-import { View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, FlatList } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+import LoadingDataContainer from "../../components/LoadingDataContainer";
 import { RootStackParamList } from "../../navigation/AppNavigator";
 import { WorkoutSession } from "../../models/WorkoutSession";
-import { SessionItem } from "../../components/FlatListItem/SessionItem";
-import { RouteProp } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
+import SessionItem from "../../components/Session/SessionItem";
 import { AppStyles } from "../../constants/AppStyles";
 import WorkoutSessionService from "../../api/Services/WorkoutSessionService";
 import ListEmptyComponent from "../../components/List/ListEmptyComponent";
 import UserProfileHeader from "../../components/Header/UserProfileHeader";
+import Pagination from "../../components/Pagination/Pagination";
 
-type WorkoutSessionScreenRouteProp = RouteProp<RootStackParamList, "WorkoutSessions">;
 type WorkoutSessionsScreenNavProp = NativeStackNavigationProp<RootStackParamList, "WorkoutSessions">;
 
 interface WorkoutSessionScreenProps {
-	route: WorkoutSessionScreenRouteProp;
 	navigation: WorkoutSessionsScreenNavProp;
 }
 
-export default function WorkoutSessionScreen({}: WorkoutSessionScreenProps) {
+export default function WorkoutSessionScreen({ navigation }: WorkoutSessionScreenProps) {
 	const [sessions, setSessions] = useState<WorkoutSession[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
+	const [page, setPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(1);
 
-	const fetchWorkoutSessions = async () => {
+	const fetchWorkoutSessions = async (pageNumber = page) => {
 		try {
 			setLoading(true);
 
-			const data = await WorkoutSessionService.getAllUserSessions();
-			setSessions(data);
+			const data = await WorkoutSessionService.getAllUserSessions(pageNumber);
+			setSessions(data.items);
+			setPage(data.pageNumber);
+			setTotalPages(data.totalPages);
 		} finally {
 			setLoading(false);
 		}
 	};
 
-	useEffect(() => {
-		fetchWorkoutSessions();
-	}, []);
+	const changePage = (direction: "prev" | "next") => {
+		if (direction === "prev" && page > 1) {
+			fetchWorkoutSessions(page - 1);
+		}
+		if (direction === "next" && page < totalPages) {
+			fetchWorkoutSessions(page + 1);
+		}
+	};
+
+	useFocusEffect(
+		useCallback(() => {
+			fetchWorkoutSessions();
+		}, [])
+	);
+
+	if (loading) {
+		return <LoadingDataContainer />;
+	}
 
 	return (
 		<View style={AppStyles.mainContainer}>
 			<UserProfileHeader />
 			<View style={AppStyles.contentWrapper}>
 				<Text style={styles.title}>Your sessions</Text>
-				{loading ? (
-					<ActivityIndicator size="small" color="white" />
-				) : (
-					<FlatList
-						data={sessions}
-						keyExtractor={(item) => item.id}
-						renderItem={({ item }) => <SessionItem session={item} onPress={() => {}} />}
-						showsVerticalScrollIndicator={false}
-						ListEmptyComponent={<ListEmptyComponent />}
-					/>
-				)}
+				<FlatList
+					data={sessions}
+					keyExtractor={(item) => item.id.toString()}
+					renderItem={({ item }) => (
+						<SessionItem
+							session={item}
+							onPress={() =>
+								navigation.navigate("TrackWorkout", {
+									workoutPlanDayId: item.workoutPlanDayId,
+									sessionId: item.id,
+								})
+							}
+						/>
+					)}
+					showsVerticalScrollIndicator={false}
+					ListEmptyComponent={<ListEmptyComponent />}
+				/>
+				<Pagination
+					page={page}
+					totalPages={totalPages}
+					onPrev={() => changePage("prev")}
+					onNext={() => changePage("next")}
+				/>
 			</View>
 		</View>
 	);

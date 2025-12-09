@@ -2,6 +2,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { usePersonalRecords } from "../../hooks/personalRecordsScreen/usePersonalRecords";
 import { RootStackParamList } from "../../navigation/AppNavigator";
 import { FlatList, View } from "react-native";
+import { constants } from "../../constants/Constants";
 import { AppStyles } from "../../constants/AppStyles";
 import { RouteProp } from "@react-navigation/native";
 import LoadingDataContainer from "../../components/LoadingDataContainer";
@@ -22,7 +23,6 @@ interface PersonalRecordsScreenProps {
 
 export default function PersonalRecordsScreen({ route, navigation }: PersonalRecordsScreenProps) {
 	const { personalRecordExercise } = route.params;
-
 	const {
 		records,
 		loading,
@@ -44,7 +44,11 @@ export default function PersonalRecordsScreen({ route, navigation }: PersonalRec
 		<View style={AppStyles.mainContainer}>
 			<Header title={getTitle()} onButtonClick={() => navigation.goBack()} />
 			<View style={AppStyles.contentWrapper}>
-				<ListHeader title="history" buttonTitle="Add new record" onButtonClick={() => setModalVisible(true)} />
+				<ListHeader
+					title={constants.record.history}
+					buttonTitle={constants.record.add}
+					onButtonClick={() => setModalVisible(true)}
+				/>
 				<FlatList
 					data={records}
 					keyExtractor={(item) => item.id.toString()}

@@ -1,12 +1,15 @@
-import { ActivityIndicator, Alert, FlatList, StyleSheet, View } from "react-native";
+import { Alert, FlatList, View } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/AppNavigator";
 import { useWorkoutSession } from "../../hooks/workoutSessionScreen/useWorkoutSession";
 import { RouteProp } from "@react-navigation/native";
-import { Colors } from "../../constants/Colors";
-import Header from "../../components/Header/Header";
-import ListHeader from "../../components/List/ListHeader";
+import { AppStyles } from "../../constants/AppStyles";
+import { constants } from "../../constants/Constants";
+import LoadingDataContainer from "../../components/LoadingDataContainer";
 import ExerciseSessionItem from "../../components/Exercise/ExerciseSessionItem";
+import ListEmptyComponent from "../../components/List/ListEmptyComponent";
+import ListHeader from "../../components/Header/ListHeader";
+import Header from "../../components/Header/Header";
 
 type TrackSessionScreenRouteProp = RouteProp<RootStackParamList, "TrackWorkout">;
 type TrackSessionScreenNavProp = NativeStackNavigationProp<RootStackParamList, "TrackWorkout">;
@@ -17,9 +20,12 @@ interface TrackWorkoutScreenProps {
 }
 
 export default function TrackWorkoutScreen({ route, navigation }: TrackWorkoutScreenProps) {
-	const { exercises, sessionId } = route.params;
+	const { workoutPlanDayId, sessionId } = route.params;
 
-	const { loading, isSaving, exerciseList, addSet, finishWorkout } = useWorkoutSession(sessionId, exercises);
+	const { loading, finishing, isFinished, exerciseList, addSet, finishWorkout } = useWorkoutSession(
+		sessionId,
+		workoutPlanDayId
+	);
 
 	const handleFinishWorkout = () => {
 		Alert.alert("Finish Workout", "Are you sure you want to finish?", [
@@ -28,45 +34,31 @@ export default function TrackWorkoutScreen({ route, navigation }: TrackWorkoutSc
 				text: "Finish",
 				onPress: async () => {
 					await finishWorkout();
-					navigation.popToTop();
+					navigation.pop();
 				},
 			},
 		]);
 	};
 
-	if (loading) {
-		return (
-			<View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
-				<ActivityIndicator size="large" color={Colors.secondary} />
-			</View>
-		);
+	if (loading || finishing) {
+		return <LoadingDataContainer />;
 	}
+
 	return (
-		<View style={styles.container}>
-			<Header title="Workout session" onButtonClick={() => navigation.goBack()} />
-			<View style={styles.contentWrapper}>
-				<ListHeader buttonTitle="Finish workout" onButtonClick={handleFinishWorkout} />
+		<View style={AppStyles.mainContainer}>
+			<Header title={constants.session.label} onButtonClick={() => navigation.pop()} />
+			<View style={AppStyles.contentWrapper}>
+				{!isFinished ? (
+					<ListHeader buttonTitle={constants.session.finish} onButtonClick={handleFinishWorkout} />
+				) : null}
 				<FlatList
 					data={exerciseList}
-					keyExtractor={(item) => item.id}
+					keyExtractor={(item) => item.id.toString()}
 					renderItem={({ item }) => <ExerciseSessionItem exercise={item} onSave={addSet} />}
 					showsVerticalScrollIndicator={false}
+					ListEmptyComponent={<ListEmptyComponent />}
 				/>
 			</View>
-			{isSaving && <ActivityIndicator style={{ marginTop: 10 }} color="white" />}
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: Colors.primary,
-	},
-	contentWrapper: {
-		flex: 1,
-		paddingHorizontal: 20,
-		paddingTop: 10,
-		marginBottom: 15,
-	},
-});

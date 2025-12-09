@@ -1,11 +1,8 @@
 import { View, Text, Image, StyleSheet } from "react-native";
 import { AppStyles } from "../../constants/AppStyles";
 import { useAuth } from "../../context/AuthContext";
+import { Colors } from "../../constants/Colors";
 import React from "react";
-
-const DUMMY_USER_DATA = {
-	profilePicUrl: "https://picsum.photos/id/64/200/200",
-};
 
 export default function UserProfileHeader() {
 	const { user } = useAuth();
@@ -13,20 +10,21 @@ export default function UserProfileHeader() {
 	return (
 		<View style={AppStyles.screenHeader}>
 			<Text style={styles.nicknameText}>{user?.name}</Text>
-			<Image source={{ uri: DUMMY_USER_DATA.profilePicUrl }} style={styles.profileImage} />
+			<Image source={require("../../../assets/logo.png")} style={styles.profileImage} />
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
 	profileImage: {
-		width: 50,
-		height: 50,
-		borderRadius: 25,
+		width: 100,
+		height: 100,
+		marginRight: -15,
+		marginTop: 10,
 	},
 	nicknameText: {
 		fontSize: 30,
 		fontWeight: "bold",
-		color: "white",
+		color: Colors.colorWhite,
 	},
 });

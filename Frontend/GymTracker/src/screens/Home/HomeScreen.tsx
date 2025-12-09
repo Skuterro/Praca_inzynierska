@@ -1,15 +1,15 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { View, Text, StyleSheet } from "react-native";
 import { RootStackParamList } from "../../navigation/AppNavigator";
 import { useWorkoutButton } from "../../hooks/homeScreen/useWorkoutButton";
-import { CalendarSection } from "../../components/Home/CalendarSection";
 import { useWorkoutData } from "../../hooks/homeScreen/useWorkoutData";
-import { WorkoutContent } from "../../components/Home/WorkoutContent";
+import { View, Text } from "react-native";
+import { constants } from "../../constants/Constants";
 import { AppStyles } from "../../constants/AppStyles";
 import { useState } from "react";
-import { Colors } from "../../constants/Colors";
 import UserProfileHeader from "../../components/Header/UserProfileHeader";
-import ListHeader from "../../components/List/ListHeader";
+import WorkoutContent from "../../components/Home/WorkoutContent";
+import CalendarSection from "../../components/Home/CalendarSection";
+import ListHeader from "../../components/Header/ListHeader";
 import React from "react";
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "HomeMain">;
@@ -49,46 +49,15 @@ export default function HomeScreen({ navigation }: HomeScreenProps) {
 				setSelectedDay={setSelectedDay}
 			/>
 			<View style={AppStyles.contentWrapper}>
-				<Text style={styles.borderBottom}></Text>
+				<Text style={AppStyles.borderBottom}></Text>
 				<ListHeader
-					title="Today's workout"
+					title={constants.todaysWorkout}
 					buttonTitle={getButtonLabel()}
 					disabled={isButtonDisabled}
 					onButtonClick={handleMainButton}
 				/>
-
 				<WorkoutContent loading={loading} exercises={selectedDayExercises} />
 			</View>
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	borderBottom: {
-		borderBottomWidth: 2,
-		borderBottomColor: Colors.subTitle,
-		marginBottom: 15,
-	},
-	sectionHeader: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-		marginBottom: 15,
-	},
-	sectionTitle: {
-		fontSize: 20,
-		fontWeight: "bold",
-		color: "white",
-	},
-	addButton: {
-		backgroundColor: Colors.color1,
-		paddingVertical: 6,
-		paddingHorizontal: 12,
-		borderRadius: 8,
-	},
-	addButtonText: {
-		color: "black",
-		fontWeight: "600",
-		fontSize: 14,
-	},
-});

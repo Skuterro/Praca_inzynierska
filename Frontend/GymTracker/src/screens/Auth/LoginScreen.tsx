@@ -1,4 +1,4 @@
-import { View, TextInput, TouchableOpacity, Text, Image } from "react-native";
+import { View, TextInput, TouchableOpacity, Text, Image, KeyboardAvoidingView } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/AppNavigator";
 import { constants } from "../../constants/Constants";
@@ -34,30 +34,32 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 	}
 
 	return (
-		<View style={AppStyles.authContainer}>
-			<Image source={require("../../../assets/logo.png")} style={AppStyles.logoImage} />
-			<TextInput
-				placeholder="Email"
-				style={AppStyles.authInput}
-				value={email}
-				onChangeText={setEmail}
-				keyboardType="email-address"
-				placeholderTextColor={Colors.subTitle}
-			/>
-			<TextInput
-				placeholder="Password"
-				style={AppStyles.authInput}
-				value={password}
-				onChangeText={setPassword}
-				secureTextEntry
-				placeholderTextColor={Colors.subTitle}
-			/>
-			<TouchableOpacity style={AppStyles.authButton} onPress={handleLogin}>
-				<Text style={[AppStyles.title, { color: Colors.colorBlack }]}>{constants.auth.login}</Text>
-			</TouchableOpacity>
-			<TouchableOpacity onPress={() => navigation.navigate("Register")}>
-				<Text style={AppStyles.authLink}>{constants.auth.noAccount}</Text>
-			</TouchableOpacity>
-		</View>
+		<KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+			<View style={AppStyles.authContainer}>
+				<Image source={require("../../../assets/logo.png")} style={AppStyles.logoImage} />
+				<TextInput
+					placeholder="Email"
+					style={AppStyles.authInput}
+					value={email}
+					onChangeText={setEmail}
+					keyboardType="email-address"
+					placeholderTextColor={Colors.subTitle}
+				/>
+				<TextInput
+					placeholder="Password"
+					style={AppStyles.authInput}
+					value={password}
+					onChangeText={setPassword}
+					secureTextEntry
+					placeholderTextColor={Colors.subTitle}
+				/>
+				<TouchableOpacity style={AppStyles.authButton} onPress={handleLogin}>
+					<Text style={[AppStyles.title, { color: Colors.colorBlack }]}>{constants.auth.login}</Text>
+				</TouchableOpacity>
+				<TouchableOpacity onPress={() => navigation.navigate("Register")}>
+					<Text style={AppStyles.authLink}>{constants.auth.noAccount}</Text>
+				</TouchableOpacity>
+			</View>
+		</KeyboardAvoidingView>
 	);
 }

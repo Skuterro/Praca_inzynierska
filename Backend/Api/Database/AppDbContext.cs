@@ -15,8 +15,8 @@ namespace Api.Database
         public DbSet<WorkoutSession> WorkoutSessions { get; set; }
         public DbSet<WorkoutSessionExercise> WorkoutSessionExercises { get; set; }
         public DbSet<WorkoutSessionSet> WorkoutSessionSets { get; set; }
-        public DbSet<BodyMeasurement> BodyMeasurements { get; set; }
-        public DbSet<OneRepMax> OneRepMaxes { get; set; }
+        public DbSet<BodyMeasurements> BodyMeasurements { get; set; }
+        public DbSet<PersonalRecord> PersonalRecords { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
 
@@ -77,32 +77,23 @@ namespace Api.Database
                 .HasForeignKey(wss => wss.WorkoutSessionExerciseId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<BodyMeasurement>()
+            modelBuilder.Entity<BodyMeasurements>()
                 .HasOne(bm => bm.User)
                 .WithMany(u => u.BodyMeasurements)
                 .HasForeignKey(bm => bm.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<OneRepMax>()
+            modelBuilder.Entity<PersonalRecord>()
                 .HasOne(orm => orm.User)
-                .WithMany(u => u.OneRepMaxes)
+                .WithMany(u => u.PersonalRecords)
                 .HasForeignKey(orm => orm.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<OneRepMax>()
-                .HasOne(orm => orm.Exercise)
-                .WithMany()
-                .HasForeignKey(orm => orm.ExerciseId)
-                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<RefreshToken>()
                 .HasOne(rt => rt.User)
                 .WithMany(u => u.RefreshTokens)
                 .HasForeignKey(rt => rt.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-
-
 
             modelBuilder.Entity<Exercise>()
                 .HasIndex(e => e.Name)

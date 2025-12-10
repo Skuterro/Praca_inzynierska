@@ -2,7 +2,7 @@
 
 namespace Api.Models.Requests.WorkoutPlanRequests
 {
-    public class DayExerciseCreateDto
+    public class CreateDayExerciseRequest
     {
         [Required]
         public int ExerciseId { get; set; }

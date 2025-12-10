@@ -6,8 +6,8 @@ namespace Api.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<AuthResponseDto> RegisterAsync(RegisterRequestDto registerDto);
-        Task<AuthResponseDto> LoginAsync(LoginRequestDto loginDto);
+        Task<AuthResponseDto> RegisterAsync(RegisterRequestDto request);
+        Task<AuthResponseDto> LoginAsync(LoginRequestDto request);
         Task LogoutAsync(string refreshToken);
         Task<AuthResponseDto> RefreshAsync(string refreshToken);
         Task<AuthResponseDto> GenerateTokensAsync(User user);

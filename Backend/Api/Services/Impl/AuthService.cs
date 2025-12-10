@@ -23,9 +23,9 @@ namespace Api.Services.Impl
             _context = context;
         }
 
-        public async Task<AuthResponseDto> RegisterAsync(RegisterRequestDto registerDto)
+        public async Task<AuthResponseDto> RegisterAsync(RegisterRequestDto request)
         {
-            var existingUser = await _userManager.FindByEmailAsync(registerDto.Email);
+            var existingUser = await _userManager.FindByEmailAsync(request.Email);
             if (existingUser != null)
             {
                 throw new BadRequestException("User with this email already exists");
@@ -33,11 +33,11 @@ namespace Api.Services.Impl
 
             var user = new User
             {
-                UserName = registerDto.UserName,
-                Email = registerDto.Email,
+                UserName = request.UserName,
+                Email = request.Email,
             };
 
-            var result = await _userManager.CreateAsync(user, registerDto.Password);
+            var result = await _userManager.CreateAsync(user, request.Password);
 
             if (!result.Succeeded)
             {
@@ -48,10 +48,10 @@ namespace Api.Services.Impl
             return await GenerateTokensAsync(user);
         }
 
-        public async Task<AuthResponseDto> LoginAsync(LoginRequestDto loginDto)
+        public async Task<AuthResponseDto> LoginAsync(LoginRequestDto request)
         {
-            var user = await _userManager.FindByEmailAsync(loginDto.Email);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
             {
                 throw new UnauthorizedException("Invalid email or password");
             }

@@ -17,7 +17,7 @@ namespace Api.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
 
-            modelBuilder.Entity("Api.Models.Entities.BodyMeasurement", b =>
+            modelBuilder.Entity("Api.Models.Entities.BodyMeasurements", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -27,9 +27,6 @@ namespace Api.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("HeightCm")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("MeasurementDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
@@ -79,10 +76,6 @@ namespace Api.Migrations
                     b.Property<int>("BodyPart")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -96,7 +89,7 @@ namespace Api.Migrations
                     b.ToTable("Exercises");
                 });
 
-            modelBuilder.Entity("Api.Models.Entities.OneRepMax", b =>
+            modelBuilder.Entity("Api.Models.Entities.PersonalRecord", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -105,7 +98,7 @@ namespace Api.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ExerciseId")
+                    b.Property<int>("Exercise")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
@@ -117,11 +110,9 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExerciseId");
-
                     b.HasIndex("UserId");
 
-                    b.ToTable("OneRepMaxes");
+                    b.ToTable("PersonalRecords");
                 });
 
             modelBuilder.Entity("Api.Models.Entities.RefreshToken", b =>
@@ -472,7 +463,7 @@ namespace Api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Api.Models.Entities.BodyMeasurement", b =>
+            modelBuilder.Entity("Api.Models.Entities.BodyMeasurements", b =>
                 {
                     b.HasOne("Api.Models.Entities.User", "User")
                         .WithMany("BodyMeasurements")
@@ -502,21 +493,13 @@ namespace Api.Migrations
                     b.Navigation("WorkoutPlanDay");
                 });
 
-            modelBuilder.Entity("Api.Models.Entities.OneRepMax", b =>
+            modelBuilder.Entity("Api.Models.Entities.PersonalRecord", b =>
                 {
-                    b.HasOne("Api.Models.Entities.Exercise", "Exercise")
-                        .WithMany()
-                        .HasForeignKey("ExerciseId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Api.Models.Entities.User", "User")
-                        .WithMany("OneRepMaxes")
+                        .WithMany("PersonalRecords")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Exercise");
 
                     b.Navigation("User");
                 });
@@ -658,7 +641,7 @@ namespace Api.Migrations
                 {
                     b.Navigation("BodyMeasurements");
 
-                    b.Navigation("OneRepMaxes");
+                    b.Navigation("PersonalRecords");
 
                     b.Navigation("RefreshTokens");
 

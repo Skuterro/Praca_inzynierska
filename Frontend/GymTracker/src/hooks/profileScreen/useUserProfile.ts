@@ -63,7 +63,7 @@ export function useUserProfile() {
 				setBodyMetrics(created);
 			}
 		} finally {
-			fetchBodyMetrics();
+			setLoading(false);
 		}
 	};
 

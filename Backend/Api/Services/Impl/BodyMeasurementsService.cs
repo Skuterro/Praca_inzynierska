@@ -9,61 +9,57 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.Services.Impl
 {
-    public class BodyMeasurementService : IBodyMeasurementService
+    public class BodyMeasurementsService : IBodyMeasurementsService
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
 
-        public BodyMeasurementService(AppDbContext context, IMapper mapper)
+        public BodyMeasurementsService(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<BodyMeasurementResponseDto>> GetUserBodyMeasurementsAsync(string userId)
+        public async Task<BodyMeasurementsResponse> CreateBodyMeasurementAsync(string userId, CreateBodyMeasurementsRequest request)
         {
-            var bodyMeasEntities = await _context.BodyMeasurements
-                .Where(bm => bm.UserId == userId)
-                .ToListAsync();
-
-            return _mapper.Map<List<BodyMeasurementResponseDto>>(bodyMeasEntities);
-        }
-
-        public async Task<BodyMeasurementResponseDto> GetBodyMeasurementByIdAsync(int id)
-        {
-            var bodyMeasEntity =  await _context.BodyMeasurements.FindAsync(id);
-
-            if (bodyMeasEntity == null)
-            {
-                throw new NotFoundException("Body Measurement does not exist");
-            }
-
-            return _mapper.Map<BodyMeasurementResponseDto>(bodyMeasEntity);
-        }
-
-        public async Task<BodyMeasurementResponseDto> CreateBodyMeasurementAsync(string userId, BodyMeasurementCreateDto bodyMeasurementCreateDto)
-        {
-            var bodyMeasEntity = _mapper.Map<BodyMeasurement>(bodyMeasurementCreateDto);
+            var bodyMeasEntity = _mapper.Map<BodyMeasurements>(request);
             bodyMeasEntity.UserId = userId;
-            bodyMeasEntity.MeasurementDate = DateTime.UtcNow;
 
             _context.BodyMeasurements.Add(bodyMeasEntity);
             await _context.SaveChangesAsync();
-            return _mapper.Map<BodyMeasurementResponseDto>(bodyMeasEntity);
+            return _mapper.Map<BodyMeasurementsResponse>(bodyMeasEntity);
         }
 
-        public async Task DeleteBodyMeasurementAsync(string userId, int id)
+        public async Task<BodyMeasurementsResponse> GetUserBodyMeasurementsAsync(string userId)
         {
-            var bodyMeasToDelete = await _context.BodyMeasurements.FirstOrDefaultAsync(bm => bm.Id == id);
+            var bodyMeasEntities = await _context.BodyMeasurements
+                .FirstOrDefaultAsync(bm => bm.UserId == userId);
+
+            return _mapper.Map<BodyMeasurementsResponse>(bodyMeasEntities);
+        }
+
+        public async Task<BodyMeasurementsResponse> UpdateBodyMeasurementsAsync(string userId, UpdateBodyMeasurementsRequest request)
+        {
+            var bodyMeasToUpdate = await _context.BodyMeasurements
+                .FirstOrDefaultAsync(bm => bm.Id == request.BodyMeasurementsId && bm.UserId == userId);
+
+            if (bodyMeasToUpdate == null)
+            {
+                throw new BadRequestException("Body measurement does not exist");
+            }
+
+            _mapper.Map(request, bodyMeasToUpdate);
+            await _context.SaveChangesAsync();
+            return _mapper.Map<BodyMeasurementsResponse>(bodyMeasToUpdate);
+        }
+
+        public async Task DeleteBodyMeasurementsAsync(string userId, int id)
+        {
+            var bodyMeasToDelete = await _context.BodyMeasurements.FirstOrDefaultAsync(bm => bm.Id == id && bm.UserId == userId);
         
             if(bodyMeasToDelete == null)
             {
-                throw new NotFoundException("Body measurement does not exist");
-            }
-
-            if(bodyMeasToDelete.UserId != userId)
-            {
-                throw new UnauthorizedException("");
+                throw new BadRequestException("Body measurement does not exist");
             }
 
             _context.BodyMeasurements.Remove(bodyMeasToDelete);

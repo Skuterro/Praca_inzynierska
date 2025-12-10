@@ -21,7 +21,5 @@ namespace Api.Models.Entities
         public string Name { get; set; } = null!;
 
         public BodyPartEnum BodyPart { get; set; }
-
-        public string Description { get; set; } = string.Empty;
     }
 }

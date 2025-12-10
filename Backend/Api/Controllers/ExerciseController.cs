@@ -18,21 +18,14 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ExerciseResponseDto>>> GetAllExercises()
+        public async Task<ActionResult<List<ExerciseResponse>>> GetAllExercises()
         {
             var exercises = await _exerciseService.GetAllExercisesAsync();
             return Ok(exercises);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ExerciseResponseDto>> GetExerciseById([FromRoute] int id)
-        {
-            var exercise = await _exerciseService.GetExerciseById(id);
-            return Ok(exercise);
-        }
-
         [HttpGet("getByBodyPart/{bodyPart}")]
-        public async Task<ActionResult<List<ExerciseResponseDto>>> GetExercisesByBodyPart([FromRoute] BodyPartEnum bodyPart)
+        public async Task<ActionResult<List<ExerciseResponse>>> GetExercisesByBodyPart([FromRoute] BodyPartEnum bodyPart)
         {
             if (!Enum.IsDefined(typeof(BodyPartEnum), bodyPart))
             {
@@ -44,15 +37,15 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ExerciseResponseDto>> CreateExercise([FromBody] ExerciseCreateDto exerciseDto)
+        public async Task<ActionResult> CreateExercise([FromBody] CreateExerciseRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var createdExercise = await _exerciseService.CreateExercise(exerciseDto);
-            return CreatedAtAction(nameof(GetExerciseById), new { id = createdExercise.Id }, createdExercise);
+            await _exerciseService.CreateExercise(request);
+            return Created();
         }
 
         [HttpDelete("{id}")]

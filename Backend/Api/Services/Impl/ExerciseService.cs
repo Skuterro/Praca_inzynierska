@@ -20,38 +20,27 @@ namespace Api.Services.Impl
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ExerciseResponseDto>> GetAllExercisesAsync()
+        public async Task<IEnumerable<ExerciseResponse>> GetAllExercisesAsync()
         {
             var exerciseEntities = await _context.Exercises.ToListAsync();
-            return _mapper.Map<List<ExerciseResponseDto>>(exerciseEntities);
+            return _mapper.Map<List<ExerciseResponse>>(exerciseEntities);
         }
 
-        public async Task<ExerciseResponseDto> GetExerciseById(int id)
-        {
-            var exerciseEntity = await _context.Exercises.FirstOrDefaultAsync(e => e.Id ==  id);
-            if (exerciseEntity == null) 
-            {
-                throw new NotFoundException("Exercise does not exist");
-            }
-
-            return _mapper.Map<ExerciseResponseDto>(exerciseEntity);
-        }
-
-        public async Task<IEnumerable<ExerciseResponseDto>> GetExercisesByBodyPartAsync(BodyPartEnum bodyPart)
+        public async Task<IEnumerable<ExerciseResponse>> GetExercisesByBodyPartAsync(BodyPartEnum bodyPart)
         {
             var exercisesEntites = await _context.Exercises
                 .Where(e => e.BodyPart == bodyPart)
                 .ToListAsync();
 
-            return _mapper.Map<List<ExerciseResponseDto>>(exercisesEntites);
+            return _mapper.Map<List<ExerciseResponse>>(exercisesEntites);
         }
 
-        public async Task<ExerciseResponseDto> CreateExercise(ExerciseCreateDto exericseDto)
+        public async Task<ExerciseResponse> CreateExercise(CreateExerciseRequest request)
         {
-            var exerciseEntity = _mapper.Map<Exercise>(exericseDto);
+            var exerciseEntity = _mapper.Map<Exercise>(request);
             _context.Exercises.Add(exerciseEntity);
             await _context.SaveChangesAsync();
-            return _mapper.Map<ExerciseResponseDto>(exerciseEntity);
+            return _mapper.Map<ExerciseResponse>(exerciseEntity);
         }
 
         public async Task DeleteExerciseAsync(int id)

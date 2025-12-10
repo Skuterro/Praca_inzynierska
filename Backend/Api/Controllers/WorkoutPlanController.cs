@@ -20,7 +20,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<WorkoutPlanResponseDto>>> GetUserWorkoutPlans()
+        public async Task<ActionResult<List<WorkoutPlanResponse>>> GetUserWorkoutPlans()
         {
             var userId = HttpContext.GetUserId();
             if (userId == null)
@@ -32,15 +32,9 @@ namespace Api.Controllers
             return Ok(workoutPlans);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<WorkoutPlanResponseDto>> GetWorkouPlanById(int id)
-        {
-            var workoutPlan = await _workoutPlanService.GetWorkoutPlanById(id);
-            return Ok(workoutPlan);
-        }
 
         [HttpPost]
-        public async Task<ActionResult> CreateEmptyWorkoutPlan([FromBody] WorkoutPlanCreateDto workoutPlanCreateDto)
+        public async Task<ActionResult> CreateEmptyWorkoutPlan([FromBody] CreateWorkoutPlanRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -53,12 +47,12 @@ namespace Api.Controllers
                 return Unauthorized();
             }
 
-            var createdWorkoutPlan = await _workoutPlanService.CreateEmptyWorkoutPlanAsync(userId, workoutPlanCreateDto);
-            return CreatedAtAction(nameof(GetWorkouPlanById), new { id = createdWorkoutPlan.Id }, createdWorkoutPlan);
+            await _workoutPlanService.CreateEmptyWorkoutPlanAsync(userId, request);
+            return Created();
         }
 
         [HttpGet("{planId}/days")]
-        public async Task<ActionResult<List<WorkoutPlanDayResponseDto>>> GetWorkoutPlanDays([FromRoute] int planId)
+        public async Task<ActionResult<List<SimpleWorkoutPlanDayResponse>>> GetWorkoutPlanDays([FromRoute] int planId)
         {
             var userId = HttpContext.GetUserId();
             if (userId == null)
@@ -71,7 +65,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("weekDay/{weekDayIndex}")]
-        public async Task<ActionResult<List<WorkoutPlanDayResponseDto>>> getWorkoutPlanByWeekDay([FromRoute] int weekDayIndex)
+        public async Task<ActionResult<List<WorkoutPlanDayResponse>>> getWorkoutPlanByWeekDay([FromRoute] int weekDayIndex)
         {
             var userId = HttpContext.GetUserId();
             if (userId == null)
@@ -84,7 +78,7 @@ namespace Api.Controllers
         }
 
         [HttpPost("addDay")]
-        public async Task<ActionResult> AddDay([FromBody] WorkoutPlanDayCreateDto dto)
+        public async Task<ActionResult> AddDay([FromBody] CreateWorkoutPlanDayRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -97,12 +91,12 @@ namespace Api.Controllers
                 return Unauthorized();
             }
 
-            var day = await _workoutPlanService.AddDayToPlanAsync(userId, dto);
-            return Ok(day);
+            await _workoutPlanService.AddDayToPlanAsync(userId, request);
+            return Created();
         }
 
         [HttpPost("days/addExercise")]
-        public async Task<ActionResult> AddExerciseToDay([FromBody] DayExerciseCreateDto dto)
+        public async Task<ActionResult> AddExerciseToDay([FromBody] CreateDayExerciseRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -115,12 +109,12 @@ namespace Api.Controllers
                 return Unauthorized();
             }
 
-            var res = await _workoutPlanService.AddExerciseToDayAsync(userId, dto);
-            return Ok(res);
+            await _workoutPlanService.AddExerciseToDayAsync(userId, request);
+            return Created();
         }
 
         [HttpGet("days/{dayId}/exercises")]
-        public async Task<ActionResult<List<DayExerciseResponseDto>>> GetWorkoutPlanDayExercises([FromRoute] int dayId)
+        public async Task<ActionResult<List<DayExerciseResponse>>> GetWorkoutPlanDayExercises([FromRoute] int dayId)
         {
             var userId = HttpContext.GetUserId();
             if (userId == null)
@@ -142,6 +136,32 @@ namespace Api.Controllers
             }
 
             await _workoutPlanService.ToggleWorkoutPlanAsync(userId, planId);
+            return NoContent();
+        }
+
+        [HttpDelete("{planId}")]
+        public async Task<ActionResult> DeleteWorkoutPlan([FromRoute] int planId)
+        {
+            var userId = HttpContext.GetUserId();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            await _workoutPlanService.DeleteWorkoutPlanAsync(userId, planId);
+            return NoContent();
+        }
+
+        [HttpDelete("days/{planDayId}")]
+        public async Task<ActionResult> DeleteWorkoutPlanDay([FromRoute] int planDayId)
+        {
+            var userId = HttpContext.GetUserId();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            await _workoutPlanService.DeleteWorkoutPlanDayAsync(userId, planDayId);
             return NoContent();
         }
     }

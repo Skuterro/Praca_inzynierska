@@ -23,22 +23,22 @@ namespace Api.Services.Impl
             _mapper = mapper;
         }
 
-        public async Task<WorkoutPlanResponseDto> CreateEmptyWorkoutPlanAsync(string userId, WorkoutPlanCreateDto workoutPlanCreateDto)
+        public async Task<WorkoutPlanResponse> CreateEmptyWorkoutPlanAsync(string userId, CreateWorkoutPlanRequest request)
         {
-            var workoutPlanEntity = _mapper.Map<WorkoutPlan>(workoutPlanCreateDto);
+            var workoutPlanEntity = _mapper.Map<WorkoutPlan>(request);
             workoutPlanEntity.UserId = userId;
             workoutPlanEntity.CreatedAt = DateTime.UtcNow;
 
             _context.WorkoutPlans.Add(workoutPlanEntity);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<WorkoutPlanResponseDto>(workoutPlanEntity);
+            return _mapper.Map<WorkoutPlanResponse>(workoutPlanEntity);
         }
 
-        public async Task<WorkoutPlanDayResponseDto> AddDayToPlanAsync(string userId, WorkoutPlanDayCreateDto dto)
+        public async Task<SimpleWorkoutPlanDayResponse> AddDayToPlanAsync(string userId, CreateWorkoutPlanDayRequest request)
         {
             var plan = await _context.WorkoutPlans
-                .Where(wp => wp.Id == dto.PlanId && wp.UserId == userId)
+                .Where(wp => wp.Id == request.PlanId && wp.UserId == userId)
                 .FirstOrDefaultAsync();
 
             if (plan == null)
@@ -46,13 +46,13 @@ namespace Api.Services.Impl
                 throw new BadRequestException("Workout plan does not exist.");
             }
 
-            if (!Enum.TryParse(dto.WeekDay, true, out WeekDayEnum weekDay))
+            if (!Enum.TryParse(request.WeekDay, true, out WeekDayEnum weekDay))
             {
                 throw new BadRequestException("Invalid week day value.");
             }
 
             var exists = await _context.WorkoutPlanDays
-                .AnyAsync(d => d.WorkoutPlanId == dto.PlanId && d.WeekDay == weekDay);
+                .AnyAsync(d => d.WorkoutPlanId == request.PlanId && d.WeekDay == weekDay);
             if (exists)
             {
                 throw new BadRequestException($"Day {weekDay} already exists in this plan.");
@@ -60,22 +60,22 @@ namespace Api.Services.Impl
 
             var workoutDayEntity = new WorkoutPlanDay
             {
-                Name = dto.Name,
+                Name = request.Name,
                 WeekDay = weekDay,
-                WorkoutPlanId = dto.PlanId,
+                WorkoutPlanId = request.PlanId,
             };
 
             _context.WorkoutPlanDays.Add(workoutDayEntity);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<WorkoutPlanDayResponseDto>(workoutDayEntity);
+            return _mapper.Map<SimpleWorkoutPlanDayResponse>(workoutDayEntity);
         }
 
-        public async Task<DayExerciseResponseDto> AddExerciseToDayAsync(string userId, DayExerciseCreateDto dto)
+        public async Task<DayExerciseResponse> AddExerciseToDayAsync(string userId, CreateDayExerciseRequest request)
         {
             var day = await _context.WorkoutPlanDays
                 .Include(wpd => wpd.WorkoutPlan)
-                .Where(wpd => wpd.Id == dto.DayId && wpd.WorkoutPlan.UserId == userId)
+                .Where(wpd => wpd.Id == request.DayId && wpd.WorkoutPlan.UserId == userId)
                 .FirstOrDefaultAsync();
 
             if (day == null)
@@ -83,7 +83,7 @@ namespace Api.Services.Impl
                 throw new BadRequestException("Workout plan day does not exist.");
             }
 
-            var exerciseExists = await _context.Exercises.AnyAsync(e => e.Id == dto.ExerciseId);
+            var exerciseExists = await _context.Exercises.AnyAsync(e => e.Id == request.ExerciseId);
             if (!exerciseExists)
             {
                 throw new BadRequestException("Exercise does not exist.");
@@ -91,9 +91,9 @@ namespace Api.Services.Impl
 
             var dayExerciseEntity = new DayExercise
             {
-                WorkoutPlanDayId = dto.DayId,
-                ExerciseId = dto.ExerciseId,
-                Sets = dto.Sets
+                WorkoutPlanDayId = request.DayId,
+                ExerciseId = request.ExerciseId,
+                Sets = request.Sets
             };
 
             _context.DayExercises.Add(dayExerciseEntity);
@@ -101,7 +101,7 @@ namespace Api.Services.Impl
 
             await _context.Entry(dayExerciseEntity).Reference(de => de.Exercise).LoadAsync();
 
-            return _mapper.Map<DayExerciseResponseDto>(dayExerciseEntity);
+            return _mapper.Map<DayExerciseResponse>(dayExerciseEntity);
         }
 
         public async Task ToggleWorkoutPlanAsync( string userId, int planId)
@@ -129,25 +129,27 @@ namespace Api.Services.Impl
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<DayExerciseResponseDto>> GetWorkoutPlanByWeekDayAsync(string userId, int weekDayIndex)
+        public async Task<WorkoutPlanDayResponse> GetWorkoutPlanByWeekDayAsync(string userId, int weekDayIndex)
         {
             var activeWorkoutPlan = await _context.WorkoutPlans
                 .FirstOrDefaultAsync(wp => wp.UserId == userId && wp.IsActive);
 
             if (activeWorkoutPlan == null)
             {
-                return new List<DayExerciseResponseDto>();
+                throw new BadRequestException("Workout plan is not active or does not exist");
             }
 
             var today = (WeekDayEnum)weekDayIndex;
 
             var todayWorkout = await _context.WorkoutPlanDays
                 .Where(wpd => wpd.WorkoutPlanId == activeWorkoutPlan.Id && wpd.WeekDay == today)
+                .Include(wpd => wpd.DayExercises)
+                    .ThenInclude(de => de.Exercise)
                 .FirstOrDefaultAsync();
 
             if (todayWorkout == null)
             {
-                return new List<DayExerciseResponseDto>();
+                return new WorkoutPlanDayResponse();
             }
 
             var dayExerciseEntities = await _context.DayExercises
@@ -155,10 +157,10 @@ namespace Api.Services.Impl
                 .Include(de => de.Exercise)
                 .ToListAsync();
 
-            return _mapper.Map<List<DayExerciseResponseDto>>(dayExerciseEntities);
+            return _mapper.Map<WorkoutPlanDayResponse>(todayWorkout);
         }
 
-        public async Task<IEnumerable<WorkoutPlanResponseDto>> GetUserWorkoutPlansAsync(string userId)
+        public async Task<IEnumerable<WorkoutPlanResponse>> GetUserWorkoutPlansAsync(string userId)
         {
             var workoutPlanEntities = await _context.WorkoutPlans
                 .Where(wp => wp.UserId == userId)
@@ -167,10 +169,10 @@ namespace Api.Services.Impl
                         .ThenInclude(de => de.Exercise)
                 .ToListAsync();
 
-            return _mapper.Map<List<WorkoutPlanResponseDto>>(workoutPlanEntities);
+            return _mapper.Map<List<WorkoutPlanResponse>>(workoutPlanEntities);
         }
 
-        public async Task<IEnumerable<WorkoutPlanDayResponseDto>> GetWorkoutPlanDaysAsync(string userId, int planId)
+        public async Task<IEnumerable<SimpleWorkoutPlanDayResponse>> GetWorkoutPlanDaysAsync(string userId, int planId)
         {
             var workoutPlanExists = await _context.WorkoutPlans.AnyAsync(wp => wp.Id == planId && wp.UserId == userId);
             if (!workoutPlanExists)
@@ -183,10 +185,10 @@ namespace Api.Services.Impl
                 .OrderBy(wpd => wpd.WeekDay)
                 .ToListAsync();
 
-            return _mapper.Map<List<WorkoutPlanDayResponseDto>>(workoutPlanDaysEntities);
+            return _mapper.Map<List<SimpleWorkoutPlanDayResponse>>(workoutPlanDaysEntities);
         }
 
-        public async Task<IEnumerable<DayExerciseResponseDto>> GetWorkoutPlanDayExercisesAsync(string userId, int dayId)
+        public async Task<IEnumerable<DayExerciseResponse>> GetWorkoutPlanDayExercisesAsync(string userId, int dayId)
         {
             var workoutPlanDayExists = await _context.WorkoutPlanDays.AnyAsync(wpd => wpd.Id == dayId);
             if (!workoutPlanDayExists)
@@ -199,18 +201,36 @@ namespace Api.Services.Impl
                 .Include(de => de.Exercise)
                 .ToListAsync();
 
-            return _mapper.Map<List<DayExerciseResponseDto>>(dayExerciseEntities);
+            return _mapper.Map<List<DayExerciseResponse>>(dayExerciseEntities);
         }
 
-        public async Task<WorkoutPlanResponseDto> GetWorkoutPlanById(int id)
+        public async Task DeleteWorkoutPlanAsync(string userId, int planId)
         {
-            var workoutPlanEntity = await _context.WorkoutPlans.FirstOrDefaultAsync(wp => wp.Id == id);
-            if (workoutPlanEntity == null)
+            var planToDelete = await _context.WorkoutPlans
+                .FirstOrDefaultAsync(wp => wp.Id == planId && wp.UserId == userId);
+
+            if (planToDelete == null)
             {
-                throw new NotFoundException("Workout plan does not exist");
+                throw new BadRequestException("Workout plan does not exist");
             }
 
-            return _mapper.Map<WorkoutPlanResponseDto>(workoutPlanEntity);
+            _context.Remove(planToDelete);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteWorkoutPlanDayAsync(string userId, int planDayId)
+        {
+            var planDayToDelete = await _context.WorkoutPlanDays
+                .Include(wpd => wpd.WorkoutPlan)
+                .FirstOrDefaultAsync(wpd => wpd.Id == planDayId && wpd.WorkoutPlan.UserId == userId);
+
+            if (planDayToDelete == null)
+            {
+                throw new BadRequestException("Workout plan day does not exist");
+            }
+
+            _context.Remove(planDayToDelete);
+            await _context.SaveChangesAsync();
         }
     }
 }

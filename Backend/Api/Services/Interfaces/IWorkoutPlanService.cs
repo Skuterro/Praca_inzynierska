@@ -6,14 +6,15 @@ namespace Api.Services.Interfaces
 {
     public interface IWorkoutPlanService
     {
-        Task<WorkoutPlanResponseDto> CreateEmptyWorkoutPlanAsync(string userId, WorkoutPlanCreateDto workoutPlanCreateDto);
-        Task<WorkoutPlanDayResponseDto> AddDayToPlanAsync(string userId, WorkoutPlanDayCreateDto dto);
-        Task<DayExerciseResponseDto> AddExerciseToDayAsync(string userId, DayExerciseCreateDto dto);
+        Task<WorkoutPlanResponse> CreateEmptyWorkoutPlanAsync(string userId, CreateWorkoutPlanRequest request);
+        Task<SimpleWorkoutPlanDayResponse> AddDayToPlanAsync(string userId, CreateWorkoutPlanDayRequest request);
+        Task<DayExerciseResponse> AddExerciseToDayAsync(string userId, CreateDayExerciseRequest request);
         Task ToggleWorkoutPlanAsync(string userId, int planId);
-        Task<IEnumerable<DayExerciseResponseDto>> GetWorkoutPlanByWeekDayAsync(string userId, int weekDayIndex);
-        Task<IEnumerable<WorkoutPlanDayResponseDto>> GetWorkoutPlanDaysAsync(string userId, int planId);
-        Task<IEnumerable<WorkoutPlanResponseDto>> GetUserWorkoutPlansAsync(string userId);
-        Task<IEnumerable<DayExerciseResponseDto>> GetWorkoutPlanDayExercisesAsync(string userId, int dayId);
-        Task<WorkoutPlanResponseDto> GetWorkoutPlanById(int id);
+        Task<WorkoutPlanDayResponse> GetWorkoutPlanByWeekDayAsync(string userId, int weekDayIndex);
+        Task<IEnumerable<SimpleWorkoutPlanDayResponse>> GetWorkoutPlanDaysAsync(string userId, int planId);
+        Task<IEnumerable<WorkoutPlanResponse>> GetUserWorkoutPlansAsync(string userId);
+        Task<IEnumerable<DayExerciseResponse>> GetWorkoutPlanDayExercisesAsync(string userId, int dayId);
+        Task DeleteWorkoutPlanAsync(string userId, int planId);
+        Task DeleteWorkoutPlanDayAsync(string userId, int planDayId);
     }
 }

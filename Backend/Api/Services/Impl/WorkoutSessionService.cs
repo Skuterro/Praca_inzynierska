@@ -1,8 +1,10 @@
 ﻿using Api.Database;
 using Api.Exceptions;
 using Api.Models.Entities;
+using Api.Models.Requests.QueryParams;
 using Api.Models.Requests.WorkoutSessionRequests;
 using Api.Models.Responses.ActiveSessionResponses;
+using Api.Models.Responses.PagedResult;
 using Api.Models.Responses.WorkoutSessionResponses;
 using Api.Services.Interfaces;
 using AutoMapper;
@@ -157,38 +159,25 @@ namespace Api.Services.Impl
             };
         }
 
-        public async Task<IEnumerable<WorkoutSessionResponse>> GetAllUserWorkoutSessionsAsync(string userId)
+        public async Task<PagedResult<WorkoutSessionResponse>> GetAllUserWorkoutSessionsAsync(string userId, QueryParams queryParams)
         {
-            var workoutSessionEntities = await _context.WorkoutSessions
+            var baseQuery = _context.WorkoutSessions
                 .Where(ws => ws.UserId == userId)
                 .OrderByDescending(ws => ws.Start)
                 .Include(ws => ws.WorkoutPlanDay)
                     .ThenInclude(wpd => wpd.WorkoutPlan) 
+                .AsQueryable();
+
+            var totalItemsCount = await baseQuery.CountAsync();
+
+            var workoutSessions = await baseQuery
+                .Skip(queryParams.PageSize * (queryParams.PageNumber - 1))
+                .Take(queryParams.PageSize)
                 .ToListAsync();
 
-            return _mapper.Map<List<WorkoutSessionResponse>>(workoutSessionEntities);
-        }
+            var response = _mapper.Map<List<WorkoutSessionResponse>>(workoutSessions);
 
-        public async Task<WorkoutSessionResponse> GetWorkoutSessionByIdAsync(int id)
-        {
-            var workoutSessionEntity = await _context.WorkoutSessions.FirstOrDefaultAsync(ws => ws.Id == id);
-            if (workoutSessionEntity == null)
-            {
-                throw new NotFoundException("Workout session does not exist");
-            }
-
-            return _mapper.Map<WorkoutSessionResponse>(workoutSessionEntity);
-        }
-
-        public async Task<WorkoutSessionSetResponse> GetWorkoutSessionSetByIdAsync(int id)
-        {
-            var workoutSessionSetEntity = await _context.WorkoutSessionSets.FirstOrDefaultAsync(wss => wss.Id == id);
-            if (workoutSessionSetEntity == null)
-            {
-                throw new NotFoundException("Workout session does not exist");
-            }
-
-            return _mapper.Map<WorkoutSessionSetResponse>(workoutSessionSetEntity);
+            return new PagedResult<WorkoutSessionResponse>(response, totalItemsCount, queryParams.PageNumber, queryParams.PageSize);
         }
 
         public async Task<WorkoutSessionDetailsResponse> GetWorkoutSessionDetailsByIdAsync(string userId, int sessionId)
@@ -210,6 +199,7 @@ namespace Api.Services.Impl
             return new WorkoutSessionDetailsResponse
             {
                 SessionId = workoutSession.Id,
+                IsFinished = workoutSession.IsFinished,
                 Exercises = workoutSession.SessionExercises.Select(se => new WorkoutSessionExerciseResponse
                 {
                     DayExerciseId = se.DayExerciseId,

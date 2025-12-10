@@ -1,7 +1,9 @@
 ﻿using System.Security.Claims;
 using Api.Database;
+using Api.Models.Requests.QueryParams;
 using Api.Models.Requests.WorkoutSessionRequests;
 using Api.Models.Responses.ActiveSessionResponses;
+using Api.Models.Responses.PagedResult;
 using Api.Models.Responses.WorkoutSessionResponses;
 using Api.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -23,22 +25,8 @@ namespace Api.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        /*[HttpGet("{id}")]
-        public async Task<ActionResult<WorkoutSessionResponseDto>> GetWorkoutSessionById([FromRoute] int id)
-        {
-            var workoutSession = await _workoutSessionService.GetWorkoutSessionByIdAsync(id);
-            return Ok(workoutSession);
-        }*/
-
-        /*[HttpGet("set/{id}")]
-        public async Task<ActionResult<WorkoutSessionSetResponseDto>> GetWorkoutSessionSetById([FromRoute] int id)
-        {
-            var workoutSessionSet = await _workoutSessionService.GetWorkoutSessionSetByIdAsync(id);
-            return Ok(workoutSessionSet);
-        }*/
-
         [HttpGet]
-        public async Task<ActionResult<List<WorkoutSessionResponse>>> GetAllUserWorkoutSessions()
+        public async Task<ActionResult<PagedResult<WorkoutSessionResponse>>> GetAllUserWorkoutSessions([FromQuery] QueryParams queryParams)
         {
             var userId = _httpContextAccessor.HttpContext!.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -46,8 +34,8 @@ namespace Api.Controllers
                 return Unauthorized();
             }
 
-            var workoutSessions = await _workoutSessionService.GetAllUserWorkoutSessionsAsync(userId);
-            return Ok(workoutSessions);
+            var response = await _workoutSessionService.GetAllUserWorkoutSessionsAsync(userId, queryParams);
+            return Ok(response);
         }
 
         [HttpPost("start")]

@@ -1,5 +1,7 @@
-﻿using Api.Models.Requests.WorkoutSessionRequests;
+﻿using Api.Models.Requests.QueryParams;
+using Api.Models.Requests.WorkoutSessionRequests;
 using Api.Models.Responses.ActiveSessionResponses;
+using Api.Models.Responses.PagedResult;
 using Api.Models.Responses.WorkoutSessionResponses;
 
 namespace Api.Services.Interfaces
@@ -10,10 +12,7 @@ namespace Api.Services.Interfaces
         Task<WorkoutSessionSetResponse> AddSetAsync(string userId, AddWorkouSessionSetRequest request);
         Task FinishWorkoutSessionAsync(string userId, FinishWorkoutSessionRequest request);
         Task<SessionStatusResponse> GetTodaySessionStatusAsync(string userId);
-        Task<IEnumerable<WorkoutSessionResponse>> GetAllUserWorkoutSessionsAsync(string userId);
-        Task<WorkoutSessionResponse> GetWorkoutSessionByIdAsync(int sessionId);
+        Task<PagedResult<WorkoutSessionResponse>> GetAllUserWorkoutSessionsAsync(string userId, QueryParams queryParams);
         Task<WorkoutSessionDetailsResponse> GetWorkoutSessionDetailsByIdAsync(string userId, int sessionId);
-        Task<WorkoutSessionSetResponse> GetWorkoutSessionSetByIdAsync(int id);
-
     }
 }

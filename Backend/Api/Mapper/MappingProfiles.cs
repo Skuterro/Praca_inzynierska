@@ -18,8 +18,8 @@ namespace Api.Mapper
     {
         public ExerciseMappingProfile()
         {
-            CreateMap<ExerciseCreateDto, Exercise>();
-            CreateMap<Exercise, ExerciseResponseDto>();
+            CreateMap<CreateExerciseRequest, Exercise>();
+            CreateMap<Exercise, ExerciseResponse>();
         }
     }
 
@@ -27,36 +27,33 @@ namespace Api.Mapper
     {
         public DayExerciseMappingProfile()
         {
-            CreateMap<DayExercise, DayExerciseResponseDto>()
+            CreateMap<DayExercise, DayExerciseResponse>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ExerciseId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Exercise.Name))
                 .ForMember(dest => dest.BodyPart, opt => opt.MapFrom(src => src.Exercise.BodyPart));
         }
     }
 
-
     public class WorkoutPlanMappingProfile : Profile
     {
         public WorkoutPlanMappingProfile()
         {
-            CreateMap<WorkoutPlanCreateDto, WorkoutPlan>()
+            CreateMap<CreateWorkoutPlanRequest, WorkoutPlan>()
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
-            //.ForMember(dest => dest.WorkoutPlanDays, opt => opt.MapFrom(src => src.WorkoutDays));
 
-            CreateMap<WorkoutPlanDayCreateDto, WorkoutPlanDay>()
+            CreateMap<CreateWorkoutPlanDayRequest, WorkoutPlanDay>()
                 .ForMember(dest => dest.WeekDay, opt => opt.MapFrom(src => Enum.Parse<WeekDayEnum>(src.WeekDay, true)));
-                //.ForMember(dest => dest.DayExercises, opt => opt.MapFrom(src => src.DayExercises));
 
-            CreateMap<DayExerciseCreateDto, DayExercise>();
+            CreateMap<CreateDayExerciseRequest, DayExercise>();
 
-            CreateMap<WorkoutPlan, WorkoutPlanResponseDto>();
-            CreateMap<WorkoutPlanDay, SimpleWorkoutPlanDayResponseDto>();
+            CreateMap<WorkoutPlan, WorkoutPlanResponse>();
+            CreateMap<WorkoutPlanDay, SimpleWorkoutPlanDayResponse>();
 
-            CreateMap<WorkoutPlanDay, WorkoutPlanDayResponseDto>()
+            CreateMap<WorkoutPlanDay, WorkoutPlanDayResponse>()
                 .ForMember(dest => dest.DayExercises, opt => opt.MapFrom(src => src.DayExercises));
 
-            CreateMap<DayExercise, DayExerciseResponseDto>()
+            CreateMap<DayExercise, DayExerciseResponse>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ExerciseId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Exercise.Name))
                 .ForMember(dest => dest.BodyPart, opt => opt.MapFrom(src => src.Exercise.BodyPart));
@@ -67,11 +64,14 @@ namespace Api.Mapper
     {
         public BodyMeasurementMappingProfile() 
         {
-            CreateMap<BodyMeasurementCreateDto, BodyMeasurement>()
-                .ForMember(dest => dest.MeasurementDate, opt => opt.Ignore())
+            CreateMap<CreateBodyMeasurementsRequest, BodyMeasurements>()
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
 
-            CreateMap<BodyMeasurement, BodyMeasurementResponseDto>();
+            CreateMap<UpdateBodyMeasurementsRequest, BodyMeasurements>()
+                .ForAllMembers(opt =>
+                    opt.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<BodyMeasurements, BodyMeasurementsResponse>();
         }
     }
 
@@ -79,11 +79,11 @@ namespace Api.Mapper
     {
         public OneRepMaxMappingProfile()
         {
-            CreateMap<CreateOneRepMaxRequest, OneRepMax>()
+            CreateMap<PersonalRecordRequest, PersonalRecord>()
                 .ForMember(dest => dest.Date, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
 
-            CreateMap<OneRepMax, OneRepMaxResponse>();
+            CreateMap<PersonalRecord, PersonalRecordResponse>();
         }
     }
 
@@ -96,26 +96,6 @@ namespace Api.Mapper
                 .ForMember(dest => dest.Start, opt => opt.Ignore())
                 .ForMember(dest => dest.End, opt => opt.Ignore())
                 .ForMember(dest => dest.IsFinished, opt => opt.Ignore());
-
-            /*CreateMap<WorkoutSession, WorkoutSessionResponseDto>()
-                .ForMember(dest => dest.WorkoutPlanDayName, opt => opt.MapFrom(src => src.WorkoutPlanDay.Name))
-                .ForMember(dest => dest.Exercises, opt => opt.MapFrom(src =>
-                    src.SessionSets
-                        .GroupBy(s => new { s.ExerciseId, s.Exercise.Name })
-                        .Select(g => new WorkoutSessionExerciseDto
-                        {
-                            ExerciseId = g.Key.ExerciseId,
-                            ExerciseName = g.Key.Name,
-                            Sets = g.Select(s => new SessionSetResponseDto
-                            {
-                                Id = s.Id,
-                                SetNumber = s.SetNumber,
-                                Reps = s.Reps,
-                                WeightKg = s.WeightKg
-                            }).ToList()
-                        })
-                        .ToList()
-                ));*/
 
             CreateMap<WorkoutSession, WorkoutSessionResponse>()
                 .ForMember(dest => dest.WorkoutPlanName, opt => opt.MapFrom(src => src.WorkoutPlanDay.WorkoutPlan.Name))

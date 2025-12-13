@@ -5,7 +5,7 @@ import { Colors } from "../../constants/Colors";
 export default function LoadingDataContainer() {
 	return (
 		<View style={AppStyles.loadingData}>
-			<ActivityIndicator size="large" color={Colors.secondary} />
+			<ActivityIndicator testID="activity-indicator" size="large" color={Colors.secondary} />
 		</View>
 	);
 }

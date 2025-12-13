@@ -1,5 +1,5 @@
-import { DayExercise } from "../../models/DayExercise";
 import { render, screen } from "@testing-library/react-native";
+import { DayExercise } from "../../models/DayExercise";
 import ExerciseItem from "./ExerciseItem";
 
 const mockExercise: DayExercise = {

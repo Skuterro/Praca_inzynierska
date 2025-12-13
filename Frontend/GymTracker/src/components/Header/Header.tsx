@@ -14,7 +14,7 @@ export default function Header({ title, onButtonClick, onDelete }: HeaderProps) 
 		<View style={AppStyles.screenHeader}>
 			<View style={styles.sideContainer}>
 				<TouchableOpacity onPress={onButtonClick}>
-					<FeatherIcon name="arrow-left-circle" size={32} color="white" />
+					<FeatherIcon name="arrow-left-circle" size={32} color={Colors.colorWhite} />
 				</TouchableOpacity>
 			</View>
 			<Text style={styles.title}>{title}</Text>
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 26,
 		fontWeight: "bold",
-		color: "white",
+		color: Colors.colorWhite,
 		textAlign: "center",
 		flex: 1,
 	},

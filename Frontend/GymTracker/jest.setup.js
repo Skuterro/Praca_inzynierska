@@ -12,5 +12,10 @@ jest.mock("@expo/vector-icons", () => {
 
 jest.mock("react-native-vector-icons/Feather", () => {
 	const { Text } = require("react-native");
-	return ({ name }) => <Text>{name}</Text>; // Zwraca nazwę ikony jako tekst
+	return ({ name }) => <Text>{name}</Text>;
+});
+
+jest.mock("react-native-vector-icons/Ionicons", () => {
+	const { Text } = require("react-native");
+	return ({ name }) => <Text>{name}</Text>;
 });

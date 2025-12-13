@@ -5,7 +5,7 @@ import { FlatList, View } from "react-native";
 import { constants } from "../../constants/Constants";
 import { AppStyles } from "../../constants/AppStyles";
 import { RouteProp } from "@react-navigation/native";
-import LoadingDataContainer from "../../components/LoadingDataContainer";
+import LoadingDataContainer from "../../components/LoadingData/LoadingDataContainer";
 import ListEmptyComponent from "../../components/List/ListEmptyComponent";
 import AddRecordModal from "../../components/Modal/AddRecordModal";
 import ListHeader from "../../components/Header/ListHeader";

@@ -2,7 +2,7 @@ import { Text, FlatList, StyleSheet } from "react-native";
 import { DayExercise } from "../../models/DayExercise";
 import { constants } from "../../constants/Constants";
 import { Colors } from "../../constants/Colors";
-import LoadingDataContainer from "../LoadingDataContainer";
+import LoadingDataContainer from "../LoadingData/LoadingDataContainer";
 import ExerciseItem from "../Exercise/ExerciseItem";
 
 interface WorkoutContentProps {

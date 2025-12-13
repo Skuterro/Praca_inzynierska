@@ -8,7 +8,7 @@ import { constants } from "../../constants/Constants";
 import { AppStyles } from "../../constants/AppStyles";
 import { useAuth } from "../../context/AuthContext";
 import { Colors } from "../../constants/Colors";
-import LoadingDataContainer from "../../components/LoadingDataContainer";
+import LoadingDataContainer from "../../components/LoadingData/LoadingDataContainer";
 import BodyMetricsContainer from "../../components/UserProfile/BodyMetricsContainer";
 import PersonalRecordItem from "../../components/UserProfile/PersonalRecordItem";
 import UserProfileHeader from "../../components/Header/UserProfileHeader";

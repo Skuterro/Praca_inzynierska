@@ -5,7 +5,7 @@ import { useWorkoutSession } from "../../hooks/workoutSessionScreen/useWorkoutSe
 import { RouteProp } from "@react-navigation/native";
 import { AppStyles } from "../../constants/AppStyles";
 import { constants } from "../../constants/Constants";
-import LoadingDataContainer from "../../components/LoadingDataContainer";
+import LoadingDataContainer from "../../components/LoadingData/LoadingDataContainer";
 import ExerciseSessionItem from "../../components/Exercise/ExerciseSessionItem";
 import ListEmptyComponent from "../../components/List/ListEmptyComponent";
 import ListHeader from "../../components/Header/ListHeader";

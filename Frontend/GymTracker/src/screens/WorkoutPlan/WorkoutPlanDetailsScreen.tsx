@@ -9,7 +9,7 @@ import { AppStyles } from "../../constants/AppStyles";
 import { constants } from "../../constants/Constants";
 import { useState } from "react";
 import { Colors } from "../../constants/Colors";
-import LoadingDataContainer from "../../components/LoadingDataContainer";
+import LoadingDataContainer from "../../components/LoadingData/LoadingDataContainer";
 import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
 import ListEmptyComponent from "../../components/List/ListEmptyComponent";
 import ListHeader from "../../components/Header/ListHeader";

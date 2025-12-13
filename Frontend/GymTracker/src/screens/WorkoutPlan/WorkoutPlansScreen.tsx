@@ -7,7 +7,7 @@ import { AppStyles } from "../../constants/AppStyles";
 import { constants } from "../../constants/Constants";
 import { PlanItem } from "../../components/WorkoutPlan/PlanItem";
 import { useState } from "react";
-import LoadingDataContainer from "../../components/LoadingDataContainer";
+import LoadingDataContainer from "../../components/LoadingData/LoadingDataContainer";
 import WorkoutPlanService from "../../api/Services/WorkoutPlanService";
 import ListEmptyComponent from "../../components/List/ListEmptyComponent";
 import UserProfileHeader from "../../components/Header/UserProfileHeader";

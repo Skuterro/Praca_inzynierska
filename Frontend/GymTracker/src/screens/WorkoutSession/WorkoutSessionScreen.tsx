@@ -1,15 +1,15 @@
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useCallback, useState } from "react";
-import LoadingDataContainer from "../../components/LoadingDataContainer";
 import { RootStackParamList } from "../../navigation/AppNavigator";
 import { WorkoutSession } from "../../models/WorkoutSession";
 import { useFocusEffect } from "@react-navigation/native";
-import SessionItem from "../../components/Session/SessionItem";
 import { AppStyles } from "../../constants/AppStyles";
 import WorkoutSessionService from "../../api/Services/WorkoutSessionService";
+import LoadingDataContainer from "../../components/LoadingData/LoadingDataContainer";
 import ListEmptyComponent from "../../components/List/ListEmptyComponent";
 import UserProfileHeader from "../../components/Header/UserProfileHeader";
+import SessionItem from "../../components/Session/SessionItem";
 import Pagination from "../../components/Pagination/Pagination";
 
 type WorkoutSessionsScreenNavProp = NativeStackNavigationProp<RootStackParamList, "WorkoutSessions">;

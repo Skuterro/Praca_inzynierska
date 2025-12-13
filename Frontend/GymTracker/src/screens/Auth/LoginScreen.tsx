@@ -6,7 +6,7 @@ import { AppStyles } from "../../constants/AppStyles";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Colors } from "../../constants/Colors";
-import LoadingDataContainer from "../../components/LoadingDataContainer";
+import LoadingDataContainer from "../../components/LoadingData/LoadingDataContainer";
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "Login">;
 

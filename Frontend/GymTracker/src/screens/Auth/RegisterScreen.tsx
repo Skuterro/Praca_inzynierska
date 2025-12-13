@@ -1,13 +1,13 @@
 import { View, TextInput, TouchableOpacity, Text, Image } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { KeyboardAvoidingView } from "react-native";
 import { RootStackParamList } from "../../navigation/AppNavigator";
 import { constants } from "../../constants/Constants";
 import { AppStyles } from "../../constants/AppStyles";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Colors } from "../../constants/Colors";
-import LoadingDataContainer from "../../components/LoadingDataContainer";
-import { KeyboardAvoidingView } from "react-native";
+import LoadingDataContainer from "../../components/LoadingData/LoadingDataContainer";
 
 type RegisterScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "Register">;
 

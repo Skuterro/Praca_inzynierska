@@ -19,3 +19,13 @@ jest.mock("react-native-vector-icons/Ionicons", () => {
 	const { Text } = require("react-native");
 	return ({ name }) => <Text>{name}</Text>;
 });
+
+jest.mock("react-native-vector-icons/FontAwesome", () => {
+	const { Text } = require("react-native");
+	return ({ name }) => <Text>{name}</Text>;
+});
+
+jest.mock("react-native-vector-icons/Entypo", () => {
+	const { Text } = require("react-native");
+	return ({ name }) => <Text>{name}</Text>;
+});

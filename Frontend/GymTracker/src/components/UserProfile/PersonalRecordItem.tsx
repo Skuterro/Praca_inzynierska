@@ -22,7 +22,7 @@ export default function PersonalRecordItem({ value, label, onPress }: PersonalRe
 				</View>
 			</View>
 			<TouchableOpacity style={AppStyles.classicButton} onPress={onPress}>
-				<Ionicons name="chevron-forward" size={18} color="black" />
+				<Ionicons name="chevron-forward" size={18} color={Colors.colorBlack} />
 			</TouchableOpacity>
 		</View>
 	);

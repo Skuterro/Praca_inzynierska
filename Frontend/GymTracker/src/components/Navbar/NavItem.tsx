@@ -60,6 +60,6 @@ const styles = StyleSheet.create({
 	navText: {
 		fontSize: 14,
 		marginLeft: 8,
-		color: "white",
+		color: Colors.colorWhite,
 	},
 });

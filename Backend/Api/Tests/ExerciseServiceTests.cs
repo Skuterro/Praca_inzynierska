@@ -109,6 +109,8 @@ namespace Api.Tests
         {
             await _exerciseService.DeleteExerciseAsync(1);
 
+            var deletedEntity = await _context.BodyMeasurements.FindAsync(1);
+            Assert.IsNull(deletedEntity);
             var dbCount = await _context.Exercises.CountAsync();
             Assert.AreEqual(2, dbCount);
         }

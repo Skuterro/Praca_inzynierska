@@ -73,7 +73,8 @@ namespace Api.Tests
 
             _userManagerMock.FindByEmailAsync(request.Email).Returns(existingUser);
 
-            await Assert.ThrowsAsync<BadRequestException>(async () =>  await _authService.RegisterAsync(request));
+            await Assert.ThrowsAsync<BadRequestException>(async () =>  
+                await _authService.RegisterAsync(request));
         }
 
         [TestMethod]

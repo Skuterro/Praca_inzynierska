@@ -8,7 +8,7 @@ namespace Api.Services.Interfaces
     {
         Task<IEnumerable<ExerciseResponse>> GetAllExercisesAsync();
         Task<IEnumerable<ExerciseResponse>> GetExercisesByBodyPartAsync(BodyPartEnum bodyPart);
-        Task<ExerciseResponse> CreateExercise(CreateExerciseRequest request);
+        Task<ExerciseResponse> CreateExerciseAsync(CreateExerciseRequest request);
         Task DeleteExerciseAsync(int id);
     }
 }

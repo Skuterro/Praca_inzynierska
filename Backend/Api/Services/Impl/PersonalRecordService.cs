@@ -24,24 +24,24 @@ namespace Api.Services.Impl
 
         public async Task<PersonalRecordResponse> CreatePersonalRecordAsync(string userId, PersonalRecordRequest request)
         {
-            var oneRepMax = _mapper.Map<PersonalRecord>(request);
-            oneRepMax.UserId = userId;
-            oneRepMax.Date = DateTime.UtcNow;
+            var personalRecord = _mapper.Map<PersonalRecord>(request);
+            personalRecord.UserId = userId;
+            personalRecord.Date = DateTime.UtcNow;
 
-            _context.PersonalRecords.Add(oneRepMax);
+            _context.PersonalRecords.Add(personalRecord);
             await _context.SaveChangesAsync();
-            return _mapper.Map<PersonalRecordResponse>(oneRepMax);
+            return _mapper.Map<PersonalRecordResponse>(personalRecord);
         }
 
         public async Task<IEnumerable<PersonalRecordResponse>> GetCurrentUserRecordsAsync(string userId)
         {
-            var oneRepMaxes = await _context.PersonalRecords
+            var personalRecords = await _context.PersonalRecords
                 .Where(orm => orm.UserId == userId)
                 .GroupBy(orm => orm.Exercise)
                 .Select(g => g.OrderByDescending(orm => orm.Date).First())
                 .ToListAsync();
 
-            return _mapper.Map<List<PersonalRecordResponse>>(oneRepMaxes);
+            return _mapper.Map<List<PersonalRecordResponse>>(personalRecords);
         }
 
 
@@ -66,13 +66,13 @@ namespace Api.Services.Impl
 
         public async Task DeletePersonalRecordAsync(string userId, int id)
         {
-            var oneRepMaxToDelete = await _context.PersonalRecords.FirstOrDefaultAsync(orm => orm.Id == id && orm.UserId == userId);
-            if(oneRepMaxToDelete == null)
+            var recordToDelete = await _context.PersonalRecords.FirstOrDefaultAsync(orm => orm.Id == id && orm.UserId == userId);
+            if(recordToDelete == null)
             {
                 throw new BadRequestException("One rep max does not exist");
             }
 
-            _context.Remove(oneRepMaxToDelete);
+            _context.PersonalRecords.Remove(recordToDelete);
             await _context.SaveChangesAsync();
         }
     }

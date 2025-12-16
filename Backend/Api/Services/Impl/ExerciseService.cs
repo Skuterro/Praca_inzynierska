@@ -35,7 +35,7 @@ namespace Api.Services.Impl
             return _mapper.Map<List<ExerciseResponse>>(exercisesEntites);
         }
 
-        public async Task<ExerciseResponse> CreateExercise(CreateExerciseRequest request)
+        public async Task<ExerciseResponse> CreateExerciseAsync(CreateExerciseRequest request)
         {
             var exerciseEntity = _mapper.Map<Exercise>(request);
             _context.Exercises.Add(exerciseEntity);
@@ -48,9 +48,10 @@ namespace Api.Services.Impl
             var exercise = await _context.Exercises.FirstOrDefaultAsync(e => e.Id == id);
             if (exercise == null)
             {
-                throw new NotFoundException("Exercise does not exist");
+                throw new BadRequestException("Exercise does not exist");
             }
 
+            _context.Exercises.Remove(exercise);
             await _context.SaveChangesAsync();
         }
     }

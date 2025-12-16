@@ -214,7 +214,7 @@ namespace Api.Services.Impl
                 throw new BadRequestException("Workout plan does not exist");
             }
 
-            _context.Remove(planToDelete);
+            _context.WorkoutPlans.Remove(planToDelete);
             await _context.SaveChangesAsync();
         }
 
@@ -229,7 +229,7 @@ namespace Api.Services.Impl
                 throw new BadRequestException("Workout plan day does not exist");
             }
 
-            _context.Remove(planDayToDelete);
+            _context.WorkoutPlanDays.Remove(planDayToDelete);
             await _context.SaveChangesAsync();
         }
     }

@@ -44,7 +44,7 @@ namespace Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _exerciseService.CreateExercise(request);
+            await _exerciseService.CreateExerciseAsync(request);
             return Created();
         }
 

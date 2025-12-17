@@ -177,7 +177,7 @@ namespace Api.Services.Impl
             var workoutPlanExists = await _context.WorkoutPlans.AnyAsync(wp => wp.Id == planId && wp.UserId == userId);
             if (!workoutPlanExists)
             {
-                throw new BadRequestException("Workout plan does not exist or does not belong to provided user.");
+                throw new BadRequestException("Workout plan does not exist or does not belong to user.");
             }
 
             var workoutPlanDaysEntities = await _context.WorkoutPlanDays

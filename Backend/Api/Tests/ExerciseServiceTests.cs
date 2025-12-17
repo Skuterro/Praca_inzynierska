@@ -29,9 +29,9 @@ namespace Api.Tests
             _context = new AppDbContext(options);
             var exercises = new List<Exercise>
             {
-                new Exercise { Id = 1, Name = "Bench Press", BodyPart = BodyPartEnum.Chest },
-                new Exercise { Id = 2, Name = "Dead Lift", BodyPart = BodyPartEnum.Legs },
-                new Exercise { Id = 3, Name = "Squat", BodyPart = BodyPartEnum.Legs }
+                new Exercise {  Name = "Bench Press", BodyPart = BodyPartEnum.Chest },
+                new Exercise {  Name = "Dead Lift", BodyPart = BodyPartEnum.Legs },
+                new Exercise {  Name = "Squat", BodyPart = BodyPartEnum.Legs }
             };
             _context.Exercises.AddRange(exercises);
             _context.SaveChanges();
@@ -107,12 +107,17 @@ namespace Api.Tests
         [TestMethod]
         public async Task DeleteExerciseAsync_ShouldDeleteExercise_WhenExerciseExists()
         {
-            await _exerciseService.DeleteExerciseAsync(1);
+            var exercise = new Exercise { Id = 5, Name = "Bench Press", BodyPart = BodyPartEnum.Chest };
 
-            var deletedEntity = await _context.BodyMeasurements.FindAsync(1);
+            _context.Exercises.Add(exercise);
+            _context.SaveChanges();
+
+            await _exerciseService.DeleteExerciseAsync(5);
+
+            var deletedEntity = await _context.Exercises.FindAsync(5);
             Assert.IsNull(deletedEntity);
             var dbCount = await _context.Exercises.CountAsync();
-            Assert.AreEqual(2, dbCount);
+            Assert.AreEqual(3, dbCount);
         }
 
         [TestMethod]

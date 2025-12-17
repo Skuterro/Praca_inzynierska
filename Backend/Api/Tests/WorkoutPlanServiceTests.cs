@@ -47,6 +47,8 @@ namespace Api.Tests
             _context.Add(dayExercise);
             _context.SaveChanges();
 
+            _context.ChangeTracker.Clear();
+
             _mapperMock = Substitute.For<IMapper>();
             _workoutPlanService = new WorkoutPlanService(_context, _mapperMock);
         }
@@ -62,7 +64,7 @@ namespace Api.Tests
         {
             var userId = "1";
             var request = new CreateWorkoutPlanRequest { Name = "TestPlan3" };
-            var entity = new WorkoutPlan { UserId = userId, Name = "TestPlan3", CreatedAt = new DateTime(), IsActive = false };
+            var entity = new WorkoutPlan { Id = 3, UserId = userId, Name = "TestPlan3", CreatedAt = new DateTime(), IsActive = false };
             var response = new WorkoutPlanResponse { Id = 3, Name = "TestPlan3", CreatedAt = new DateTime(), IsActive = false };
 
             _mapperMock.Map<WorkoutPlan>(request).Returns(entity);
@@ -81,6 +83,7 @@ namespace Api.Tests
         {
             var userId = "1";
             var request = new CreateWorkoutPlanDayRequest { PlanId = 1, Name = "PushDay", WeekDay = "Friday" };
+            var entity = new WorkoutPlanDay { Id = 3, Name = "PushDay", WeekDay = WeekDayEnum.Friday, WorkoutPlanId = 1 };
 
             _mapperMock.Map<SimpleWorkoutPlanDayResponse>(Arg.Any<WorkoutPlanDay>())
                 .Returns(new SimpleWorkoutPlanDayResponse { Name = "PushDay" });

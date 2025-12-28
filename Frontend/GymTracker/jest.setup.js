@@ -10,25 +10,8 @@ jest.mock("@expo/vector-icons", () => {
 	const React = require("react");
 	return {
 		Ionicons: () => React.createElement("Ionicons"),
+		Feather: () => React.createElement("Feather"),
+		Entypo: () => React.createElement("Entypo"),
+		FontAwesome6: () => React.createElement("FontAwesome6"),
 	};
-});
-
-jest.mock("react-native-vector-icons/Feather", () => {
-	const { Text } = require("react-native");
-	return ({ name }) => <Text>{name}</Text>;
-});
-
-jest.mock("react-native-vector-icons/Ionicons", () => {
-	const { Text } = require("react-native");
-	return ({ name }) => <Text>{name}</Text>;
-});
-
-jest.mock("react-native-vector-icons/FontAwesome", () => {
-	const { Text } = require("react-native");
-	return ({ name }) => <Text>{name}</Text>;
-});
-
-jest.mock("react-native-vector-icons/Entypo", () => {
-	const { Text } = require("react-native");
-	return ({ name }) => <Text>{name}</Text>;
 });

@@ -11,22 +11,22 @@ describe("Header", () => {
 		render(<Header {...props} />);
 
 		expect(screen.getByText("Header title")).toBeOnTheScreen();
-		expect(screen.getByText("arrow-left-circle")).toBeOnTheScreen();
+		expect(screen.getByTestId("arrow-left")).toBeOnTheScreen();
 	});
 
 	test("does not render delete button when onDelete is not provided", () => {
 		render(<Header {...props} />);
 
-		expect(screen.queryByText("trash-2")).toBeNull();
+		expect(screen.queryByTestId("trash")).toBeNull();
 	});
 
 	test("renders delete button and calls onDelete when pressed", () => {
 		const mockOnDelete = jest.fn();
 		render(<Header {...props} onDelete={mockOnDelete} />);
 
-		expect(screen.getByText("trash-2")).toBeOnTheScreen();
+		expect(screen.getByTestId("trash")).toBeOnTheScreen();
 
-		fireEvent.press(screen.getByText("trash-2"));
+		fireEvent.press(screen.getByTestId("trash"));
 		expect(mockOnDelete).toHaveBeenCalledTimes(1);
 	});
 });

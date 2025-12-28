@@ -3,8 +3,8 @@ import { PersonalRecord } from "../../models/PersonalRecord";
 import { AppStyles } from "../../constants/AppStyles";
 import { constants } from "../../constants/Constants";
 import { Ionicons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { Colors } from "../../constants/Colors";
-import FeatherIcon from "react-native-vector-icons/Feather";
 import formatDate from "../../utils/FormatDate";
 
 interface RecordItemProps {
@@ -41,7 +41,7 @@ export default function RecordItem({ record, prevRecord, onDelete, onPress }: Re
 					style={[AppStyles.classicButton, { backgroundColor: Colors.colorRed }]}
 					onPress={onDelete}
 				>
-					<FeatherIcon name="trash-2" size={18} color="white" />
+					<Feather name="trash-2" size={18} color="white" />
 				</TouchableOpacity>
 				<TouchableOpacity style={AppStyles.classicButton} onPress={onPress}>
 					<Ionicons name="chevron-forward" size={18} color="black" />

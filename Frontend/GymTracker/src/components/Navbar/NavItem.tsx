@@ -1,10 +1,10 @@
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
+import { FontAwesome6 } from "@expo/vector-icons";
 import { constants } from "../../constants/Constants";
 import { AppStyles } from "../../constants/AppStyles";
+import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../../constants/Colors";
 import { Route } from "@react-navigation/native";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import IonIcon from "react-native-vector-icons/Ionicons";
 
 interface NavItemProps {
 	route: Route<string, object | undefined>;
@@ -21,21 +21,21 @@ export default function NavItem({ route, isFocused, onPress }: NavItemProps) {
 
 	switch (route.name) {
 		case "Home":
-			IconComponent = IonIcon;
+			IconComponent = Ionicons;
 			iconName = isFocused ? "home" : "home-outline";
 			break;
 		case "Sessions":
-			IconComponent = IonIcon;
+			IconComponent = Ionicons;
 			iconName = isFocused ? "calendar-sharp" : "calendar-outline";
 			displayText = constants.navbar.sessions;
 			break;
 		case "WorkoutPlans":
-			IconComponent = IonIcon;
+			IconComponent = Ionicons;
 			iconName = "barbell";
 			displayText = constants.navbar.workoutPlans;
 			break;
 		case "Profile":
-			IconComponent = FontAwesome;
+			IconComponent = FontAwesome6;
 			iconName = isFocused ? "user" : "user-o";
 			break;
 		default:

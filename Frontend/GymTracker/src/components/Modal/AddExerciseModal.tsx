@@ -1,11 +1,11 @@
 import { Modal, View, Text, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
 import { constants } from "../../constants/Constants";
+import { AppStyles } from "../../constants/AppStyles";
 import { Exercise } from "../../models/Exercise";
 import { Colors } from "../../constants/Colors";
+import { Entypo } from "@expo/vector-icons";
 import ListEmptyComponent from "../List/ListEmptyComponent";
-import EntypoIcon from "react-native-vector-icons/Entypo";
-import { AppStyles } from "../../constants/AppStyles";
 
 interface AddExerciseModalProps {
 	bodyParts: string[];
@@ -38,7 +38,7 @@ export default function AddExerciseModal({
 					<View style={styles.modalHeader}>
 						<Text style={AppStyles.title}>{constants.exercise.add}</Text>
 						<TouchableOpacity onPress={onClose}>
-							<EntypoIcon name="cross" size={32} color={Colors.colorWhite} />
+							<Entypo name="cross" size={32} color={Colors.colorWhite} />
 						</TouchableOpacity>
 					</View>
 

@@ -1,5 +1,6 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { showErrorToast } from "../utils/Toast";
 
 const BASE_API_URL = "http://192.168.1.17:5199";
 
@@ -38,8 +39,14 @@ axiosClient.interceptors.response.use(
 	(response) => response,
 	async (error) => {
 		const originalRequest = error.config;
+		const status = error.response?.status;
 
-		if (error.response?.status === 401 && !originalRequest._retry) {
+		if (!error.response) {
+			showErrorToast("Network error", "Please check your internet connection.");
+			return Promise.reject(error);
+		}
+
+		if (status === 401 && !originalRequest._retry) {
 			originalRequest._retry = true;
 
 			if (isRefreshing) {
@@ -59,7 +66,7 @@ axiosClient.interceptors.response.use(
 				const stored = await AsyncStorage.getItem("user");
 				const user = stored ? JSON.parse(stored) : null;
 
-				const refreshResponse = await axios.post("http://192.168.1.17:5199/auth/refresh", {
+				const refreshResponse = await axios.post(`${BASE_API_URL}/auth/refresh`, {
 					refreshToken: user?.refreshToken,
 				});
 
@@ -71,15 +78,33 @@ axiosClient.interceptors.response.use(
 				isRefreshing = false;
 
 				originalRequest.headers.Authorization = "Bearer " + newToken;
+
 				return axiosClient(originalRequest);
 			} catch (refreshError) {
 				processQueue(refreshError, null);
 				isRefreshing = false;
 
 				await AsyncStorage.removeItem("user");
+
+				showErrorToast("Session epxired", "Please sign in again.");
+
 				return Promise.reject(refreshError);
 			}
 		}
+
+		if (status === 400) {
+			const message = error.response.data?.message || "Invalid request data.";
+
+			showErrorToast("Bad request", message);
+			return Promise.reject(error);
+		}
+
+		if (status >= 500) {
+			showErrorToast("Server error", "Something went wrong on the server.");
+			return Promise.reject(error);
+		}
+
+		showErrorToast("Error", "An error occurred while processing your request.");
 
 		return Promise.reject(error);
 	}

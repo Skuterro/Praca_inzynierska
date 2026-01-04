@@ -36,7 +36,7 @@ export default function NavItem({ route, isFocused, onPress }: NavItemProps) {
 			break;
 		case "Profile":
 			IconComponent = FontAwesome6;
-			iconName = isFocused ? "user" : "user-o";
+			iconName = isFocused ? "user-large" : "user";
 			break;
 		default:
 			return null;

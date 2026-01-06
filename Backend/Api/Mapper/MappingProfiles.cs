@@ -75,9 +75,9 @@ namespace Api.Mapper
         }
     }
 
-    public class OneRepMaxMappingProfile : Profile
+    public class PersonalRecordMappingProfile : Profile
     {
-        public OneRepMaxMappingProfile()
+        public PersonalRecordMappingProfile()
         {
             CreateMap<PersonalRecordRequest, PersonalRecord>()
                 .ForMember(dest => dest.Date, opt => opt.Ignore())

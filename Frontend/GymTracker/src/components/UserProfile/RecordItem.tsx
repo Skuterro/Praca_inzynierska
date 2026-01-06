@@ -44,7 +44,7 @@ export default function RecordItem({ record, prevRecord, onDelete, onPress }: Re
 					<Feather name="trash-2" size={18} color="white" />
 				</TouchableOpacity>
 				<TouchableOpacity style={AppStyles.classicButton} onPress={onPress}>
-					<Ionicons name="chevron-forward" size={18} color="black" />
+					<Ionicons name="analytics" size={18} color="black" />
 				</TouchableOpacity>
 			</View>
 		</View>

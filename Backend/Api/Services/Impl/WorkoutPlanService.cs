@@ -152,11 +152,6 @@ namespace Api.Services.Impl
                 return new WorkoutPlanDayResponse();
             }
 
-            var dayExerciseEntities = await _context.DayExercises
-                .Where(de => de.WorkoutPlanDayId == todayWorkout.Id)
-                .Include(de => de.Exercise)
-                .ToListAsync();
-
             return _mapper.Map<WorkoutPlanDayResponse>(todayWorkout);
         }
 

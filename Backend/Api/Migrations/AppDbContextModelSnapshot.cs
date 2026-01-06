@@ -38,7 +38,8 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("BodyMeasurements");
                 });
@@ -466,8 +467,8 @@ namespace Api.Migrations
             modelBuilder.Entity("Api.Models.Entities.BodyMeasurements", b =>
                 {
                     b.HasOne("Api.Models.Entities.User", "User")
-                        .WithMany("BodyMeasurements")
-                        .HasForeignKey("UserId")
+                        .WithOne("BodyMeasurements")
+                        .HasForeignKey("Api.Models.Entities.BodyMeasurements", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

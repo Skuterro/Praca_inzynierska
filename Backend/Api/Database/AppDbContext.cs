@@ -79,14 +79,14 @@ namespace Api.Database
 
             modelBuilder.Entity<BodyMeasurements>()
                 .HasOne(bm => bm.User)
-                .WithMany(u => u.BodyMeasurements)
-                .HasForeignKey(bm => bm.UserId)
+                .WithOne(u => u.BodyMeasurements)
+                .HasForeignKey<BodyMeasurements>(bm => bm.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<PersonalRecord>()
-                .HasOne(orm => orm.User)
+                .HasOne(pr => pr.User)
                 .WithMany(u => u.PersonalRecords)
-                .HasForeignKey(orm => orm.UserId)
+                .HasForeignKey(pr => pr.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<RefreshToken>()

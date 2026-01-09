@@ -136,7 +136,7 @@ namespace Api.Services.Impl
 
             if (activeWorkoutPlan == null)
             {
-                throw new BadRequestException("Workout plan is not active or does not exist");
+                return new WorkoutPlanDayResponse();
             }
 
             var today = (WeekDayEnum)weekDayIndex;

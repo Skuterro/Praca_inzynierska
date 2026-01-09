@@ -46,6 +46,13 @@ axiosClient.interceptors.response.use(
 			return Promise.reject(error);
 		}
 
+		const isLoginRequest = originalRequest.url?.includes("/login");
+
+		if (status === 401 && isLoginRequest) {
+			showErrorToast("Login failed", "Invalid email or password.");
+			return Promise.reject(error);
+		}
+
 		if (status === 401 && !originalRequest._retry) {
 			originalRequest._retry = true;
 

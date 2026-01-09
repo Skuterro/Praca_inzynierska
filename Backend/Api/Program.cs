@@ -101,6 +101,22 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+using(var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var dbContext = services.GetRequiredService<AppDbContext>();
+
+        DataSeeder.Seed(dbContext);
+    }
+    catch(Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding the database.");
+    }
+}
+
 app.UseCors("AllowAll");
 
 // Configure the HTTP request pipeline.

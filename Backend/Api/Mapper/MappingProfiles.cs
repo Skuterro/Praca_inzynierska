@@ -54,7 +54,7 @@ namespace Api.Mapper
                 .ForMember(dest => dest.DayExercises, opt => opt.MapFrom(src => src.DayExercises));
 
             CreateMap<DayExercise, DayExerciseResponse>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ExerciseId))
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Exercise.Name))
                 .ForMember(dest => dest.BodyPart, opt => opt.MapFrom(src => src.Exercise.BodyPart));
         }

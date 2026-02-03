@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { ExerciseWithSets } from "../../models/ExerciseWithSets";
 import { useExerciseSets } from "../../hooks/workoutSessionScreen/useExerciseSets";
 import { Colors } from "../../constants/Colors";
@@ -25,6 +25,12 @@ export default function ExerciseSessionItem({ exercise, onSave }: ExerciseSessio
 
 			{expanded && (
 				<View style={styles.setsContainer}>
+					<View style={styles.labelsContainer}>
+						<View style={styles.colSpacerLeft} />
+						<Text style={styles.label}>Reps</Text>
+						<Text style={styles.label}>Kg</Text>
+						<View style={styles.colSpacerRight} />
+					</View>
 					{sets.map((s, i) => (
 						<ExerciseSetRow
 							key={i}
@@ -53,5 +59,23 @@ const styles = StyleSheet.create({
 	setsContainer: {
 		padding: 16,
 		backgroundColor: Colors.colorDarkGray,
+	},
+	labelsContainer: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		marginBottom: 4,
+		paddingHorizontal: 6,
+	},
+	label: {
+		flex: 1,
+		color: Colors.subTitle,
+		fontSize: 12,
+		textAlign: "center",
+	},
+	colSpacerLeft: {
+		width: 20,
+	},
+	colSpacerRight: {
+		width: 45,
 	},
 });

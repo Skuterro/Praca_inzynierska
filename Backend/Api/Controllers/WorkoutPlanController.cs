@@ -47,8 +47,8 @@ namespace Api.Controllers
                 return Unauthorized();
             }
 
-            await _workoutPlanService.CreateEmptyWorkoutPlanAsync(userId, request);
-            return Created();
+            var createdPlan = await _workoutPlanService.CreateEmptyWorkoutPlanAsync(userId, request);
+            return Created("", createdPlan);
         }
 
         [HttpGet("{planId}/days")]

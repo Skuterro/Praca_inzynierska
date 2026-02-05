@@ -1,10 +1,11 @@
+import { FlatList, TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { usePersonalRecords } from "../../hooks/personalRecordsScreen/usePersonalRecords";
 import { RootStackParamList } from "../../navigation/AppNavigator";
-import { FlatList, View } from "react-native";
 import { constants } from "../../constants/Constants";
 import { AppStyles } from "../../constants/AppStyles";
 import { RouteProp } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 import LoadingDataContainer from "../../components/LoadingData/LoadingDataContainer";
 import ListEmptyComponent from "../../components/List/ListEmptyComponent";
 import AddRecordModal from "../../components/Modal/AddRecordModal";
@@ -44,6 +45,13 @@ export default function PersonalRecordsScreen({ route, navigation }: PersonalRec
 		<View style={AppStyles.mainContainer}>
 			<Header title={getTitle()} onButtonClick={() => navigation.goBack()} />
 			<View style={AppStyles.contentWrapper}>
+				<TouchableOpacity
+					style={[AppStyles.classicButton, styles.analyticsButton]}
+					onPress={() => navigation.navigate("StrengthChart", { records: records })}
+				>
+					<Ionicons name="analytics" size={18} color="black" />
+					<Text style={{ color: "black", fontWeight: "600", fontSize: 14 }}>Analytics</Text>
+				</TouchableOpacity>
 				<ListHeader
 					title={constants.record.history}
 					buttonTitle={constants.record.add}
@@ -55,14 +63,7 @@ export default function PersonalRecordsScreen({ route, navigation }: PersonalRec
 					renderItem={({ item, index }) => {
 						const prev = index < records.length - 1 ? records[index + 1] : null;
 
-						return (
-							<RecordItem
-								record={item}
-								prevRecord={prev}
-								onPress={() => navigation.navigate("StrengthChart", { records: records })}
-								onDelete={() => handleDelete(item.id)}
-							/>
-						);
+						return <RecordItem record={item} prevRecord={prev} onDelete={() => handleDelete(item.id)} />;
 					}}
 					ListEmptyComponent={<ListEmptyComponent />}
 				/>
@@ -81,3 +82,15 @@ export default function PersonalRecordsScreen({ route, navigation }: PersonalRec
 		</View>
 	);
 }
+
+const styles = StyleSheet.create({
+	analyticsButton: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginBottom: 10,
+		alignSelf: "flex-end",
+		paddingVertical: 6,
+		paddingHorizontal: 12,
+		borderRadius: 8,
+	},
+});

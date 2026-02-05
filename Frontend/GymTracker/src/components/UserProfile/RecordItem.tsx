@@ -11,10 +11,9 @@ interface RecordItemProps {
 	record: PersonalRecord;
 	prevRecord: PersonalRecord | null;
 	onDelete: () => Promise<void>;
-	onPress: () => void;
 }
 
-export default function RecordItem({ record, prevRecord, onDelete, onPress }: RecordItemProps) {
+export default function RecordItem({ record, prevRecord, onDelete }: RecordItemProps) {
 	const diff = prevRecord ? record.weightKg - prevRecord.weightKg : 0;
 
 	return (
@@ -42,9 +41,6 @@ export default function RecordItem({ record, prevRecord, onDelete, onPress }: Re
 					onPress={onDelete}
 				>
 					<Feather name="trash-2" size={18} color="white" />
-				</TouchableOpacity>
-				<TouchableOpacity style={AppStyles.classicButton} onPress={onPress}>
-					<Ionicons name="analytics" size={18} color="black" />
 				</TouchableOpacity>
 			</View>
 		</View>

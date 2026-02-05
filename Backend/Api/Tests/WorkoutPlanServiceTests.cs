@@ -83,7 +83,7 @@ namespace Api.Tests
         {
             var userId = "1";
             var request = new CreateWorkoutPlanDayRequest { PlanId = 1, Name = "PushDay", WeekDay = "Friday" };
-            var entity = new WorkoutPlanDay { Id = 3, Name = "PushDay", WeekDay = WeekDayEnum.Friday, WorkoutPlanId = 1 };
+            var entity = new WorkoutPlanDay { Id = 300, Name = "PushDay", WeekDay = WeekDayEnum.Friday, WorkoutPlanId = 1 };
 
             _mapperMock.Map<SimpleWorkoutPlanDayResponse>(Arg.Any<WorkoutPlanDay>())
                 .Returns(new SimpleWorkoutPlanDayResponse { Name = "PushDay" });
@@ -217,13 +217,28 @@ namespace Api.Tests
         }
 
         [TestMethod]
-        public async Task GetWorkoutPlanByWeekDayAsync_ShouldThrowBadRequest_WhenPlanIsInactive()
+        public async Task GetWorkoutPlanByWeekDayAsync_ShouldReturnEmptyResponse_WhenPlanIsInactive()
         {
             var dayIndex = 2;
-            var userId = "2";
+            var userId = "5";
 
-            await Assert.ThrowsAsync<BadRequestException>(async () =>
-                await _workoutPlanService.GetWorkoutPlanByWeekDayAsync(userId, dayIndex));
+            var inactivePlan = new WorkoutPlan
+            {
+                Id = 100,
+                UserId = userId,
+                Name = "Inactive Plan",
+                IsActive = false,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.WorkoutPlans.Add(inactivePlan);
+            await _context.SaveChangesAsync();
+            _context.ChangeTracker.Clear();
+
+            var result = await _workoutPlanService.GetWorkoutPlanByWeekDayAsync(userId, dayIndex);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(0, result.Id);
         }
 
         [TestMethod]

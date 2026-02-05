@@ -36,6 +36,7 @@ namespace Api.Tests
             _context.Exercises.AddRange(exercises);
             _context.SaveChanges();
 
+            _context.ChangeTracker.Clear();
             _mapperMock = Substitute.For<IMapper>();
             _exerciseService = new ExerciseService(_context, _mapperMock);
         }
@@ -107,14 +108,15 @@ namespace Api.Tests
         [TestMethod]
         public async Task DeleteExerciseAsync_ShouldDeleteExercise_WhenExerciseExists()
         {
-            var exercise = new Exercise { Id = 5, Name = "Bench Press", BodyPart = BodyPartEnum.Chest };
+            var exercise = new Exercise { Name = "Bench Press", BodyPart = BodyPartEnum.Chest };
 
             _context.Exercises.Add(exercise);
             _context.SaveChanges();
+            var idToDelete = exercise.Id;
 
-            await _exerciseService.DeleteExerciseAsync(5);
+            await _exerciseService.DeleteExerciseAsync(idToDelete);
 
-            var deletedEntity = await _context.Exercises.FindAsync(5);
+            var deletedEntity = await _context.Exercises.FindAsync(idToDelete);
             Assert.IsNull(deletedEntity);
             var dbCount = await _context.Exercises.CountAsync();
             Assert.AreEqual(3, dbCount);
@@ -124,7 +126,7 @@ namespace Api.Tests
         public async Task DeleteExerciseAsync_ShouldThrowBadRequest_WhenExerciseDoesNotExist()
         {
             await Assert.ThrowsAsync<BadRequestException>(async () =>
-                await _exerciseService.DeleteExerciseAsync(5));
+                await _exerciseService.DeleteExerciseAsync(999));
         }
     }
 }

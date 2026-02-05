@@ -3,6 +3,7 @@ import MockAdapter from "axios-mock-adapter";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosClient from "./ApiClient";
 
+const url = process.env.EXPO_PUBLIC_API_URL;
 const mockAxios = new MockAdapter(axios);
 const mockClient = new MockAdapter(axiosClient);
 let storedUser: any = null;
@@ -33,7 +34,7 @@ describe("axiosClient", () => {
 
 		mockClient.onGet("/secure").replyOnce(401);
 
-		mockAxios.onPost("http://192.168.1.17:5199/auth/refresh").reply(200, { token: "new-token" });
+		mockAxios.onPost(url).reply(200, { token: "new-token" });
 
 		mockClient.onGet("/secure").reply((config) => {
 			expect(config.headers?.Authorization).toBe("Bearer new-token");
@@ -49,12 +50,12 @@ describe("axiosClient", () => {
 			JSON.stringify({
 				token: "old-token",
 				refreshToken: "bad-refresh",
-			})
+			}),
 		);
 
 		mockClient.onGet("/secure").replyOnce(401);
 
-		mockAxios.onPost("http://192.168.1.17:5199/auth/refresh").reply(401);
+		mockAxios.onPost(url).reply(401);
 
 		await expect(axiosClient.get("/secure")).rejects.toBeDefined();
 
@@ -66,13 +67,13 @@ describe("axiosClient", () => {
 			JSON.stringify({
 				token: "old-token",
 				refreshToken: "refresh-token",
-			})
+			}),
 		);
 
 		mockClient.onGet("/a").replyOnce(401);
 		mockClient.onGet("/b").replyOnce(401);
 
-		mockAxios.onPost("http://192.168.1.17:5199/auth/refresh").reply(200, { token: "new-token" });
+		mockAxios.onPost(url).reply(200, { token: "new-token" });
 
 		mockClient.onGet("/a").reply(200, { a: true });
 		mockClient.onGet("/b").reply(200, { b: true });

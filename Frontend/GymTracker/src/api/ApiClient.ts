@@ -93,7 +93,7 @@ axiosClient.interceptors.response.use(
 
 				await AsyncStorage.removeItem("user");
 
-				showErrorToast("Session epxired", "Please sign in again.");
+				showErrorToast("Session expired", "Please sign in again.");
 
 				return Promise.reject(refreshError);
 			}
@@ -114,7 +114,7 @@ axiosClient.interceptors.response.use(
 		showErrorToast("Error", "An error occurred while processing your request.");
 
 		return Promise.reject(error);
-	}
+	},
 );
 
 export default axiosClient;

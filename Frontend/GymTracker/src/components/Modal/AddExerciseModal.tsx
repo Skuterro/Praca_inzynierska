@@ -54,7 +54,11 @@ export default function AddExerciseModal({
 								]}
 								onPress={() => onSelectBodyPart(part)}
 							>
-								<Text style={{ color: Colors.colorWhite }}>{part}</Text>
+								<Text
+									style={{ color: selectedBodyPart === part ? Colors.colorBlack : Colors.colorWhite }}
+								>
+									{part}
+								</Text>
 							</TouchableOpacity>
 						))}
 					</View>
@@ -72,10 +76,24 @@ export default function AddExerciseModal({
 									style={{ maxHeight: 200 }}
 									renderItem={({ item }) => (
 										<TouchableOpacity
-											style={styles.exerciseItem}
+											style={[
+												styles.exerciseItem,
+												selectedExercise?.id === item.id && {
+													backgroundColor: Colors.colorYellow,
+												},
+											]}
 											onPress={() => setSelectedExercise(item)}
 										>
-											<Text style={{ color: Colors.colorWhite }}>{item.name}</Text>
+											<Text
+												style={{
+													color:
+														selectedExercise?.id === item.id
+															? Colors.colorBlack
+															: Colors.colorWhite,
+												}}
+											>
+												{item.name}
+											</Text>
 										</TouchableOpacity>
 									)}
 									ListEmptyComponent={<ListEmptyComponent />}

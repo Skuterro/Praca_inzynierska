@@ -1,4 +1,4 @@
-import { Alert, FlatList, View } from "react-native";
+import { Alert, FlatList, View, KeyboardAvoidingView } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/AppNavigator";
 import { useWorkoutSession } from "../../hooks/workoutSessionScreen/useWorkoutSession";
@@ -24,7 +24,7 @@ export default function TrackWorkoutScreen({ route, navigation }: TrackWorkoutSc
 
 	const { loading, finishing, isFinished, exerciseList, addSet, finishWorkout } = useWorkoutSession(
 		sessionId,
-		workoutPlanDayId
+		workoutPlanDayId,
 	);
 
 	const handleFinishWorkout = () => {
@@ -45,20 +45,22 @@ export default function TrackWorkoutScreen({ route, navigation }: TrackWorkoutSc
 	}
 
 	return (
-		<View style={AppStyles.mainContainer}>
-			<Header title={constants.session.label} onButtonClick={() => navigation.pop()} />
-			<View style={AppStyles.contentWrapper}>
-				{!isFinished ? (
-					<ListHeader buttonTitle={constants.session.finish} onButtonClick={handleFinishWorkout} />
-				) : null}
-				<FlatList
-					data={exerciseList}
-					keyExtractor={(item) => item.id.toString()}
-					renderItem={({ item }) => <ExerciseSessionItem exercise={item} onSave={addSet} />}
-					showsVerticalScrollIndicator={false}
-					ListEmptyComponent={<ListEmptyComponent />}
-				/>
+		<KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+			<View style={AppStyles.mainContainer}>
+				<Header title={constants.session.label} onButtonClick={() => navigation.pop()} />
+				<View style={AppStyles.contentWrapper}>
+					{!isFinished ? (
+						<ListHeader buttonTitle={constants.session.finish} onButtonClick={handleFinishWorkout} />
+					) : null}
+					<FlatList
+						data={exerciseList}
+						keyExtractor={(item) => item.id.toString()}
+						renderItem={({ item }) => <ExerciseSessionItem exercise={item} onSave={addSet} />}
+						showsVerticalScrollIndicator={false}
+						ListEmptyComponent={<ListEmptyComponent />}
+					/>
+				</View>
 			</View>
-		</View>
+		</KeyboardAvoidingView>
 	);
 }

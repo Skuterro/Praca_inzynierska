@@ -1,1 +1,1 @@
-export const bodyParts = ["Chest", "Back", "Legs", "Shoulders", "Arms", "Abs"];
+export const bodyParts = ["Chest", "Back", "Legs", "Shoulders", "Arms", "Core"];

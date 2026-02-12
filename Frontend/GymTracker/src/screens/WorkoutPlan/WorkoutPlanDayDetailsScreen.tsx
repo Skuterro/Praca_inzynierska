@@ -57,22 +57,26 @@ export default function WorkoutPlanDayDetailsScreen({ navigation, route }: Worko
 	};
 
 	const handleDelete = async () => {
-		Alert.alert("Delete workout plan day", "Are you sure you want to delete this day?", [
-			{ text: "Cancel", style: "cancel" },
-			{
-				text: "Delete",
-				style: "destructive",
-				onPress: async () => {
-					try {
-						setLoading(true);
-						await WorkoutPlanService.deleteWorkoutPlanDay(dayId);
-						navigation.goBack();
-					} finally {
-						setLoading(false);
-					}
+		Alert.alert(
+			"Delete workout plan day",
+			"Are you sure you want to delete this day?\nAll related workout logs will be lost.",
+			[
+				{ text: "Cancel", style: "cancel" },
+				{
+					text: "Delete",
+					style: "destructive",
+					onPress: async () => {
+						try {
+							setLoading(true);
+							await WorkoutPlanService.deleteWorkoutPlanDay(dayId);
+							navigation.goBack();
+						} finally {
+							setLoading(false);
+						}
+					},
 				},
-			},
-		]);
+			],
+		);
 	};
 	const handleAddExercise = () => {
 		setModalVisible(true);
@@ -81,7 +85,7 @@ export default function WorkoutPlanDayDetailsScreen({ navigation, route }: Worko
 	useFocusEffect(
 		React.useCallback(() => {
 			fetchDayExercises();
-		}, [])
+		}, []),
 	);
 
 	if (loading) {

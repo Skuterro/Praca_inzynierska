@@ -549,7 +549,7 @@ namespace Api.Migrations
                     b.HasOne("Api.Models.Entities.WorkoutPlanDay", "WorkoutPlanDay")
                         .WithMany("WorkoutSessions")
                         .HasForeignKey("WorkoutPlanDayId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");

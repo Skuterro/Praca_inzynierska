@@ -58,7 +58,7 @@ namespace Api.Database
                 .HasOne(ws => ws.WorkoutPlanDay)
                 .WithMany(wpd=> wpd.WorkoutSessions)
                 .HasForeignKey(ws => ws.WorkoutPlanDayId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<WorkoutSession>()
                 .HasMany(ws => ws.SessionExercises)

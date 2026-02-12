@@ -12,6 +12,10 @@ interface PaginationProps {
 }
 
 export default function Pagination({ page, totalPages, onPrev, onNext }: PaginationProps) {
+	if (totalPages == 0) {
+		return null;
+	}
+
 	return (
 		<View style={AppStyles.paginationContainer}>
 			<TouchableOpacity style={AppStyles.classicButton} onPress={onPrev}>

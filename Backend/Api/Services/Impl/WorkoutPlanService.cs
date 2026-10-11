@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 using System.Reflection.Metadata.Ecma335;
 using Api.Database;
 using Api.Exceptions;
@@ -89,11 +89,18 @@ namespace Api.Services.Impl
                 throw new BadRequestException("Exercise does not exist.");
             }
 
+            if (request.MinReps > request.MaxReps)
+            {
+                throw new BadRequestException("Min reps cannot be greater than Max reps.");
+            }
+
             var dayExerciseEntity = new DayExercise
             {
                 WorkoutPlanDayId = request.DayId,
                 ExerciseId = request.ExerciseId,
-                Sets = request.Sets
+                Sets = request.Sets,
+                MinReps = request.MinReps,
+                MaxReps = request.MaxReps
             };
 
             _context.DayExercises.Add(dayExerciseEntity);

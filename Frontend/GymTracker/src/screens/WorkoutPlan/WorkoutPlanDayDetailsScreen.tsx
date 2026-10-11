@@ -121,8 +121,8 @@ export default function WorkoutPlanDayDetailsScreen({ navigation, route }: Worko
 					fetchExercisesByBodyPart(bodyPart);
 				}}
 				onClose={() => setModalVisible(false)}
-				onAddExercise={async (exerciseId, sets) => {
-					await WorkoutPlanService.addExerciseToDay(dayId, exerciseId, sets);
+				onAddExercise={async (exerciseId, sets, minReps, maxReps) => {
+					await WorkoutPlanService.addExerciseToDay(dayId, exerciseId, sets, minReps, maxReps);
 					setModalVisible(false);
 					setSelectedBodyPart(null);
 					fetchDayExercises();

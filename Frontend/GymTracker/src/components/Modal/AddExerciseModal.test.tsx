@@ -40,4 +40,13 @@ describe("AddExerciseModal", () => {
 
 		expect(screen.getByText("Bench Press")).toBeOnTheScreen();
 	});
+
+	test("should call onAddExercise with exerciseId, sets, minReps and maxReps", () => {
+		render(<AddExerciseModal {...props} selectedBodyPart={"chest"} />);
+
+		fireEvent.press(screen.getByText("Bench Press"));
+		fireEvent.press(screen.getByText("Add"));
+
+		expect(props.onAddExercise).toHaveBeenCalledWith(1, 3, 8, 12);
+	});
 });

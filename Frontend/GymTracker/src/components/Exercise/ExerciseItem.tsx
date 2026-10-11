@@ -8,17 +8,26 @@ interface ExerciseItemProps {
 }
 
 export default function ExerciseItem({ exercise }: ExerciseItemProps) {
+	const formatSetsAndReps = () => {
+		if (!exercise.sets) return "";
+		const repsText =
+			exercise.minReps === exercise.maxReps
+				? `${exercise.minReps} reps`
+				: `${exercise.minReps}-${exercise.maxReps} reps`;
+		return `${exercise.sets} ${constants.exercise.sets} • ${repsText}`;
+	};
+
 	return (
 		<View style={AppStyles.flatListItem}>
 			<View style={AppStyles.itemLeftContent}>
 				<Text style={AppStyles.title}>{exercise.name}</Text>
 				<Text style={AppStyles.subTitle}>{exercise.bodyPart}</Text>
 			</View>
-			{exercise.sets && (
+			{exercise.sets ? (
 				<Text style={AppStyles.subTitle}>
-					{exercise.sets} {constants.exercise.sets}
+					{formatSetsAndReps()}
 				</Text>
-			)}
+			) : null}
 		</View>
 	);
 }

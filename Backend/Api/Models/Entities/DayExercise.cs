@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Api.Models.Entities
 {
@@ -15,5 +15,11 @@ namespace Api.Models.Entities
 
         [Required]
         public int Sets {  get; set; }
+
+        [Required]
+        public int MinReps { get; set; }
+
+        [Required]
+        public int MaxReps { get; set; }
     }
 }

@@ -21,6 +21,8 @@ export default function ExerciseSessionItem({ exercise, onSave }: ExerciseSessio
 				expanded={expanded}
 				isFinished={isExerciseFinished}
 				onPress={toggleExpand}
+				minReps={exercise.minReps}
+				maxReps={exercise.maxReps}
 			/>
 
 			{expanded && (

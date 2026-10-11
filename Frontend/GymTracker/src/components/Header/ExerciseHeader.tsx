@@ -8,14 +8,32 @@ interface ExerciseHeaderProps {
 	expanded: boolean;
 	isFinished: boolean;
 	onPress: () => void;
+	minReps?: number;
+	maxReps?: number;
 }
 
-export default function ExerciseHeader({ name, setsCount, expanded, isFinished, onPress }: ExerciseHeaderProps) {
+export default function ExerciseHeader({
+	name,
+	setsCount,
+	expanded,
+	isFinished,
+	onPress,
+	minReps,
+	maxReps,
+}: ExerciseHeaderProps) {
+	const getSubtitle = () => {
+		if (minReps && maxReps) {
+			const repsText = minReps === maxReps ? `${minReps} reps` : `${minReps}-${maxReps} reps`;
+			return `${setsCount} sets • ${repsText}`;
+		}
+		return `${setsCount} sets`;
+	};
+
 	return (
 		<TouchableOpacity style={styles.cardHeader} onPress={onPress} activeOpacity={0.7}>
 			<View style={{ flex: 1 }}>
 				<Text style={[styles.exerciseName, isFinished && { color: Colors.colorGreen }]}>{name}</Text>
-				<Text style={styles.subtitle}>{setsCount} sets</Text>
+				<Text style={styles.subtitle}>{getSubtitle()}</Text>
 			</View>
 
 			{isFinished ? (

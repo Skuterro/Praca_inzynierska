@@ -15,7 +15,7 @@ interface AddExerciseModalProps {
 	exercises: Exercise[];
 	onSelectBodyPart: (bodyPart: string) => void;
 	onClose: () => void;
-	onAddExercise: (exerciseId: number, sets: number) => Promise<void>;
+	onAddExercise: (exerciseId: number, sets: number, minReps: number, maxReps: number) => Promise<void>;
 }
 
 export default function AddExerciseModal({
@@ -30,6 +30,25 @@ export default function AddExerciseModal({
 }: AddExerciseModalProps) {
 	const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
 	const [sets, setSets] = useState(3);
+	const [minReps, setMinReps] = useState(8);
+	const [maxReps, setMaxReps] = useState(12);
+
+	const handleMinRepsChange = (delta: number) => {
+		setMinReps((current) => {
+			const next = Math.max(1, Math.min(30, current + delta));
+			if (next > maxReps) {
+				setMaxReps(next);
+			}
+			return next;
+		});
+	};
+
+	const handleMaxRepsChange = (delta: number) => {
+		setMaxReps((current) => {
+			const next = Math.max(minReps, Math.min(30, current + delta));
+			return next;
+		});
+	};
 
 	return (
 		<Modal visible={visible} transparent animationType="fade">
@@ -105,22 +124,53 @@ export default function AddExerciseModal({
 					{selectedExercise && (
 						<View style={styles.seriesPopup}>
 							<Text style={AppStyles.title}>{selectedExercise.name}</Text>
-							<Text style={{ color: Colors.colorWhite }}>
-								{constants.exercise.series} {sets}
-							</Text>
-							<View style={styles.seriesControls}>
-								<TouchableOpacity onPress={() => setSets((s) => Math.max(1, s - 1))}>
-									<Text style={styles.seriesButton}>-</Text>
-								</TouchableOpacity>
+							<View style={styles.controlsRow}>
+								<View style={styles.controlColumn}>
+									<Text style={styles.controlLabel}>
+										{constants.exercise.series} {sets}
+									</Text>
+									<View style={styles.seriesControls}>
+										<TouchableOpacity onPress={() => setSets((s) => Math.max(1, s - 1))}>
+											<Text style={styles.seriesButton}>-</Text>
+										</TouchableOpacity>
+										<TouchableOpacity onPress={() => setSets((s) => Math.min(10, s + 1))}>
+											<Text style={styles.seriesButton}>+</Text>
+										</TouchableOpacity>
+									</View>
+								</View>
 
-								<TouchableOpacity onPress={() => setSets((s) => s + 1)}>
-									<Text style={styles.seriesButton}>+</Text>
-								</TouchableOpacity>
+								<View style={styles.controlColumn}>
+									<Text style={styles.controlLabel}>
+										{constants.exercise.minReps} {minReps}
+									</Text>
+									<View style={styles.seriesControls}>
+										<TouchableOpacity onPress={() => handleMinRepsChange(-1)}>
+											<Text style={styles.seriesButton}>-</Text>
+										</TouchableOpacity>
+										<TouchableOpacity onPress={() => handleMinRepsChange(1)}>
+											<Text style={styles.seriesButton}>+</Text>
+										</TouchableOpacity>
+									</View>
+								</View>
+
+								<View style={styles.controlColumn}>
+									<Text style={styles.controlLabel}>
+										{constants.exercise.maxReps} {maxReps}
+									</Text>
+									<View style={styles.seriesControls}>
+										<TouchableOpacity onPress={() => handleMaxRepsChange(-1)}>
+											<Text style={styles.seriesButton}>-</Text>
+										</TouchableOpacity>
+										<TouchableOpacity onPress={() => handleMaxRepsChange(1)}>
+											<Text style={styles.seriesButton}>+</Text>
+										</TouchableOpacity>
+									</View>
+								</View>
 							</View>
 
 							<TouchableOpacity
 								style={styles.confirmButton}
-								onPress={() => onAddExercise(Number(selectedExercise.id), sets)}
+								onPress={() => onAddExercise(Number(selectedExercise.id), sets, minReps, maxReps)}
 							>
 								<Text style={styles.confirmButtonText}>Add</Text>
 							</TouchableOpacity>
@@ -174,15 +224,34 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		alignItems: "center",
 	},
+	controlsRow: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		width: "100%",
+		marginVertical: 10,
+		gap: 8,
+	},
+	controlColumn: {
+		flex: 1,
+		alignItems: "center",
+	},
+	controlLabel: {
+		color: Colors.colorWhite,
+		fontSize: 12,
+		fontWeight: "600",
+		textAlign: "center",
+		marginBottom: 4,
+	},
 	seriesControls: {
 		flexDirection: "row",
-		gap: 20,
-		marginVertical: 10,
+		gap: 12,
+		alignItems: "center",
 	},
 	seriesButton: {
 		color: Colors.colorWhite,
-		fontSize: 32,
+		fontSize: 26,
 		fontWeight: "bold",
+		paddingHorizontal: 6,
 	},
 	confirmButton: {
 		backgroundColor: Colors.colorYellow,

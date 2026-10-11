@@ -53,6 +53,12 @@ namespace Api.Migrations
                     b.Property<int>("ExerciseId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("MaxReps")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MinReps")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Sets")
                         .HasColumnType("INTEGER");
 

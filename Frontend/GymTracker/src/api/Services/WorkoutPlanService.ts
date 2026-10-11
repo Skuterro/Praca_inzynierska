@@ -15,8 +15,14 @@ const WorkoutPlanService = {
 		return data;
 	},
 
-	addExerciseToDay: async (DayId: number, ExerciseId: number, Sets: number) => {
-		const { data } = await axiosClient.post("/workout-plans/days/addExercise", { DayId, ExerciseId, Sets });
+	addExerciseToDay: async (DayId: number, ExerciseId: number, Sets: number, MinReps: number, MaxReps: number) => {
+		const { data } = await axiosClient.post("/workout-plans/days/addExercise", {
+			DayId,
+			ExerciseId,
+			Sets,
+			MinReps,
+			MaxReps,
+		});
 		return data;
 	},
 

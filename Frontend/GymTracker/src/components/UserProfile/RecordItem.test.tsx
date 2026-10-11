@@ -26,7 +26,7 @@ const PREV_RECORD_HIGH: PersonalRecord = {
 };
 
 const setup = (record: PersonalRecord, prevRecord: PersonalRecord | null = null) => {
-	return render(<RecordItem record={record} prevRecord={prevRecord} onDelete={mockOnDelete} onPress={mockOnPress} />);
+	return render(<RecordItem record={record} prevRecord={prevRecord} onDelete={mockOnDelete} />);
 };
 
 describe("RecordItem", () => {

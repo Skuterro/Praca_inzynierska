@@ -7,6 +7,8 @@ const mockExercise: ExerciseWithSets = {
 	name: "Bench Press",
 	bodyPart: "Chest",
 	sets: 3,
+	minReps: 8,
+	maxReps: 12,
 	existingSets: [
 		{ setNumber: 1, reps: 10, weightKg: 80 },
 		{ setNumber: 2, reps: 8, weightKg: 85 },
@@ -20,7 +22,7 @@ describe("ExerciseSessionItem", () => {
 		render(<ExerciseSessionItem exercise={mockExercise} onSave={mockOnSave} />);
 
 		expect(screen.getByText("Bench Press")).toBeOnTheScreen();
-		expect(screen.getByText("3 sets")).toBeOnTheScreen();
+		expect(screen.getByText("3 sets • 8-12 reps")).toBeOnTheScreen();
 	});
 
 	test("expands sets list after user click", () => {

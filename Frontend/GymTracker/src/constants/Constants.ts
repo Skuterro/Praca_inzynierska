@@ -37,6 +37,9 @@ export const constants = {
 	},
 	exercise: {
 		sets: "Sets",
+		reps: "Reps",
+		minReps: "Min Reps:",
+		maxReps: "Max Reps:",
 		add: "Add exercise",
 		addMore: "Add more",
 		series: "Series:",

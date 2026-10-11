@@ -9,12 +9,16 @@ const props = {
 			name: "Bench press",
 			bodyPart: "chest",
 			sets: 3,
+			minReps: 8,
+			maxReps: 12,
 		},
 		{
 			id: 2,
 			name: "Squat",
 			bodyPart: "legs",
 			sets: 4,
+			minReps: 10,
+			maxReps: 10,
 		},
 	],
 };

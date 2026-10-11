@@ -1,4 +1,4 @@
-﻿using Api.Database;
+using Api.Database;
 using Api.Exceptions;
 using Api.Models.Entities;
 using Api.Models.Requests.WorkoutPlanRequests;
@@ -129,10 +129,10 @@ namespace Api.Tests
         public async Task AddExerciseToDayAsync_ShouldAdd_WhenExerciseExists()
         {
             var userId = "2";
-            var request = new CreateDayExerciseRequest { ExerciseId = 1, DayId = 2, Sets = 4 };
+            var request = new CreateDayExerciseRequest { ExerciseId = 1, DayId = 2, Sets = 4, MinReps = 8, MaxReps = 12 };
 
             _mapperMock.Map<DayExerciseResponse>(Arg.Any<DayExercise>())
-                       .Returns(new DayExerciseResponse { Sets = 4 });
+                       .Returns(new DayExerciseResponse { Sets = 4, MinReps = 8, MaxReps = 12 });
 
             var result = await _workoutPlanService.AddExerciseToDayAsync(userId, request);
 
@@ -147,7 +147,7 @@ namespace Api.Tests
         public async Task AddExerciseToDayAsync_ShouldThrowBadRequest_WhenPlanDayDoesntExist()
         {
             var userId = "1";
-            var request = new CreateDayExerciseRequest { ExerciseId = 1, DayId = 3, Sets = 4 };
+            var request = new CreateDayExerciseRequest { ExerciseId = 1, DayId = 3, Sets = 4, MinReps = 8, MaxReps = 12 };
 
             await Assert.ThrowsAsync<BadRequestException>(async () =>
                 await _workoutPlanService.AddExerciseToDayAsync(userId, request));
@@ -157,7 +157,17 @@ namespace Api.Tests
         public async Task AddExerciseToDayAsync_ShouldThrowBadRequest_WhenExerciseDoesntExist()
         {
             var userId = "1";
-            var request = new CreateDayExerciseRequest { ExerciseId = 3, DayId = 1, Sets = 4 };
+            var request = new CreateDayExerciseRequest { ExerciseId = 3, DayId = 1, Sets = 4, MinReps = 8, MaxReps = 12 };
+
+            await Assert.ThrowsAsync<BadRequestException>(async () =>
+                await _workoutPlanService.AddExerciseToDayAsync(userId, request));
+        }
+
+        [TestMethod]
+        public async Task AddExerciseToDayAsync_ShouldThrowBadRequest_WhenMinRepsGreaterThanMaxReps()
+        {
+            var userId = "2";
+            var request = new CreateDayExerciseRequest { ExerciseId = 1, DayId = 2, Sets = 4, MinReps = 15, MaxReps = 10 };
 
             await Assert.ThrowsAsync<BadRequestException>(async () =>
                 await _workoutPlanService.AddExerciseToDayAsync(userId, request));

@@ -1,4 +1,4 @@
-﻿namespace Api.Models.Responses.WorkoutPlanResponses
+namespace Api.Models.Responses.WorkoutPlanResponses
 {
     public class DayExerciseResponse
     {
@@ -6,5 +6,7 @@
         public string Name { get; set; } = null!;
         public string BodyPart { get; set; } = null!;
         public int Sets { get; set; }
+        public int MinReps { get; set; }
+        public int MaxReps { get; set; }
     }
 }
